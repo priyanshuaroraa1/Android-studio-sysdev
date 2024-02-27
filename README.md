@@ -4,3 +4,8 @@
 Skriv navnet ditt her for å vise at du har fåt til å klone fra Github, og comitte til main branchen.
 
 Bernd var her.
+
+# Ekstra funksjonalitet
+
+Her har Bernd lagt til masse kul ekstra funksjonalitet, som nå kan merges inn i main/trunk.
+
