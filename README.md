@@ -4,3 +4,4 @@
 Skriv navnet ditt her for å vise at du har fåt til å klone fra Github, og comitte til main branchen.
 
 Bernd var her.
+Martine var her.<3
