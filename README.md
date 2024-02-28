@@ -5,7 +5,8 @@ Skriv navnet ditt her for å vise at du har fåt til å klone fra Github, og com
 
 Bernd var her.
 Martine var her.<3
+Priyanshu var her :)
 
 # Ekstra funksjonalitet
-
 Her har Bernd lagt til masse kul ekstra funksjonalitet, som nå kan merges inn i main/trunk.
+
