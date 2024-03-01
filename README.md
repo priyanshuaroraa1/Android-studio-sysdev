@@ -7,6 +7,7 @@ Bernd var her.
 Martine var her.<3
 Priyanshu var her :)
 Vetle var også her ;)
+Sindre var her =D
 
 # Ekstra funksjonalitet
 Her har Bernd lagt til masse kul ekstra funksjonalitet, som nå kan merges inn i main/trunk.
