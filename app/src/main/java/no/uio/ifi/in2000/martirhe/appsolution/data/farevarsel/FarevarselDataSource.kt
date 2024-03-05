@@ -3,9 +3,11 @@ package no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.client.request.header
+import io.ktor.serialization.gson.gson
 import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.FarevarselCollection
 
 class FarevarselDataSource {
@@ -19,18 +21,15 @@ class FarevarselDataSource {
         }
 
         // TODO: Trenger vi dette?
-        //        install(ContentNegotiation) {
-        //            gson()
-        //        }
+        install(ContentNegotiation) {
+            gson()
+        }
 
     }
 
     suspend fun fetchFarevarsler(): FarevarselCollection {
-        val farevarselCollection: FarevarselCollection = client.get("weatherapi/metalerts/2.0/current.json").body()
+        val farevarselCollection: FarevarselCollection =
+            client.get("weatherapi/metalerts/2.0/current.json").body()
         return farevarselCollection
     }
-
-
-
-
 }
