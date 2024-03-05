@@ -3,12 +3,10 @@ package no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.client.request.header
-import io.ktor.http.URLProtocol
-import io.ktor.serialization.gson.gson
+import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.FarevarselCollection
 
 class FarevarselDataSource {
 

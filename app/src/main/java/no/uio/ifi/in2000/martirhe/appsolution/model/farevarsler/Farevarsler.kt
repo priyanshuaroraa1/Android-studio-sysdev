@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel
+package no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler
 
 
 
