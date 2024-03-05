@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
 // Go through this file and evaluate if we need the @SerializedAnnotation for all variables, or just
 // for some.
 
-data class FeatureCollection(
+data class FarevarselCollection(
     val features: List<Feature>,
     val lang: String,
     @SerializedName("lastChange") val lastChange: String,
