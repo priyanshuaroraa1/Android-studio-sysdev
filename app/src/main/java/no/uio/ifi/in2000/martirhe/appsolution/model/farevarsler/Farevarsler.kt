@@ -35,7 +35,7 @@ data class Properties(
     @SerializedName("awareness_type") val awarenessType: String,
     val certainty: String,
     val consequences: String,
-    val county: List<Any>, // Empty array in provided JSON, the actual type is not defined
+    val county: List<Int>, // Empty array in provided JSON, the actual type is not defined
     val description: String,
     val event: String,
     @SerializedName("eventAwarenessName") val eventAwarenessName: String,

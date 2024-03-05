@@ -57,6 +57,8 @@ fun PocFarevarselScreen(
             when (farevarslerState) {
                 is FarevarselUiState.Success -> {
                     Text(text = "Success")
+                    val farevarsler = (farevarslerState).farevarsler
+//                    Text(text = farevarsler.features.)
                 }
                 is FarevarselUiState.Loading -> {
                     Text(text = "Loading")
@@ -68,9 +70,7 @@ fun PocFarevarselScreen(
         }
 
 
-        Text(text = "Overskrift")
-        Text(text = "Mer tekst")
-        Text(text = "Enda mer tekst")
+
     }
 
 }
