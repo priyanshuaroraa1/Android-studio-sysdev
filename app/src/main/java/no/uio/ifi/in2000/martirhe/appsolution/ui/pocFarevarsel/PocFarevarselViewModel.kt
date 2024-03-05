@@ -27,7 +27,7 @@ class PocFarevarselViewModel: ViewModel() {
     var uiState = MutableStateFlow(PocFarevarselUiState())
 
     init {
-
+        loadFarevarsler()
     }
 
     fun loadFarevarsler() {
