@@ -1,5 +1,6 @@
 package no.uio.ifi.in2000.martirhe.appsolution.data.locationforecast
 
+import android.util.Log
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
@@ -31,8 +32,10 @@ class LocationForecastDataSource {
     ): LocationForecast {
         val apiString = "weatherapi/locationforecast/2.0/compact.json"
         val parameterString = "?lat=$lat&lon=$lon"
+        Log.i("API call", "url: https://gw-uio.intark.uh-it.no/in2000/$apiString$parameterString")
         val locationForecast: LocationForecast =
             client.get(urlString = apiString + parameterString).body()
+        Log.i("API call", "Current temperature ${locationForecast.properties.timeseries[0].data.instant.details.airTemperature}")
         return locationForecast
     }
 

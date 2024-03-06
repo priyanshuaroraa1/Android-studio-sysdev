@@ -1,5 +1,9 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.PocLocationForecast
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -27,6 +31,11 @@ data class PocLocationForecastUiState(
  class PocLocationForecastViewModel: ViewModel() {
      val locationForecastRepository: LocationForecastRepositoryInterface = LocationForecastRepository()
      var uiState = MutableStateFlow(PocLocationForecastUiState())
+
+     var latitude by mutableDoubleStateOf(50.911491)
+     var longitude by mutableDoubleStateOf(12.757933)
+     var showForecast by mutableStateOf(false)
+     var chosenCity by mutableStateOf("Oslo")
 
      init {
          // TODO: Do we need to do anything in the init?

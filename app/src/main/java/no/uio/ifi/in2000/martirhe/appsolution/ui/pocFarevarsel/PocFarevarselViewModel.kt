@@ -1,5 +1,8 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.pocFarevarsel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +28,9 @@ data class PocFarevarselUiState(
 class PocFarevarselViewModel: ViewModel() {
     val farevarselRepository: FarevarselRepositoryInterface = FarevarselRepository()
     var uiState = MutableStateFlow(PocFarevarselUiState())
+
+
+
 
     init {
         loadFarevarsler()
