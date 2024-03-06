@@ -27,7 +27,7 @@ data class When (
 )
 
 data class Geometry (
-    val coordinates: List<List<List<Any>>>, // TODO: Må denne være Any??
+    val coordinates: Any, // Denne kan være String, List<String>, ... , List<List<List<List<String>>>>
     val type: String
 )
 
