@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel
+package no.uio.ifi.in2000.martirhe.appsolution.data.locationforecast
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -8,11 +8,10 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.serialization.gson.gson
-import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.FarevarselCollection
+import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.LocationForecast
 
-class FarevarselDataSource {
+class LocationForecastDataSource {
 
-    // TODO: Security breach?
     private val apiKey = "d51d9a9a-cb2e-4299-9c77-d41f1de3b854"
 
     private val client = HttpClient(CIO) {
@@ -26,9 +25,15 @@ class FarevarselDataSource {
         }
     }
 
-    suspend fun fetchFarevarsler(): FarevarselCollection {
-        val farevarselCollection: FarevarselCollection =
-            client.get("weatherapi/metalerts/2.0/test.json").body()
-        return farevarselCollection
+    suspend fun fetchLocationForecast(
+        lat: Double = 59.920244,
+        lon: Double = 10.756355,
+    ): LocationForecast {
+        val apiString = "weatherapi/locationforecast/2.0/compact.json"
+        val parameterString = "?lat=$lat&lon=$lon"
+        val locationForecast: LocationForecast =
+            client.get(urlString = apiString + parameterString).body()
+        return locationForecast
     }
+
 }
