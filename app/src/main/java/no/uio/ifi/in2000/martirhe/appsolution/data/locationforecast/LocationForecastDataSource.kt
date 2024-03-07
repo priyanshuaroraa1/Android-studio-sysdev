@@ -35,7 +35,8 @@ class LocationForecastDataSource {
         Log.i("API call", "url: https://gw-uio.intark.uh-it.no/in2000/$apiString$parameterString")
         val locationForecast: LocationForecast =
             client.get(urlString = apiString + parameterString).body()
-        Log.i("API call", "Current temperature ${locationForecast.properties.timeseries[0].data.instant.details.airTemperature}")
+
+        Log.i("API call", "Current temperature ${locationForecast.properties.timeseries[0].data.instant.details.air_temperature}")
         return locationForecast
     }
 

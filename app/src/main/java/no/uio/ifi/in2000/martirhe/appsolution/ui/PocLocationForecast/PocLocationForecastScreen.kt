@@ -119,7 +119,7 @@ fun PocLocationForecastScreen(
                                     fontWeight = FontWeight.ExtraBold,
                                 )
                                 Text(
-                                    text = state.locationForecast.properties.timeseries[0].data.instant.details.airTemperature.roundToInt().toString() + " grader",
+                                    text = state.locationForecast.properties.timeseries[0].data.instant.details.air_temperature.roundToInt().toString() + " grader",
                                     modifier = Modifier.padding(bottom = 16.dp)
                                 )
 
@@ -130,7 +130,7 @@ fun PocLocationForecastScreen(
                                     fontWeight = FontWeight.ExtraBold,
                                 )
                                 Text(
-                                    text = state.locationForecast.properties.timeseries[0].data.instant.details.cloudAreaFraction.toString(),
+                                    text = state.locationForecast.properties.timeseries[0].data.instant.details.cloud_area_fraction.toString(),
                                     modifier = Modifier.padding(bottom = 16.dp)
                                 )
 
@@ -140,7 +140,7 @@ fun PocLocationForecastScreen(
                                     fontWeight = FontWeight.ExtraBold,
                                 )
                                 Text(
-                                    text = state.locationForecast.properties.timeseries[0].data.instant.details.windSpeed.toString() + " m/s",
+                                    text = state.locationForecast.properties.timeseries[0].data.instant.details.wind_speed.toString() + " m/s",
                                     modifier = Modifier.padding(bottom = 16.dp)
                                 )
                             }
