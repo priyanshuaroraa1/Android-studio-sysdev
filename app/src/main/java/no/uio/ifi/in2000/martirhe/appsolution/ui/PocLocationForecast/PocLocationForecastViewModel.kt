@@ -1,5 +1,6 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.PocLocationForecast
 
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +37,7 @@ data class PocLocationForecastUiState(
      var longitude by mutableDoubleStateOf(12.757933)
      var showForecast by mutableStateOf(false)
      var chosenCity by mutableStateOf("Oslo")
+
 
      init {
          // TODO: Do we need to do anything in the init?

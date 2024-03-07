@@ -1,7 +1,11 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.PocLocationForecast
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import no.uio.ifi.in2000.martirhe.appsolution.ui.pocFarevarsel.FarevarselUiState
@@ -42,7 +47,26 @@ fun PocLocationForecastScreenPreview() {
 fun PocLocationForecastScreen(
     pocLocationForecastViewModel: PocLocationForecastViewModel = viewModel(),
 ) {
-
+//      TODO: DELETE THIS
+//    val locationPermissionsAlreadyGranted = ContextCompat.checkSelfPermission(
+//        this,
+//        Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+//
+//    val locationPermissions = arrayOf(
+//        Manifest.permission.ACCESS_FINE_LOCATION,
+//        Manifest.permission.ACCESS_COARSE_LOCATION)
+//
+//    val locationPermissionLauncher = rememberLauncherForActivityResult(
+//        contract = ActivityResultContracts.RequestMultiplePermissions(),
+//        onResult = { permissions ->
+//            val permissionsGranted = permissions.values.reduce { acc, isPermissionGranted ->
+//                acc && isPermissionGranted
+//            }
+//
+//            if (!permissionsGranted) {
+//                //Logic when the permissions were not granted by the user
+//            }
+//        })
 
     Column(
         modifier = Modifier
@@ -83,6 +107,19 @@ fun PocLocationForecastScreen(
             }
         ) {
             Text(text = "Bergen")
+        }
+
+        Button(
+            onClick = {
+//                TODO: Hente lat og lon fra brukerposisjon
+//                pocLocationForecastViewModel.latitude = 60.39299
+//                pocLocationForecastViewModel.longitude = 5.32415
+                pocLocationForecastViewModel.showForecast = true
+                pocLocationForecastViewModel.chosenCity = "min posisjon"
+//                TODO: Laste inn fra API
+            }
+        ) {
+            Text(text = "Min posisjon")
         }
 
         if (pocLocationForecastViewModel.showForecast) {
