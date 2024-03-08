@@ -68,6 +68,13 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    // Kotlin Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3") // use the latest version available
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3") // use the latest version available
+
+    // Kotlin Coroutines Play Services
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3") // use the latest version available
+
     // ktor dependencies
     implementation("io.ktor:ktor-client-core:2.3.8")
     implementation("io.ktor:ktor-client-cio:2.3.8")

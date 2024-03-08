@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +41,15 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+
+
 import no.uio.ifi.in2000.martirhe.appsolution.ui.locationpermissionrationaledialog.PermissionRationaleDialog
 import no.uio.ifi.in2000.martirhe.appsolution.ui.locationpermissionrationaledialog.RationaleState
 import no.uio.ifi.in2000.martirhe.appsolution.ui.pocFarevarsel.FarevarselUiState
@@ -46,22 +57,26 @@ import no.uio.ifi.in2000.martirhe.appsolution.ui.pocFarevarsel.PocFarevarselView
 import kotlin.math.roundToInt
 
 
-@RequiresApi(Build.VERSION_CODES.Q)
-@Preview(
-    name = "Dark Mode",
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO
-)
-@Preview(
-    name = "Light Mode",
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-fun PocLocationForecastScreenPreview() {
-    PocLocationForecastScreen()
-}
+//@RequiresApi(Build.VERSION_CODES.Q)
+//@Preview(
+//    name = "Dark Mode",
+//    showBackground = true,
+//    uiMode = Configuration.UI_MODE_NIGHT_NO
+//)
+//@Preview(
+//    name = "Light Mode",
+//    showBackground = true,
+//    uiMode = Configuration.UI_MODE_NIGHT_YES
+//)
+//@Composable
+//fun PocLocationForecastScreenPreview() {
+//    PocLocationForecastScreen()
+//}
 
+
+@RequiresPermission(
+    anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION],
+)
 @RequiresApi(Build.VERSION_CODES.Q)
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -69,7 +84,14 @@ fun PocLocationForecastScreen(
     pocLocationForecastViewModel: PocLocationForecastViewModel = viewModel(),
 ) {
     // TODO: Skal denne ligge her eller i ViewModel?
+    val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val locationClient = remember {
+        LocationServices.getFusedLocationProviderClient(context)
+    }
+    var locationInfo by remember {
+        mutableStateOf(" ??? ")
+    }
 
     // TODO: Skal denne ligge her eller i ViewModel?
     // Approximate location access is sufficient for most of use cases
@@ -96,7 +118,6 @@ fun PocLocationForecastScreen(
     var rationaleState by remember {
         mutableStateOf<RationaleState?>(null)
     }
-
 
 
 
@@ -149,7 +170,29 @@ fun PocLocationForecastScreen(
 
             if (coarseLocationPermissionState.status.isGranted) {
                 Log.i("permission", "Location permission IS granted")
-                // TODO: Hent koordinater
+
+                scope.launch(Dispatchers.IO) {
+                    val usePreciseLocation: Boolean = false;
+                    val priority = if (usePreciseLocation) {
+                        Priority.PRIORITY_HIGH_ACCURACY
+                    } else {
+                        Priority.PRIORITY_BALANCED_POWER_ACCURACY
+                    }
+                    val result = locationClient.getCurrentLocation(
+                        priority,
+                        CancellationTokenSource().token,
+                    ).await()
+                    result?.let { fetchedLocation ->
+                        pocLocationForecastViewModel.latitude = fetchedLocation.latitude
+                        pocLocationForecastViewModel.longitude = fetchedLocation.longitude
+                        pocLocationForecastViewModel.showForecast = true
+                        pocLocationForecastViewModel.chosenCity = "min posisjon"
+                        pocLocationForecastViewModel.loadLocationForecast(
+                            pocLocationForecastViewModel.latitude,
+                            pocLocationForecastViewModel.longitude
+                        )
+                    }
+                }
             } else if (coarseLocationPermissionState.status.shouldShowRationale) {
                 Log.i("permission", "Should show rationale")
 
@@ -167,6 +210,8 @@ fun PocLocationForecastScreen(
                 Log.i("permission", "Location permission is NOT granted")
                 coarseLocationPermissionState.launchPermissionRequest()
             }
+
+            Log.i("location", locationInfo)
 
         }) {
             Text(text = "Min posisjon")
@@ -239,6 +284,17 @@ fun PocLocationForecastScreen(
                                     text = state.locationForecast.properties.timeseries[0].data.instant.details.wind_speed.toString() + " m/s",
                                     modifier = Modifier.padding(bottom = 16.dp)
                                 )
+                                Text(
+                                    text = "Koordinater",
+                                    fontWeight = FontWeight.ExtraBold,
+                                )
+                                Text(
+                                    text = "Lat:" + pocLocationForecastViewModel.latitude,
+                                )
+                                Text(
+                                    text = "Lon:" + pocLocationForecastViewModel.longitude,
+                                    modifier = Modifier.padding(bottom = 16.dp)
+                                )
                             }
 
 
@@ -256,6 +312,17 @@ fun PocLocationForecastScreen(
                 }
             }
         }
+
+
     }
+
+
+
+
+
 }
+
+
+
+
 
