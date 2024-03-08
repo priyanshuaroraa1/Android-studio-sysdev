@@ -80,4 +80,8 @@ dependencies {
     // gson dependencies?
     implementation("com.google.code.gson:gson:2.10.1") // TODO: Trengs denne?
 
+    // Dependencies for location services
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+    implementation("com.google.accompanist:accompanist-permissions:0.35.0-alpha")
+
 }
