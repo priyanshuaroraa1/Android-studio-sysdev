@@ -20,6 +20,8 @@ import no.uio.ifi.in2000.martirhe.appsolution.ui.theme.AppSolutionTheme
 import android.Manifest
 import android.os.Build
 import androidx.annotation.RequiresApi
+import no.uio.ifi.in2000.martirhe.appsolution.ui.pocmap.PocMapScreen
+
 //import com.example.platform.location.permission.LocationPermissionScreen
 
 class MainActivity : ComponentActivity() {
@@ -35,9 +37,9 @@ class MainActivity : ComponentActivity() {
                 ) {
 //                    Kommenter ut denne....
 //                    PocFarevarselScreen()
-//                    ... og kommenter inn denne i stedet for å sjekke værmelding
-                    PocLocationForecastScreen()
+//                    PocLocationForecastScreen()
 //                    LocationPermissionScreen()
+                    PocMapScreen()
                 }
             }
         }
