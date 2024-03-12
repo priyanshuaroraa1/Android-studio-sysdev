@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "830416950814",
+    "project_id": "in2000-416711",
+    "storage_bucket": "in2000-416711.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:830416950814:android:170b6c6bed8fd83a72400f",
+        "android_client_info": {
+          "package_name": "no.uio.ifi.in2000.martirhe.appsolution"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3XIcfGHeBlIwsW8_zD6n_LE6Fubh6tzw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

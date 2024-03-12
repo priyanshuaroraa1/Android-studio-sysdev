@@ -33,14 +33,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.maps.UiSettings
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-
 
 
 @Composable
@@ -48,10 +49,15 @@ fun PocMapScreen() {
     // Two possible sizes for the card
     val collapsedSize: Dp = 300.dp
     val expandedSize: Dp = 560.dp
-        val oslo = LatLng(59.911491, 10.757933)
+    val oslo = LatLng(59.911491, 10.757933)
+
+    var uiSettings by remember { mutableStateOf(MapUiSettings()) }
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(oslo, 10f)
     }
+
+    uiSettings = uiSettings.copy(zoomControlsEnabled = true)
+
 
     // State to remember if the card is expanded or not
     var isExpanded by remember { mutableStateOf(false) }
@@ -72,8 +78,10 @@ fun PocMapScreen() {
 
         GoogleMap(
             modifier = Modifier,
-            cameraPositionState = cameraPositionState
-        ) {
+            uiSettings = uiSettings,
+            cameraPositionState = cameraPositionState,
+
+            ) {
             Marker(
                 state = MarkerState(position = oslo),
                 title = "Oslo",
