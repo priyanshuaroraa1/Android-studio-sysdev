@@ -10,10 +10,15 @@ import io.ktor.client.request.header
 import io.ktor.serialization.gson.gson
 import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.FarevarselCollection
 
+// Import packagename.BuildConfig??
+
 class FarevarselDataSource {
 
-    // TODO: Security breach?
-    private val apiKey = "d51d9a9a-cb2e-4299-9c77-d41f1de3b854"
+    // TODO: Security breach? Why wont BuildConfig work probably
+    //private val apiKey = "d51d9a9a-cb2e-4299-9c77-d41f1de3b854"
+
+    private val apiKey = BuildConfig.API_KEY_IFI_PROXY
+
 
     private val client = HttpClient(CIO) {
         defaultRequest {
