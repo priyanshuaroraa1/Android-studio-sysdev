@@ -42,13 +42,12 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 
 
-
 @Composable
 fun PocMapScreen() {
     // Two possible sizes for the card
     val collapsedSize: Dp = 300.dp
     val expandedSize: Dp = 560.dp
-        val oslo = LatLng(59.911491, 10.757933)
+    val oslo = LatLng(59.911491, 10.757933)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(oslo, 10f)
     }

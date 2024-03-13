@@ -20,6 +20,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.ui.theme.AppSolutionTheme
 import android.Manifest
 import android.os.Build
 import androidx.annotation.RequiresApi
+import no.uio.ifi.in2000.martirhe.appsolution.ui.home.HomeScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.pocmap.PocMapScreen
 
 //import com.example.platform.location.permission.LocationPermissionScreen
@@ -39,7 +40,8 @@ class MainActivity : ComponentActivity() {
 //                    PocFarevarselScreen()
 //                    PocLocationForecastScreen()
 //                    LocationPermissionScreen()
-                    PocMapScreen()
+//                    PocMapScreen()
+                    HomeScreen()
                 }
             }
         }

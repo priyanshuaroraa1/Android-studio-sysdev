@@ -68,6 +68,9 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    // Extended Icons
+    implementation("androidx.compose.material:material-icons-extended-android:1.6.3")
+
     // Kotlin Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3") // use the latest version available
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3") // use the latest version available
