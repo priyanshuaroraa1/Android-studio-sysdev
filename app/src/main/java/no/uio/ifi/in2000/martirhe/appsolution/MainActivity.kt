@@ -20,6 +20,8 @@ import no.uio.ifi.in2000.martirhe.appsolution.ui.theme.AppSolutionTheme
 import android.Manifest
 import android.os.Build
 import androidx.annotation.RequiresApi
+import no.uio.ifi.in2000.martirhe.appsolution.ui.about.AboutScreen
+import no.uio.ifi.in2000.martirhe.appsolution.ui.about.AboutViewModel
 import no.uio.ifi.in2000.martirhe.appsolution.ui.pocmap.PocMapScreen
 
 //import com.example.platform.location.permission.LocationPermissionScreen
@@ -35,11 +37,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-//                    Kommenter ut denne....
 //                    PocFarevarselScreen()
 //                    PocLocationForecastScreen()
 //                    LocationPermissionScreen()
-                    PocMapScreen()
+//                    PocMapScreen()
+                    AboutScreen()
                 }
             }
         }
