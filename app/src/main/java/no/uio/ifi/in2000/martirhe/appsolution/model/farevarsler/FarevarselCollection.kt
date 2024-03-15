@@ -3,26 +3,22 @@ package no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler
 
 import com.google.gson.annotations.SerializedName
 
-// TODO: Do we need @SerializedName-annotation?
-// Go through this file and evaluate if we need the @SerializedAnnotation for all variables, or just
-// for some.
 
 data class FarevarselCollection (
-    val features: List<Feature>,
-    val lang: String,
-    val lastChange: String,
-    val type: String
+    val features: List<Feature>,        // ok
+    val lang: String,                   // ok
+    val lastChange: String,             // ok
+    val type: String                    // ok
 )
 
 data class Feature (
     val geometry: Geometry,
     val properties: Properties,
     val type: String,
-    val featureWhen: When
+    @SerializedName("when") val featureWhen: TimeInterval,
 )
-//    @SerializedName("`when`") val `when`: TimeInterval
 
-data class When (
+data class TimeInterval (
     val interval: List<String>
 )
 
@@ -33,17 +29,17 @@ data class Geometry (
 
 
 data class Properties(
-    val altitude_above_sea_level: Int,
+    @SerializedName("altitude_above_sea_level") val altitudeAboveSeaLevel: Int?,
     val area: String,
-    val awarenessResponse: String,
-    val awarenessSeriousness: String,
+    val awarenessResponse: String?,
+    val awarenessSeriousness: String?,
     @SerializedName("awareness_level") val awarenessLevel: String,
     @SerializedName("awareness_type") val awarenessType: String,
     val ceiling_above_sea_level: Int,
     val certainty: String,
     val consequences: String,
     val contact: String,
-    val county: List<String>, // TODO: Skal denne være string eller int? Jeg tror String (Bernd)
+    val county: List<String>,
     val description: String,
     val event: String,
     val eventAwarenessName: String,
