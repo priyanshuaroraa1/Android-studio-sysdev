@@ -96,4 +96,9 @@ dependencies {
 
     // Android Maps Compose composables for the Maps SDK for Android
     implementation("com.google.maps.android:maps-compose:4.3.3")
+
+    // Støtte for GeoJSON
+    implementation("com.squareup.moshi:moshi:1.x")
+    implementation("com.squareup.moshi:moshi-kotlin:1.x")
+    implementation("com.yourorganization:moshi-geojson:x.x.x")
 }
