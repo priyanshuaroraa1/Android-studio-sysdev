@@ -37,11 +37,11 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
 //                    Kommenter ut denne....
-                    PocFarevarselScreen()
+//                    PocFarevarselScreen()
 //                    PocLocationForecastScreen()
 //                    LocationPermissionScreen()
 //                    PocMapScreen()
-//                    HomeScreen()
+                    HomeScreen()
                 }
             }
         }

@@ -22,8 +22,11 @@ import no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel.FarevarselReposito
 import no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel.FarevarselRepositoryInterface
 import no.uio.ifi.in2000.martirhe.appsolution.data.locationforecast.LocationForecastRepository
 import no.uio.ifi.in2000.martirhe.appsolution.data.locationforecast.LocationForecastRepositoryInterface
+import no.uio.ifi.in2000.martirhe.appsolution.data.oceanforecast.OceanForecastRepository
+import no.uio.ifi.in2000.martirhe.appsolution.data.oceanforecast.OceanForecastRepositoryInterface
 import no.uio.ifi.in2000.martirhe.appsolution.model.badeplass.Badeplass
 import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.LocationForecast
+import no.uio.ifi.in2000.martirhe.appsolution.model.oceanforecast.OceanForecast
 import no.uio.ifi.in2000.martirhe.appsolution.ui.PocLocationForecast.PocLocationForecastUiState
 import no.uio.ifi.in2000.martirhe.appsolution.ui.pocFarevarsel.PocFarevarselUiState
 import java.nio.channels.UnresolvedAddressException
@@ -37,8 +40,19 @@ sealed interface LocationForecastUiState {
     object Error: LocationForecastUiState
 }
 
+sealed interface OceanForecastUiState {
+    data class Success(
+        val oceanForecast: OceanForecast
+    ): OceanForecastUiState
+    object Loading: OceanForecastUiState
+    object Error: OceanForecastUiState
+}
+
 data class PocLocationForecastUiState(
     val locationForecastUiState: LocationForecastUiState = LocationForecastUiState.Loading
+)
+data class PocOceanForecastUiState(
+    val oceanForecastUiState: OceanForecastUiState = OceanForecastUiState.Loading
 )
 
 class HomeViewModel : ViewModel() {
@@ -46,6 +60,8 @@ class HomeViewModel : ViewModel() {
     val locationForecastRepository: LocationForecastRepositoryInterface = LocationForecastRepository()
     var locationForecastUiState = MutableStateFlow(PocLocationForecastUiState())
 
+    val oceanForecastRepository: OceanForecastRepositoryInterface = OceanForecastRepository()
+    var oceanForecastUiState = MutableStateFlow(PocOceanForecastUiState())
     // Dummy data
     val badeplasserDummy: List<Badeplass> = listOf(
         Badeplass("00", "Huk", 59.895002996529485, 10.67554858599053),
