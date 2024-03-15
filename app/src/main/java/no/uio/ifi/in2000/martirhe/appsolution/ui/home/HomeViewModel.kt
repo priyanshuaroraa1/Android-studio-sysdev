@@ -10,17 +10,41 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.rememberCameraPositionState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel.FarevarselRepository
 import no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel.FarevarselRepositoryInterface
+import no.uio.ifi.in2000.martirhe.appsolution.data.locationforecast.LocationForecastRepository
+import no.uio.ifi.in2000.martirhe.appsolution.data.locationforecast.LocationForecastRepositoryInterface
 import no.uio.ifi.in2000.martirhe.appsolution.model.badeplass.Badeplass
+import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.LocationForecast
+import no.uio.ifi.in2000.martirhe.appsolution.ui.PocLocationForecast.PocLocationForecastUiState
 import no.uio.ifi.in2000.martirhe.appsolution.ui.pocFarevarsel.PocFarevarselUiState
+import java.nio.channels.UnresolvedAddressException
 
+
+sealed interface LocationForecastUiState {
+    data class Success(
+        val locationForecast: LocationForecast
+    ): LocationForecastUiState
+    object Loading: LocationForecastUiState
+    object Error: LocationForecastUiState
+}
+
+data class PocLocationForecastUiState(
+    val locationForecastUiState: LocationForecastUiState = LocationForecastUiState.Loading
+)
 
 class HomeViewModel : ViewModel() {
+
+    val locationForecastRepository: LocationForecastRepositoryInterface = LocationForecastRepository()
+    var locationForecastUiState = MutableStateFlow(PocLocationForecastUiState())
 
     // Dummy data
     val badeplasserDummy: List<Badeplass> = listOf(
@@ -33,7 +57,14 @@ class HomeViewModel : ViewModel() {
 
 
     // Variables for Map
-    var selectedBadeplass by mutableStateOf<Badeplass?>(null)
+    var selectedBadeplass by mutableStateOf<Badeplass>(badeplasser[0])
+    var showBadeplassCard by mutableStateOf(false)
+
+    fun onBadeplassPinClick(badeplass: Badeplass) {
+        selectedBadeplass = badeplass
+        showBadeplassCard = true
+        loadLocationForecast(badeplass.lat, badeplass.lon)
+    }
 
 
 
@@ -57,6 +88,20 @@ class HomeViewModel : ViewModel() {
         updateSearchBarHistory()
         searchBarText = ""
         searchBarActive = false
+    }
+
+    fun loadLocationForecast(lat: Double, lon: Double) {
+        viewModelScope.launch(Dispatchers.IO) {
+            locationForecastUiState.update { it.copy(locationForecastUiState = no.uio.ifi.in2000.martirhe.appsolution.ui.PocLocationForecast.LocationForecastUiState.Loading) }
+            locationForecastUiState.update {
+                try {
+                    val locationForecast = locationForecastRepository.getLocationForecast(lat, lon)
+                    it.copy(locationForecastUiState = no.uio.ifi.in2000.martirhe.appsolution.ui.PocLocationForecast.LocationForecastUiState.Success(locationForecast = locationForecast))
+                } catch (e: UnresolvedAddressException) {
+                    it.copy(locationForecastUiState = no.uio.ifi.in2000.martirhe.appsolution.ui.PocLocationForecast.LocationForecastUiState.Error)
+                }
+            }
+        }
     }
 
 

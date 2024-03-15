@@ -32,6 +32,8 @@ import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,6 +52,7 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.ktx.model.cameraPosition
 import no.uio.ifi.in2000.martirhe.appsolution.model.badeplass.Badeplass
+import no.uio.ifi.in2000.martirhe.appsolution.ui.PocLocationForecast.LocationForecastUiState
 import java.time.temporal.TemporalQuery
 
 
@@ -85,7 +88,7 @@ fun HomeScreen(
             modifier = Modifier,
             cameraPositionState = cameraPositionState,
             onMapClick = {
-                homeViewModel.selectedBadeplass = null
+                homeViewModel.showBadeplassCard = false
             }
         ) {
 
@@ -93,7 +96,7 @@ fun HomeScreen(
                 Marker(
                     state = MarkerState(position = LatLng(badeplass.lat, badeplass.lon)),
                     onClick = {
-                        homeViewModel.selectedBadeplass = badeplass
+                        homeViewModel.onBadeplassPinClick(badeplass)
                         false
                     }
                 )
@@ -101,12 +104,17 @@ fun HomeScreen(
 
         }
 
-        if (homeViewModel.selectedBadeplass != null) {
+        if (homeViewModel.showBadeplassCard) {
+
             BadeplassInfoCard(
-                badeplass = homeViewModel.selectedBadeplass!!,
+                homeViewModel = homeViewModel,
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
+                    .align(Alignment.BottomCenter),
             )
+
+
+
+            
         }
 
 
@@ -115,9 +123,11 @@ fun HomeScreen(
 
 @Composable
 fun BadeplassInfoCard(
-    badeplass: Badeplass,
+    homeViewModel: HomeViewModel,
     modifier: Modifier,
 ) {
+
+
     Card(
         modifier = modifier
             .padding(32.dp)
@@ -129,153 +139,121 @@ fun BadeplassInfoCard(
         )
 
     ) {
-        Column(
-            modifier = Modifier
-                .padding(8.dp)
-        ) {
 
-            Text(text = badeplass.navn,
-                modifier = Modifier
-                    .padding(horizontal = 8.dp),
-                fontSize = 18.sp
-            )
+        val uiState by homeViewModel.locationForecastUiState.collectAsState()
 
-            Row(
-                modifier = Modifier
-                .weight(1f)
-            ) {
-                Card(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .weight(1f)
-                        .fillMaxSize()
+        uiState.locationForecastUiState.let { state ->
+            when (state) {
+                is LocationForecastUiState.Success -> {
 
-                ) {
-                    Text(
-                        text = "Temp: ",
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = "Skydekke: ",
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = "Vind: ",
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = "Vindretning: ",
-                        fontSize = 14.sp
-                    )
 
-                }
-                Card(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .weight(1f)
-                        .fillMaxSize()
+                    Column(
+                        modifier = Modifier
+                            .padding(8.dp)
+                    ) {
 
-                ) {
-                    Text(text = "tmp")
-                }
-            }
+                        Text(
+                            text = homeViewModel.selectedBadeplass.navn,
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp),
+                            fontSize = 18.sp
+                        )
 
-            Row(
-                modifier = Modifier
-                    .weight(1f)
-            ) {
-                Card(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .weight(1f)
-                        .fillMaxSize()
-                ) {
-                    Text(text = "tmp")
-                }
-                Card(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .weight(1f)
-                        .fillMaxSize()
-
-                ) {
-                    Text(text = "tmp")
-                }
-            }
+                        Text(text = "Temperatur: " + state.locationForecast.properties.timeseries[0].data.instant.details.air_temperature)
 
 
 
 
-
-
-        }
-
-
-    }
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
-@Composable
-fun MapSearchBar(
-    homeViewModel: HomeViewModel = viewModel()
-) {
-    SearchBar(
-        query = homeViewModel.searchBarText,
-        onQueryChange = { homeViewModel.searchBarText = it },
-        onSearch = { homeViewModel.onSearch() },
-        active = homeViewModel.searchBarActive,
-        onActiveChange = { homeViewModel.searchBarActive = it },
-        modifier = Modifier
-            .fillMaxWidth(),
-        placeholder = {
-            Text(text = "Finn badeplass")
-        },
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = "Search Icon"
-            ) // TODO: Description?
-        },
-        trailingIcon = {
-            if (homeViewModel.searchBarActive) {
-                Icon(
-                    modifier = Modifier.clickable {
-                        if (homeViewModel.searchBarText.isNotEmpty()) {
-                            homeViewModel.searchBarText = ""
-                        } else {
-                            homeViewModel.searchBarActive = false
-                        }
-                    },
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Close Icon"
-                )
-            }
-
-        },
-
-        ) {
-        homeViewModel.searchBarHistory.forEach {
-            Row(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clickable {
-                        homeViewModel.searchBarText = it
-                        homeViewModel.onSearch()
                     }
-            ) {
-                Icon(
-                    modifier = Modifier.padding(8.dp),
-                    imageVector = Icons.Default.History,
-                    contentDescription = "History Icon"
-                )
-                Text(text = it)
 
+                }
+
+                is LocationForecastUiState.Loading -> {
+                    Text(text = "Loading")
+                }
+
+                is LocationForecastUiState.Error -> {
+                    Text(text = "Error")
+                }
+            }
+
+
+        }
+
+
+
+    }
+
+
+
+
+
+    
+
+}
+
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Preview
+    @Composable
+    fun MapSearchBar(
+        homeViewModel: HomeViewModel = viewModel()
+    ) {
+        SearchBar(
+            query = homeViewModel.searchBarText,
+            onQueryChange = { homeViewModel.searchBarText = it },
+            onSearch = { homeViewModel.onSearch() },
+            active = homeViewModel.searchBarActive,
+            onActiveChange = { homeViewModel.searchBarActive = it },
+            modifier = Modifier
+                .fillMaxWidth(),
+            placeholder = {
+                Text(text = "Finn badeplass")
+            },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search Icon"
+                ) // TODO: Description?
+            },
+            trailingIcon = {
+                if (homeViewModel.searchBarActive) {
+                    Icon(
+                        modifier = Modifier.clickable {
+                            if (homeViewModel.searchBarText.isNotEmpty()) {
+                                homeViewModel.searchBarText = ""
+                            } else {
+                                homeViewModel.searchBarActive = false
+                            }
+                        },
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close Icon"
+                    )
+                }
+
+            },
+
+            ) {
+            homeViewModel.searchBarHistory.forEach {
+                Row(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .clickable {
+                            homeViewModel.searchBarText = it
+                            homeViewModel.onSearch()
+                        }
+                ) {
+                    Icon(
+                        modifier = Modifier.padding(8.dp),
+                        imageVector = Icons.Default.History,
+                        contentDescription = "History Icon"
+                    )
+                    Text(text = it)
+
+                }
             }
         }
     }
-}
 
 
 // Her er den store TODO-lista

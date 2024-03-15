@@ -33,13 +33,16 @@ data class Geometry (
 
 
 data class Properties(
+    val altitude_above_sea_level: Int,
     val area: String,
     val awarenessResponse: String,
     val awarenessSeriousness: String,
     @SerializedName("awareness_level") val awarenessLevel: String,
     @SerializedName("awareness_type") val awarenessType: String,
+    val ceiling_above_sea_level: Int,
     val certainty: String,
     val consequences: String,
+    val contact: String,
     val county: List<String>, // TODO: Skal denne være string eller int? Jeg tror String (Bernd)
     val description: String,
     val event: String,
@@ -48,14 +51,17 @@ data class Properties(
     val geographicDomain: String,
     val id: String,
     val instruction: String,
+    val municipality: List<String>,
     val resources: List<Resource>,
     val riskMatrixColor: String,
     val severity: String,
+    val status: String,
     val title: String,
-    val triggerLevel: String? = null,
     val type: String,
-    val municipalityID: String? = null,
-    val administrativeID: String? = null,
+    val web: String,
+    val triggerLevel: String? = null,
+    val municipalityID: String? = null, // TODO: Fjerne denne?
+    val administrativeID: String? = null, //
     val incidentName: String? = null
 )
 
