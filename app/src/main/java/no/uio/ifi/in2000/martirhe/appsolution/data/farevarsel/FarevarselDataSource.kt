@@ -14,7 +14,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.FarevarselCollec
 
 class FarevarselDataSource {
 
-    // TODO: Security breach? Why wont BuildConfig work probably
+    // TODO: Security breach? Why wont BuildConfig work properly
     //private val apiKey = "d51d9a9a-cb2e-4299-9c77-d41f1de3b854"
 
     private val apiKey = BuildConfig.API_KEY_IFI_PROXY
