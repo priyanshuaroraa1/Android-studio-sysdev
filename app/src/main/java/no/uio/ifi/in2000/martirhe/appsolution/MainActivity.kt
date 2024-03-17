@@ -1,33 +1,29 @@
 package no.uio.ifi.in2000.martirhe.appsolution
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import no.uio.ifi.in2000.martirhe.appsolution.ui.PocLocationForecast.PocLocationForecastScreen
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import no.uio.ifi.in2000.martirhe.appsolution.ui.about.AboutScreen
+import no.uio.ifi.in2000.martirhe.appsolution.ui.about.TestSideNav
 import no.uio.ifi.in2000.martirhe.appsolution.ui.pocFarevarsel.PocFarevarselScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.theme.AppSolutionTheme
-import android.Manifest
-import android.os.Build
-import androidx.annotation.RequiresApi
-import no.uio.ifi.in2000.martirhe.appsolution.ui.about.AboutScreen
-import no.uio.ifi.in2000.martirhe.appsolution.ui.about.AboutViewModel
-import no.uio.ifi.in2000.martirhe.appsolution.ui.pocmap.PocMapScreen
 
 //import com.example.platform.location.permission.LocationPermissionScreen
 
 class MainActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.Q)                 // TODO: Hva gjør denne?
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -41,7 +37,8 @@ class MainActivity : ComponentActivity() {
 //                    PocLocationForecastScreen()
 //                    LocationPermissionScreen()
 //                    PocMapScreen()
-                    AboutScreen()
+
+                    AboutNavigasjon()
                 }
             }
         }
@@ -49,19 +46,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AppSolutionTheme {
-        Greeting("Android")
+fun AboutNavigasjon() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "aboutScreen") {
+        composable("aboutScreen") { AboutScreen(navController) }
+        composable("testSideNav") { TestSideNav(navController) }
     }
 }
+
 
 
