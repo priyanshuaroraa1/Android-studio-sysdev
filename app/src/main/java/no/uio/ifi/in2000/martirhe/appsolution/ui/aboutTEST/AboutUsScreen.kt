@@ -1,9 +1,10 @@
-package no.uio.ifi.in2000.martirhe.appsolution.ui.about
+package no.uio.ifi.in2000.martirhe.appsolution.ui.aboutTEST
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -13,10 +14,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import no.uio.ifi.in2000.martirhe.appsolution.R
+
+// Direkte definisjon av fargekoder
+private val PrimaryColor = Color(0xFF7DCCE9)
+private val SecondaryColor = Color(0xFF0E2D4E)
+private val TertiaryColor = Color(0xFFF2EDEC)
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,10 +32,10 @@ fun AboutUsScreen() {
 
     MaterialTheme(
         colorScheme = lightColorScheme(
-            primary = Color(0xFF7DCCE9),
-            secondary = Color(0xFF0E2D4E),
-            background = Color(0xFFF2EDEC),
-            surface = Color(0xFFF2EDEC),
+            primary = PrimaryColor,
+            secondary = SecondaryColor,
+            background = TertiaryColor,
+            surface = TertiaryColor,
             onPrimary = Color.White,
             onSecondary = Color.White
         )
@@ -40,36 +45,41 @@ fun AboutUsScreen() {
                 TopAppBar(
                     title = { Text("About BadeGuiden") },
                     modifier = Modifier
-                        .background(Color(0xFF7DCCE9))
+                        .background(color = PrimaryColor)
                 )
             }
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp)
                     .verticalScroll(scrollState)
+                    .padding(40.dp)
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.logo),
                     contentDescription = "App Logo",
                     modifier = Modifier
+                        .size(width = 280.dp, height = 140.dp)
                         .align(Alignment.CenterHorizontally)
-                        //.size(with(LocalDensity.current) { 120.dp.toPx() }, with(LocalDensity.current) { 120.dp.toPx() })
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier
+                    .height(1.dp)
+                )
 
                 // Staff Members
-                Text(
-                    "Our Team",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = Color(0xFF0E2D4E)
-                )
-                Row {
-                    StaffMember("Priyanshu", R.drawable.logo)
+                Text("Our Team", color = SecondaryColor, style = MaterialTheme.typography.headlineSmall)
+                Row(modifier = Modifier
+                    .horizontalScroll(rememberScrollState())
+                    .align(Alignment.CenterHorizontally)
+                ) {
+                    StaffMember("Priyanshu", R.drawable.bilde1)
+                    Spacer(modifier = Modifier.width(8.dp))
                     StaffMember("Vetle", R.drawable.logo)
+                    Spacer(modifier = Modifier.width(8.dp))
                     StaffMember("Bernd", R.drawable.logo)
+                    Spacer(modifier = Modifier.width(8.dp))
                     StaffMember("Martine", R.drawable.logo)
+                    Spacer(modifier = Modifier.width(8.dp))
                     StaffMember("Sindre", R.drawable.logo)
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -77,8 +87,8 @@ fun AboutUsScreen() {
                 // Tabs for About Us and Contact Us
                 TabRow(
                     selectedTabIndex = selectedTab,
-                    containerColor = Color(0xFFF2EDEC),
-                    contentColor = Color(0xFF0E2D4E)
+                    modifier = Modifier
+                            .background(color = TertiaryColor)
                 ) {
                     Tab(
                         selected = selectedTab == 0,
@@ -110,30 +120,26 @@ fun StaffMember(name: String, drawableId: Int) {
             contentDescription = "Staff Member Image",
             modifier = Modifier.size(64.dp)
         )
-        Text(name, color = Color(0xFF0E2D4E))
+        Text(name, color = SecondaryColor)
     }
 }
 
 @Composable
 fun AboutUsInfo() {
-    Text("About BadeGuiden text goes here...", color = Color(0xFF0E2D4E))
+    Text("About BadeGuiden text goes here...", color = SecondaryColor)
 }
 
 @Composable
 fun ContactUsInfo() {
     Card(
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF2EDEC)),
+        colors = CardDefaults.cardColors(containerColor = TertiaryColor),
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .clickable { /* Handle click */ }
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                "Contact Us",
-                style = MaterialTheme.typography.headlineSmall,
-                color = Color(0xFF0E2D4E)
-            )
+            Text("Contact Us", style = MaterialTheme.typography.headlineSmall)
             Text("Email: info@badeguiden.no")
             Text("Phone: (123) 456-7890")
         }
