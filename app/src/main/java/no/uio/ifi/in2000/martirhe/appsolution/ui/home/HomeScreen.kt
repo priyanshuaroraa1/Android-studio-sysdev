@@ -1,6 +1,8 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.home
 
 import android.content.res.Configuration
+import android.util.Log
+import androidx.compose.animation.core.animate
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
@@ -16,14 +18,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,12 +37,15 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import kotlinx.coroutines.launch
+
 //import no.uio.ifi.in2000.martirhe.appsolution.ui.PocLocationForecast.LocationForecastUiState
 
 
@@ -62,6 +71,10 @@ fun HomeScreen(
         position = CameraPosition.fromLatLngZoom(homeViewModel.customMarkerLocation, 11f)
     }
 
+    // Obtain a coroutine scope tied to the lifecycle of this composable
+    val coroutineScope = rememberCoroutineScope()
+
+
 
     Box(modifier = Modifier.fillMaxSize()) {
         // The map goes here - it could be a composable that displays the map
@@ -72,8 +85,7 @@ fun HomeScreen(
             modifier = Modifier,
             cameraPositionState = cameraPositionState,
             onMapClick = {
-//                homeViewModel.showBadeplassCard = false
-                homeViewModel.onMapBackroundClick(it)
+                homeViewModel.onMapBackroundClick(it, coroutineScope, cameraPositionState)
             }
         ) {
 
@@ -90,6 +102,7 @@ fun HomeScreen(
             if (homeViewModel.showCustomMarker) {
                 Marker(
                     state = MarkerState(position = homeViewModel.customMarkerLocation),
+
                 )
             }
 

@@ -1,12 +1,19 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.home
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraPositionState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -51,6 +58,7 @@ class HomeViewModel : ViewModel() {
 
     val oceanForecastRepository: OceanForecastRepositoryInterface = OceanForecastRepository()
     var oceanForecastUiState = MutableStateFlow(PocOceanForecastUiState())
+
     // Dummy data
     val badeplasserDummy: List<Badeplass> = listOf(
         Badeplass("00", "Huk", 59.895002996529485, 10.67554858599053),
@@ -59,7 +67,6 @@ class HomeViewModel : ViewModel() {
         Badeplass("03", "Tjuvholmen", 59.9064275008578, 10.721101654359384),
     )
     val badeplasser = badeplasserDummy
-
 
     // Variables for Map
     var selectedBadeplass by mutableStateOf<Badeplass>(badeplasser[0])
@@ -70,17 +77,35 @@ class HomeViewModel : ViewModel() {
     fun onBadeplassPinClick(badeplass: Badeplass) {
         selectedBadeplass = badeplass
         showBadeplassCard = true
+        showCustomMarker = false
         loadLocationForecast(badeplass.lat, badeplass.lon)
         loadOceanForecast(badeplass.lat, badeplass.lon)
     }
 
-    fun onMapBackroundClick(latLng: LatLng) {
+    fun onMapBackroundClick(
+        latLng: LatLng,
+        coroutineScope: CoroutineScope,
+        cameraPositionState: CameraPositionState) {
         if (showBadeplassCard) {
             showBadeplassCard = false
         } else {
             customMarkerLocation = latLng
             showCustomMarker = true
 
+            coroutineScope.launch {
+                cameraPositionState.animate(
+                    update = CameraUpdateFactory.newCameraPosition(
+                        CameraPosition.fromLatLngZoom(latLng, 11f),
+                    ),
+                    durationMs = 300
+                )
+            }
+//            cameraPositionState.animate(
+//                update = CameraUpdateFactory.newCameraPosition(
+//                    CameraPosition.fromLatLngZoom(latLng, 11f)
+//                ),
+//                durationMs = 1000
+//            )
         }
     }
 
