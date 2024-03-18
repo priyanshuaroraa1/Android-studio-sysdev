@@ -120,29 +120,29 @@ fun BadeplassInfoCard(
 
     ) {
 
+        Column {
+            Text(
+                text = homeViewModel.selectedBadeplass.navn,
+                modifier = Modifier
+                    .padding(horizontal = 8.dp),
+                fontSize = 18.sp
+            )
+        }
+
+
         val locationForecastUiState by homeViewModel.locationForecastUiState.collectAsState()
 
         locationForecastUiState.locationForecastUiState.let { state ->
             when (state) {
                 is LocationForecastUiState.Success -> {
 
-
-                    Column(
-                        modifier = Modifier
-                            .padding(8.dp)
-                    ) {
-
-                        Text(
-                            text = homeViewModel.selectedBadeplass.navn,
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp),
-                            fontSize = 18.sp
-                        )
-
-                        Text(text = "Temperatur: " + state.locationForecast.properties.timeseries[0].data.instant.details.air_temperature)
+                    WeatherCard(
+                        temperature = state.locationForecast.properties.timeseries[0].data.instant.details.air_temperature,
+                        windFromDirection = state.locationForecast.properties.timeseries[0].data.instant.details.windFromDirection,
+                        windSpeed = state.locationForecast.properties.timeseries[0].data.instant.details.wind_speed
+                    )
 
 
-                    }
 
                 }
 
@@ -178,68 +178,91 @@ fun BadeplassInfoCard(
     }
 }
 
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Preview
-    @Composable
-    fun MapSearchBar(
-        homeViewModel: HomeViewModel = viewModel()
+@Composable
+fun WeatherCard(
+    temperature: Double,
+    windFromDirection: Double,
+    windSpeed: Double,
+) {
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
     ) {
-        SearchBar(
-            query = homeViewModel.searchBarText,
-            onQueryChange = { homeViewModel.searchBarText = it },
-            onSearch = { homeViewModel.onSearch() },
-            active = homeViewModel.searchBarActive,
-            onActiveChange = { homeViewModel.searchBarActive = it },
+        Column(
             modifier = Modifier
-                .fillMaxWidth(),
-            placeholder = {
-                Text(text = "Finn badeplass")
-            },
-            leadingIcon = {
+                .padding(8.dp)
+        ) {
+            Text(text = "Temp: $temperature")
+            Text(text = "Vind: $windSpeed m/s fra $windFromDirection")
+        }
+
+    }
+}
+
+
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun MapSearchBar(
+    homeViewModel: HomeViewModel = viewModel()
+) {
+    SearchBar(
+        query = homeViewModel.searchBarText,
+        onQueryChange = { homeViewModel.searchBarText = it },
+        onSearch = { homeViewModel.onSearch() },
+        active = homeViewModel.searchBarActive,
+        onActiveChange = { homeViewModel.searchBarActive = it },
+        modifier = Modifier
+            .fillMaxWidth(),
+        placeholder = {
+            Text(text = "Finn badeplass")
+        },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Search Icon"
+            ) // TODO: Description?
+        },
+        trailingIcon = {
+            if (homeViewModel.searchBarActive) {
                 Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search Icon"
-                ) // TODO: Description?
-            },
-            trailingIcon = {
-                if (homeViewModel.searchBarActive) {
-                    Icon(
-                        modifier = Modifier.clickable {
-                            if (homeViewModel.searchBarText.isNotEmpty()) {
-                                homeViewModel.searchBarText = ""
-                            } else {
-                                homeViewModel.searchBarActive = false
-                            }
-                        },
-                        imageVector = Icons.Default.Close,
-                        contentDescription = "Close Icon"
-                    )
-                }
-
-            },
-
-            ) {
-            homeViewModel.searchBarHistory.forEach {
-                Row(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .clickable {
-                            homeViewModel.searchBarText = it
-                            homeViewModel.onSearch()
+                    modifier = Modifier.clickable {
+                        if (homeViewModel.searchBarText.isNotEmpty()) {
+                            homeViewModel.searchBarText = ""
+                        } else {
+                            homeViewModel.searchBarActive = false
                         }
-                ) {
-                    Icon(
-                        modifier = Modifier.padding(8.dp),
-                        imageVector = Icons.Default.History,
-                        contentDescription = "History Icon"
-                    )
-                    Text(text = it)
+                    },
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Close Icon"
+                )
+            }
 
-                }
+        },
+
+        ) {
+        homeViewModel.searchBarHistory.forEach {
+            Row(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .clickable {
+                        homeViewModel.searchBarText = it
+                        homeViewModel.onSearch()
+                    }
+            ) {
+                Icon(
+                    modifier = Modifier.padding(8.dp),
+                    imageVector = Icons.Default.History,
+                    contentDescription = "History Icon"
+                )
+                Text(text = it)
+
             }
         }
     }
+}
 
 
 // Her er den store TODO-lista
