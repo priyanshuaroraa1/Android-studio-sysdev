@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -63,13 +64,24 @@ class HomeViewModel : ViewModel() {
     // Variables for Map
     var selectedBadeplass by mutableStateOf<Badeplass>(badeplasser[0])
     var showBadeplassCard by mutableStateOf(false)
+    var showCustomMarker by mutableStateOf(false)
+    var customMarkerLocation by mutableStateOf<LatLng>(LatLng(59.911491, 10.757933))
 
     fun onBadeplassPinClick(badeplass: Badeplass) {
         selectedBadeplass = badeplass
         showBadeplassCard = true
         loadLocationForecast(badeplass.lat, badeplass.lon)
         loadOceanForecast(badeplass.lat, badeplass.lon)
+    }
 
+    fun onMapBackroundClick(latLng: LatLng) {
+        if (showBadeplassCard) {
+            showBadeplassCard = false
+        } else {
+            customMarkerLocation = latLng
+            showCustomMarker = true
+
+        }
     }
 
 

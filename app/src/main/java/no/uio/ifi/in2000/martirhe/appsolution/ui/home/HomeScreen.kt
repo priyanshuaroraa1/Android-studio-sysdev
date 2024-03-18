@@ -59,7 +59,7 @@ fun HomeScreen(
 
     val oslo = LatLng(59.911491, 10.757933)
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(oslo, 10f)
+        position = CameraPosition.fromLatLngZoom(homeViewModel.customMarkerLocation, 11f)
     }
 
 
@@ -72,7 +72,8 @@ fun HomeScreen(
             modifier = Modifier,
             cameraPositionState = cameraPositionState,
             onMapClick = {
-                homeViewModel.showBadeplassCard = false
+//                homeViewModel.showBadeplassCard = false
+                homeViewModel.onMapBackroundClick(it)
             }
         ) {
 
@@ -83,6 +84,12 @@ fun HomeScreen(
                         homeViewModel.onBadeplassPinClick(badeplass)
                         false
                     }
+                )
+            }
+
+            if (homeViewModel.showCustomMarker) {
+                Marker(
+                    state = MarkerState(position = homeViewModel.customMarkerLocation),
                 )
             }
 
