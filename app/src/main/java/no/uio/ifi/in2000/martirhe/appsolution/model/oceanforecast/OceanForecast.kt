@@ -1,6 +1,5 @@
 package no.uio.ifi.in2000.martirhe.appsolution.model.oceanforecast
 
-import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.Properties
 
 data class OceanForecast (
     val type: String,

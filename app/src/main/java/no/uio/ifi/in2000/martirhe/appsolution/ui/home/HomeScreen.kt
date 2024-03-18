@@ -27,6 +27,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.android.gms.maps.model.CameraPosition
@@ -35,7 +37,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-import no.uio.ifi.in2000.martirhe.appsolution.ui.PocLocationForecast.LocationForecastUiState
+//import no.uio.ifi.in2000.martirhe.appsolution.ui.PocLocationForecast.LocationForecastUiState
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -113,68 +115,79 @@ fun BadeplassInfoCard(
             .padding(32.dp)
             .padding(bottom = 32.dp)
             .fillMaxWidth()
-            .height(220.dp),
+            .height(260.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         )
 
     ) {
 
-        Column {
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+        ) {
             Text(
                 text = homeViewModel.selectedBadeplass.navn,
                 modifier = Modifier
                     .padding(horizontal = 8.dp),
                 fontSize = 18.sp
             )
-        }
 
+            val locationForecastUiState by homeViewModel.locationForecastUiState.collectAsState()
 
-        val locationForecastUiState by homeViewModel.locationForecastUiState.collectAsState()
+            locationForecastUiState.locationForecastUiState.let { state ->
+                when (state) {
+                    is LocationForecastUiState.Success -> {
 
-        locationForecastUiState.locationForecastUiState.let { state ->
-            when (state) {
-                is LocationForecastUiState.Success -> {
-
-                    WeatherCard(
-                        temperature = state.locationForecast.properties.timeseries[0].data.instant.details.air_temperature,
-                        windFromDirection = state.locationForecast.properties.timeseries[0].data.instant.details.windFromDirection,
-                        windSpeed = state.locationForecast.properties.timeseries[0].data.instant.details.wind_speed
-                    )
+                        WeatherCard(
+                            temperature = state.locationForecast.properties.timeseries[0].data.instant.details.air_temperature,
+                            windFromDirection = state.locationForecast.properties.timeseries[0].data.instant.details.windFromDirection,
+                            windSpeed = state.locationForecast.properties.timeseries[0].data.instant.details.wind_speed
+                        )
 
 
 
+                    }
+
+                    is LocationForecastUiState.Loading -> {
+                        Text(text = "Loading")
+                    }
+
+                    is LocationForecastUiState.Error -> {
+                        Text(text = "Error")
+                    }
                 }
 
-                is LocationForecastUiState.Loading -> {
-                    Text(text = "Loading")
+
+                val oceanForecastUiState by homeViewModel.oceanForecastUiState.collectAsState()
+
+                oceanForecastUiState.oceanForecastUiState.let { state ->
+                    when (state) {
+                        is OceanForecastUiState.Success -> {
+                            WaterCard(
+                                temperature = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_water_temperature,
+                                waveHeight = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_surface_wave_height,
+                                waveToDirection = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_water_to_direction)
+                        }
+
+                        is OceanForecastUiState.Loading -> {
+                            Text(text = "Loading")
+                        }
+
+                        is OceanForecastUiState.Error -> {
+                            Text(text = "Error")
+                        }
+                    }
                 }
 
-                is LocationForecastUiState.Error -> {
-                    Text(text = "Error")
-                }
+
             }
-
-
         }
 
-        val oceanForecastUiState by homeViewModel.oceanForecastUiState.collectAsState()
 
-        oceanForecastUiState.oceanForecastUiState.let { state ->
-            when (state) {
-                is OceanForecastUiState.Success -> {
-                    Text(text = "Success")
-                }
 
-                is OceanForecastUiState.Loading -> {
-                    Text(text = "Loading")
-                }
 
-                is OceanForecastUiState.Error -> {
-                    Text(text = "Error")
-                }
-            }
-        }
+
     }
 }
 
@@ -192,13 +205,34 @@ fun WeatherCard(
             modifier = Modifier
                 .padding(8.dp)
         ) {
+            Text(text = "Vær", fontWeight = FontWeight.ExtraBold)
             Text(text = "Temp: $temperature")
             Text(text = "Vind: $windSpeed m/s fra $windFromDirection")
         }
 
     }
 }
-
+@Composable
+fun WaterCard(
+    temperature: Double,
+    waveHeight: Double,
+    waveToDirection: Double,
+    
+) {
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
+            Text(text = "Vann", fontWeight = FontWeight.ExtraBold)
+            Text(text = "Temp: $temperature")
+            Text(text = "Bølgehøyde: ${waveHeight}m fra $waveToDirection")
+        }
+    }
+}
 
 
 

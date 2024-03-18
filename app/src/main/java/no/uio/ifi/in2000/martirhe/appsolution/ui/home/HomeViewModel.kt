@@ -1,25 +1,15 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.home
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel.FarevarselRepository
-import no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel.FarevarselRepositoryInterface
 import no.uio.ifi.in2000.martirhe.appsolution.data.locationforecast.LocationForecastRepository
 import no.uio.ifi.in2000.martirhe.appsolution.data.locationforecast.LocationForecastRepositoryInterface
 import no.uio.ifi.in2000.martirhe.appsolution.data.oceanforecast.OceanForecastRepository
@@ -27,8 +17,6 @@ import no.uio.ifi.in2000.martirhe.appsolution.data.oceanforecast.OceanForecastRe
 import no.uio.ifi.in2000.martirhe.appsolution.model.badeplass.Badeplass
 import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.LocationForecast
 import no.uio.ifi.in2000.martirhe.appsolution.model.oceanforecast.OceanForecast
-import no.uio.ifi.in2000.martirhe.appsolution.ui.PocLocationForecast.PocLocationForecastUiState
-import no.uio.ifi.in2000.martirhe.appsolution.ui.pocFarevarsel.PocFarevarselUiState
 import java.nio.channels.UnresolvedAddressException
 
 
@@ -80,6 +68,8 @@ class HomeViewModel : ViewModel() {
         selectedBadeplass = badeplass
         showBadeplassCard = true
         loadLocationForecast(badeplass.lat, badeplass.lon)
+        loadOceanForecast(badeplass.lat, badeplass.lon)
+
     }
 
 
@@ -108,13 +98,27 @@ class HomeViewModel : ViewModel() {
 
     fun loadLocationForecast(lat: Double, lon: Double) {
         viewModelScope.launch(Dispatchers.IO) {
-            locationForecastUiState.update { it.copy(locationForecastUiState = no.uio.ifi.in2000.martirhe.appsolution.ui.PocLocationForecast.LocationForecastUiState.Loading) }
+            locationForecastUiState.update { it.copy(locationForecastUiState = LocationForecastUiState.Loading) }
             locationForecastUiState.update {
                 try {
                     val locationForecast = locationForecastRepository.getLocationForecast(lat, lon)
-                    it.copy(locationForecastUiState = no.uio.ifi.in2000.martirhe.appsolution.ui.PocLocationForecast.LocationForecastUiState.Success(locationForecast = locationForecast))
+                    it.copy(locationForecastUiState = LocationForecastUiState.Success(locationForecast = locationForecast))
                 } catch (e: UnresolvedAddressException) {
-                    it.copy(locationForecastUiState = no.uio.ifi.in2000.martirhe.appsolution.ui.PocLocationForecast.LocationForecastUiState.Error)
+                    it.copy(locationForecastUiState = LocationForecastUiState.Error)
+                }
+            }
+        }
+    }
+
+    fun loadOceanForecast(lat: Double, lon: Double) {
+        viewModelScope.launch(Dispatchers.IO) {
+            oceanForecastUiState.update { it.copy(oceanForecastUiState = OceanForecastUiState.Loading) }
+            oceanForecastUiState.update {
+                try {
+                    val oceanForecast = oceanForecastRepository.getOceanForecast(lat, lon)
+                    it.copy(oceanForecastUiState = OceanForecastUiState.Success(oceanForecast = oceanForecast))
+                } catch (e: UnresolvedAddressException) {
+                    it.copy(oceanForecastUiState = OceanForecastUiState.Error)
                 }
             }
         }
