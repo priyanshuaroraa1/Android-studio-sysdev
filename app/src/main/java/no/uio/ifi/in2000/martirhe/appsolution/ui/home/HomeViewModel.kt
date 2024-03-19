@@ -67,6 +67,7 @@ class HomeViewModel : ViewModel() {
         Badeplass("03", "Tjuvholmen", 59.9064275008578, 10.721101654359384),
     )
     val badeplasser = badeplasserDummy
+    var customBadeplass by mutableStateOf<Badeplass>(Badeplass("", "Valgt sted", 59.895002996529485, 10.67554858599053))
 
     // Variables for Map
     var selectedBadeplass by mutableStateOf<Badeplass>(badeplasser[0])
@@ -88,9 +89,17 @@ class HomeViewModel : ViewModel() {
         cameraPositionState: CameraPositionState) {
         if (showBadeplassCard) {
             showBadeplassCard = false
+            showCustomMarker = false
         } else {
             customMarkerLocation = latLng
+            customBadeplass.lat = latLng.latitude
+            customBadeplass.lon = latLng.longitude
+            loadLocationForecast(customBadeplass.lat, customBadeplass.lon)
+            loadOceanForecast(customBadeplass.lat, customBadeplass.lon)
+            selectedBadeplass = customBadeplass
             showCustomMarker = true
+            showBadeplassCard = true
+
 
             coroutineScope.launch {
                 cameraPositionState.animate(
