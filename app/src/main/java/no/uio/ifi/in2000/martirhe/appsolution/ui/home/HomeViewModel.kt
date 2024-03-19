@@ -4,6 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -13,6 +15,7 @@ import com.google.maps.android.compose.CameraPositionState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.martirhe.appsolution.data.locationforecast.LocationForecastRepository
@@ -26,6 +29,7 @@ import java.nio.channels.UnresolvedAddressException
 import no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel.FarevarselRepository
 import no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel.FarevarselRepositoryInterface
 import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.FarevarselCollection
+import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.SimpleMetAlert
 
 
 sealed interface LocationForecastUiState {
@@ -46,7 +50,8 @@ sealed interface OceanForecastUiState {
 
 sealed interface FarevarselUiState {
     data class Success(
-        val farevarselCollection: FarevarselCollection
+        val farevarselCollection: FarevarselCollection,
+        val simpleMetAlertList: List<SimpleMetAlert>
     ): FarevarselUiState
     object Loading: FarevarselUiState
     object Error: FarevarselUiState
@@ -124,16 +129,8 @@ class HomeViewModel : ViewModel() {
                     durationMs = 300
                 )
             }
-//            cameraPositionState.animate(
-//                update = CameraUpdateFactory.newCameraPosition(
-//                    CameraPosition.fromLatLngZoom(latLng, 11f)
-//                ),
-//                durationMs = 1000
-//            )
         }
     }
-
-
 
     // Variables for SearchBar
     var searchBarText by mutableStateOf("")
@@ -156,6 +153,21 @@ class HomeViewModel : ViewModel() {
         searchBarText = ""
         searchBarActive = false
     }
+
+
+    // Variables for SimpleMetAlerts
+    private val _metAlertsForCurrentLocation = MutableLiveData<List<SimpleMetAlert>>(emptyList())
+    val metAlertsForCurrentLocation: LiveData<List<SimpleMetAlert>> = _metAlertsForCurrentLocation
+
+    fun updateMetAlerts(newAlerts: List<SimpleMetAlert>) {
+        _metAlertsForCurrentLocation.value = newAlerts
+    }
+
+
+
+
+
+
 
     fun loadLocationForecast(lat: Double, lon: Double) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -191,7 +203,10 @@ class HomeViewModel : ViewModel() {
             farevarselUiState.update {
                 try {
                     val farevarselCollection = farevarselRepository.getFarevarsler()
-                    it.copy(farevarselUiState = FarevarselUiState.Success(farevarselCollection = farevarselCollection))
+                    val simpleMetAlertList = farevarselRepository.getSimpleMetAlerts()
+                    it.copy(farevarselUiState = FarevarselUiState.Success(
+                        farevarselCollection = farevarselCollection,
+                        simpleMetAlertList = simpleMetAlertList))
                 } catch (e: UnresolvedAddressException) {
                     it.copy(farevarselUiState = FarevarselUiState.Error)
                 }

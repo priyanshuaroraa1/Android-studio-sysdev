@@ -6,7 +6,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.SimpleMetAlert
 
 interface FarevarselRepositoryInterface {
     suspend fun getFarevarsler(): FarevarselCollection
-    suspend fun getSimpleMetAlertsFromCoord(): List<SimpleMetAlert>
+    suspend fun getSimpleMetAlerts(): List<SimpleMetAlert>
 
 }
 
@@ -19,7 +19,7 @@ class FarevarselRepository(
         return dataSource.fetchFarevarsler()
     }
 
-    override suspend fun getSimpleMetAlertsFromCoord(): List<SimpleMetAlert> {
+    override suspend fun getSimpleMetAlerts(): List<SimpleMetAlert> {
 
         val farevarselCollection = getFarevarsler()
         val simpleMetAlertList = mutableListOf<SimpleMetAlert>()

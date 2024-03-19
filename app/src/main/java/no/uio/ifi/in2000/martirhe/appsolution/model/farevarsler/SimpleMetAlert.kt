@@ -1,6 +1,7 @@
 package no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler
 
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.PolyUtil
 import com.google.maps.android.data.DataPolygon
 
 data class SimpleMetAlert(
@@ -10,7 +11,21 @@ data class SimpleMetAlert(
     val awarenessType: String,
     val consequences: String,
     val description: String,
-)
+)  {
+    fun relevantForCoordinate(latLng: LatLng): Boolean {
+        for (polygon in multiPolygon) {
+            for (ring in polygon) {
+                val polygonPath = ring.map { latLngPair ->
+                    LatLng(latLngPair[1].toDouble(), latLngPair[0].toDouble())
+                }
+                if (PolyUtil.containsLocation(latLng, polygonPath, false)) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+}
 
 //   "Green",   "Yellow",       "Orange",   "Red"
 //   "Minor",   "Moderate",     "Severe",   "Extreme"
