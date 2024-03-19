@@ -1,13 +1,12 @@
 package no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel
 
-import com.google.android.gms.maps.model.LatLng
 import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.FarevarselCollection
 import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.SimpleMetAlert
 
 
 interface FarevarselRepositoryInterface {
     suspend fun getFarevarsler(): FarevarselCollection
-    suspend fun getSimpleMetAlertsFromCoord(latLng: LatLng): List<SimpleMetAlert>
+    suspend fun getSimpleMetAlertsFromCoord(): List<SimpleMetAlert>
 
 }
 
@@ -20,7 +19,7 @@ class FarevarselRepository(
         return dataSource.fetchFarevarsler()
     }
 
-    override suspend fun getSimpleMetAlertsFromCoord(latLng: LatLng): List<SimpleMetAlert> {
+    override suspend fun getSimpleMetAlertsFromCoord(): List<SimpleMetAlert> {
 
         val farevarselCollection = getFarevarsler()
         val simpleMetAlertList = mutableListOf<SimpleMetAlert>()

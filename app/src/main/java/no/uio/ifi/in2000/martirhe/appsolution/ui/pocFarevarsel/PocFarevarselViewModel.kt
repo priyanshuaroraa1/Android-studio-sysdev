@@ -12,11 +12,14 @@ import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel.FarevarselRepository
 import no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel.FarevarselRepositoryInterface
 import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.FarevarselCollection
+import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.SimpleMetAlert
 import java.nio.channels.UnresolvedAddressException
 
 
 sealed interface FarevarselUiState {
-    data class Success(val farevarsler: FarevarselCollection): FarevarselUiState
+    data class Success(
+        val farevarsler: FarevarselCollection,
+        val simpleMetAlerts: List<SimpleMetAlert>): FarevarselUiState
     object Loading: FarevarselUiState
     object Error: FarevarselUiState
 }
@@ -34,6 +37,7 @@ class PocFarevarselViewModel: ViewModel() {
 
     init {
         loadFarevarsler()
+
     }
 
     fun loadFarevarsler() {
@@ -42,7 +46,10 @@ class PocFarevarselViewModel: ViewModel() {
             uiState.update {
                 try {
                     val farevarsler = farevarselRepository.getFarevarsler()
-                    it.copy(farevarslerState = FarevarselUiState.Success(farevarsler = farevarsler))
+                    val simpleMetAlerts: List<SimpleMetAlert> = farevarselRepository.getSimpleMetAlertsFromCoord()
+                    it.copy(farevarslerState = FarevarselUiState.Success(
+                        farevarsler = farevarsler,
+                        simpleMetAlerts = simpleMetAlerts))
                 } catch (e: UnresolvedAddressException) {
                     it.copy(farevarslerState = FarevarselUiState.Error)
                 }
