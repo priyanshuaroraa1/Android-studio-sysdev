@@ -9,7 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import no.uio.ifi.in2000.martirhe.appsolution.ui.aboutTEST.AboutUsScreen
+import androidx.navigation.compose.rememberNavController
+import no.uio.ifi.in2000.martirhe.appsolution.ui.about.AboutUsScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.theme.AppSolutionTheme
 
 //import com.example.platform.location.permission.LocationPermissionScreen
@@ -29,8 +30,8 @@ class MainActivity : ComponentActivity() {
 //                    PocLocationForecastScreen()
 //                    LocationPermissionScreen()
 //                    PocMapScreen()
-//                    AboutNavigasjon()
-                      AboutUsScreen()
+                      val navController = rememberNavController()
+                      AboutUsScreen(navController)
                 }
             }
         }
