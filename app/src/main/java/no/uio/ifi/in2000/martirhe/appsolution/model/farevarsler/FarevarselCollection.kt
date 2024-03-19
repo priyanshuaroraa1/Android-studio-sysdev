@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 
 data class FarevarselCollection (
-    val features: List<Feature>,        // ok
+    var features: List<Feature>,        // ok
     val lang: String,                   // ok
     val lastChange: String,             // ok
     val type: String                    // ok

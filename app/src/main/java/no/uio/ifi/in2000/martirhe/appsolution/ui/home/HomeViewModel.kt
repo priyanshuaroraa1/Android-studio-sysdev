@@ -1,12 +1,9 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.home
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -26,6 +23,9 @@ import no.uio.ifi.in2000.martirhe.appsolution.model.badeplass.Badeplass
 import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.LocationForecast
 import no.uio.ifi.in2000.martirhe.appsolution.model.oceanforecast.OceanForecast
 import java.nio.channels.UnresolvedAddressException
+import no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel.FarevarselRepository
+import no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel.FarevarselRepositoryInterface
+import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.FarevarselCollection
 
 
 sealed interface LocationForecastUiState {
@@ -44,11 +44,23 @@ sealed interface OceanForecastUiState {
     object Error: OceanForecastUiState
 }
 
+sealed interface FarevarselUiState {
+    data class Success(
+        val farevarselCollection: FarevarselCollection
+    ): FarevarselUiState
+    object Loading: FarevarselUiState
+    object Error: FarevarselUiState
+}
+
 data class PocLocationForecastUiState(
     val locationForecastUiState: LocationForecastUiState = LocationForecastUiState.Loading
 )
 data class PocOceanForecastUiState(
     val oceanForecastUiState: OceanForecastUiState = OceanForecastUiState.Loading
+)
+
+data class PocFarevarselUiState(
+    val farevarselUiState: FarevarselUiState = FarevarselUiState.Loading
 )
 
 class HomeViewModel : ViewModel() {
@@ -58,6 +70,9 @@ class HomeViewModel : ViewModel() {
 
     val oceanForecastRepository: OceanForecastRepositoryInterface = OceanForecastRepository()
     var oceanForecastUiState = MutableStateFlow(PocOceanForecastUiState())
+
+    val farevarselRepository: FarevarselRepositoryInterface = FarevarselRepository()
+    var farevarselUiState = MutableStateFlow(PocFarevarselUiState())
 
     // Dummy data
     val badeplasserDummy: List<Badeplass> = listOf(
@@ -165,6 +180,20 @@ class HomeViewModel : ViewModel() {
                     it.copy(oceanForecastUiState = OceanForecastUiState.Success(oceanForecast = oceanForecast))
                 } catch (e: UnresolvedAddressException) {
                     it.copy(oceanForecastUiState = OceanForecastUiState.Error)
+                }
+            }
+        }
+    }
+
+    fun loadFarevarsler() {
+        viewModelScope.launch(Dispatchers.IO) {
+            farevarselUiState.update { it.copy(farevarselUiState = FarevarselUiState.Loading) }
+            farevarselUiState.update {
+                try {
+                    val farevarselCollection = farevarselRepository.getFarevarsler()
+                    it.copy(farevarselUiState = FarevarselUiState.Success(farevarselCollection = farevarselCollection))
+                } catch (e: UnresolvedAddressException) {
+                    it.copy(farevarselUiState = FarevarselUiState.Error)
                 }
             }
         }

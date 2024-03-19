@@ -98,5 +98,7 @@ dependencies {
 
     // Android Maps Compose composables for the Maps SDK for Android
     implementation("com.google.maps.android:maps-compose:4.3.3")
+    implementation("com.google.maps.android:android-maps-utils:2.3.0")
+
 
 }

@@ -34,12 +34,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-//                    Kommenter ut denne....
-//                    PocFarevarselScreen()
+                    PocFarevarselScreen()
 //                    PocLocationForecastScreen()
 //                    LocationPermissionScreen()
 //                    PocMapScreen()
-                    HomeScreen()
+//                    HomeScreen()
                 }
             }
         }
