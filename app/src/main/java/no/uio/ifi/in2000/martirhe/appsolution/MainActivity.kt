@@ -9,11 +9,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.rememberNavController
-import no.uio.ifi.in2000.martirhe.appsolution.ui.about.AboutUsScreen
+import androidx.compose.ui.tooling.preview.Preview
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import no.uio.ifi.in2000.martirhe.appsolution.ui.pocFarevarsel.PocFarevarselScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.theme.AppSolutionTheme
-
-//import com.example.platform.location.permission.LocationPermissionScreen
+import android.Manifest
+import android.os.Build
+import androidx.annotation.RequiresApi
+import no.uio.ifi.in2000.martirhe.appsolution.ui.home.HomeScreen
+import no.uio.ifi.in2000.martirhe.appsolution.ui.pocmap.PocMapScreen
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -30,8 +36,8 @@ class MainActivity : ComponentActivity() {
 //                    PocLocationForecastScreen()
 //                    LocationPermissionScreen()
 //                    PocMapScreen()
-                      val navController = rememberNavController()
-                      AboutUsScreen(navController)
+
+                    HomeScreen()
                 }
             }
         }

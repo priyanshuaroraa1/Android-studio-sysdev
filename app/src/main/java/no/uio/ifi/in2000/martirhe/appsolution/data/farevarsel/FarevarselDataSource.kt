@@ -28,7 +28,7 @@ class FarevarselDataSource {
 
     suspend fun fetchFarevarsler(): FarevarselCollection {
         val farevarselCollection: FarevarselCollection =
-            client.get("weatherapi/metalerts/2.0/test.json").body()
+            client.get("weatherapi/metalerts/2.0/current.json").body()
         return farevarselCollection
     }
 }

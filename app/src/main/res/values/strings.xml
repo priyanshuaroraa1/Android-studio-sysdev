@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AppSolution</string>
+    <string name="search_bar_placeholder">Søk etter badeplass</string>
+
 </resources>

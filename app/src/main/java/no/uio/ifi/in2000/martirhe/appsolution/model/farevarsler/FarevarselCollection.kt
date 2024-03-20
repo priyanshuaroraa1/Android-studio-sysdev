@@ -3,26 +3,22 @@ package no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler
 
 import com.google.gson.annotations.SerializedName
 
-// TODO: Do we need @SerializedName-annotation?
-// Go through this file and evaluate if we need the @SerializedAnnotation for all variables, or just
-// for some.
 
 data class FarevarselCollection (
-    val features: List<Feature>,
-    val lang: String,
-    val lastChange: String,
-    val type: String
+    var features: List<Feature>,        // ok
+    val lang: String,                   // ok
+    val lastChange: String,             // ok
+    val type: String                    // ok
 )
 
 data class Feature (
     val geometry: Geometry,
     val properties: Properties,
     val type: String,
-    val featureWhen: When
+    @SerializedName("when") val featureWhen: TimeInterval,
 )
-//    @SerializedName("`when`") val `when`: TimeInterval
 
-data class When (
+data class TimeInterval (
     val interval: List<String>
 )
 
@@ -33,14 +29,17 @@ data class Geometry (
 
 
 data class Properties(
+    @SerializedName("altitude_above_sea_level") val altitudeAboveSeaLevel: Int?,
     val area: String,
-    val awarenessResponse: String,
-    val awarenessSeriousness: String,
+    val awarenessResponse: String?,
+    val awarenessSeriousness: String?,
     @SerializedName("awareness_level") val awarenessLevel: String,
     @SerializedName("awareness_type") val awarenessType: String,
+    val ceiling_above_sea_level: Int,
     val certainty: String,
     val consequences: String,
-    val county: List<String>, // TODO: Skal denne være string eller int? Jeg tror String (Bernd)
+    val contact: String,
+    val county: List<String>,
     val description: String,
     val event: String,
     val eventAwarenessName: String,
@@ -48,14 +47,17 @@ data class Properties(
     val geographicDomain: String,
     val id: String,
     val instruction: String,
+    val municipality: List<String>,
     val resources: List<Resource>,
     val riskMatrixColor: String,
     val severity: String,
+    val status: String,
     val title: String,
-    val triggerLevel: String? = null,
     val type: String,
-    val municipalityID: String? = null,
-    val administrativeID: String? = null,
+    val web: String,
+    val triggerLevel: String? = null,
+    val municipalityID: String? = null, // TODO: Fjerne denne?
+    val administrativeID: String? = null, //
     val incidentName: String? = null
 )
 
