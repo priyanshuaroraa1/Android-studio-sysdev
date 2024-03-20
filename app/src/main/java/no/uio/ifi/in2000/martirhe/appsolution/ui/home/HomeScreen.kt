@@ -33,6 +33,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -136,7 +137,7 @@ fun BadeplassInfoCard(
 //            .padding(32.dp)
 //            .padding(bottom = 32.dp)
             .fillMaxWidth()
-            .height(320.dp),
+            .height(360.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         )
@@ -247,9 +248,25 @@ fun BadeplassInfoCard(
 fun FarevarselCard(
     simpleMetAlertList: List<SimpleMetAlert>
 ) {
-    Column {
-        Text(text = "Det er ${simpleMetAlertList.size} aktive farevarsler for denne badeplassen")
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+        ) {
+
+            Text(text = "${simpleMetAlertList.size} aktive farevarsler")
+            if (simpleMetAlertList.size > 0) {
+                simpleMetAlertList.forEach {
+                    Text(text = "- " + it.awarenessType.split(';')[1] + ", " + it.awarenessLevel.split(';')[1].capitalize())
+                }
+            }
+        }
     }
+
 }
 
 @Composable
@@ -261,6 +278,7 @@ fun WeatherCard(
     Card(
         modifier = Modifier
             .padding(8.dp)
+            .fillMaxWidth()
     ) {
         Column(
             modifier = Modifier
@@ -284,6 +302,7 @@ fun WaterCard(
     Card(
         modifier = Modifier
             .padding(8.dp)
+            .fillMaxWidth()
     ) {
         Column(
             modifier = Modifier
