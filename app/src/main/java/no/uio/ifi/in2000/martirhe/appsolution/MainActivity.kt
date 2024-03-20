@@ -14,15 +14,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import no.uio.ifi.in2000.martirhe.appsolution.ui.PocLocationForecast.PocLocationForecastScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.pocFarevarsel.PocFarevarselScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.theme.AppSolutionTheme
 import android.Manifest
 import android.os.Build
 import androidx.annotation.RequiresApi
+import no.uio.ifi.in2000.martirhe.appsolution.ui.home.HomeScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.pocmap.PocMapScreen
 
-//import com.example.platform.location.permission.LocationPermissionScreen
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.Q)                 // TODO: Hva gjør denne?
@@ -35,11 +34,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-//                    Kommenter ut denne....
 //                    PocFarevarselScreen()
 //                    PocLocationForecastScreen()
 //                    LocationPermissionScreen()
-                    PocMapScreen()
+//                    PocMapScreen()
+                    HomeScreen()
                 }
             }
         }
