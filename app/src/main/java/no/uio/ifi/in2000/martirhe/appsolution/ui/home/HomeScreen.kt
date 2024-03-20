@@ -47,23 +47,15 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.SimpleMetAlert
+import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
 
 //import no.uio.ifi.in2000.martirhe.appsolution.ui.PocLocationForecast.LocationForecastUiState
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(
-    name = "Dark Mode",
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO
-)
-@Preview(
-    name = "Light Mode",
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
 @Composable
 fun HomeScreen(
+    onNavigate: (UiEvent.Navigate) -> Unit,
     homeViewModel: HomeViewModel = viewModel()
 ) {
 
