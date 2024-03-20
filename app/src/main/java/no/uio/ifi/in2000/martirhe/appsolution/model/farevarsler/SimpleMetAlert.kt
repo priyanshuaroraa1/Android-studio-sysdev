@@ -1,5 +1,6 @@
 package no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler
 
+import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.PolyUtil
 import com.google.maps.android.data.DataPolygon
@@ -12,17 +13,39 @@ data class SimpleMetAlert(
     val consequences: String,
     val description: String,
 )  {
-    fun relevantForCoordinate(latLng: LatLng): Boolean {
-        for (polygon in multiPolygon) {
-            for (ring in polygon) {
-                val polygonPath = ring.map { latLngPair ->
-                    LatLng(latLngPair[1].toDouble(), latLngPair[0].toDouble())
+
+    fun isRelevantForCoordinate(latLng: LatLng): Boolean {
+
+        Log.i("TestCoordinates", "Starting")
+//        Log.i("TestCoordinatesx", multiPolygon.toString())
+        for (collection in multiPolygon) {
+            Log.i("TestCoordinates", "Inni første loop")
+//            Log.i("TestCoordinatesx", collection.toString())
+            for (polygon in collection) {
+                Log.i("TestCoordinates", "Inni andre loop")
+                Log.i("TestCoordinatesx", area)
+                Log.i("TestCoordinatesx", polygon.toString())
+
+                val polygonPath: MutableList<LatLng> = mutableListOf()
+                for (coordList in polygon) {
+                    Log.i("TestCoordinates", coordList.toString())
+                    polygonPath.add(LatLng(coordList[1].toDouble(), coordList[0].toDouble()))
                 }
-                if (PolyUtil.containsLocation(latLng, polygonPath, false)) {
+
+//                val polygonPath: List<LatLng> = polygon.map {
+//                    LatLng(it[0].toDouble(), it[1].toDouble())
+//                }
+                Log.i("TestCoordinates", polygonPath.toString())
+
+                Log.i("TestCoordinatesx", PolyUtil.containsLocation(latLng, polygonPath, true).toString())
+                if (PolyUtil.containsLocation(latLng, polygonPath, true)) {
+                    Log.i("TestCoordinates", "true")
                     return true
                 }
             }
         }
+        Log.i("TestCoordinates", "false")
+
         return false
     }
 }

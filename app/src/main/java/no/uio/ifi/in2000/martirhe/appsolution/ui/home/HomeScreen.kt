@@ -45,6 +45,7 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.launch
+import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.SimpleMetAlert
 
 //import no.uio.ifi.in2000.martirhe.appsolution.ui.PocLocationForecast.LocationForecastUiState
 
@@ -103,7 +104,7 @@ fun HomeScreen(
                 Marker(
                     state = MarkerState(position = homeViewModel.customMarkerLocation),
 
-                )
+                    )
             }
 
         }
@@ -132,10 +133,10 @@ fun BadeplassInfoCard(
 
     Card(
         modifier = modifier
-            .padding(32.dp)
-            .padding(bottom = 32.dp)
+//            .padding(32.dp)
+//            .padding(bottom = 32.dp)
             .fillMaxWidth()
-            .height(260.dp),
+            .height(320.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         )
@@ -144,7 +145,7 @@ fun BadeplassInfoCard(
 
         Column(
             modifier = Modifier
-                .padding(8.dp)
+                .padding(16.dp)
         ) {
             Text(
                 text = homeViewModel.selectedBadeplass.navn,
@@ -152,6 +153,39 @@ fun BadeplassInfoCard(
                     .padding(horizontal = 8.dp),
                 fontSize = 18.sp
             )
+
+            val farevarselUiState by homeViewModel.farevarselUiState.collectAsState()
+
+            farevarselUiState.farevarselUiState.let { state ->
+                when (state) {
+                    is FarevarselUiState.Success -> {
+
+                        val koordinater = if (homeViewModel.showCustomMarker) {
+                            LatLng(homeViewModel.customBadeplass.lat, homeViewModel.customBadeplass.lon)
+                        } else {
+                            LatLng(homeViewModel.selectedBadeplass.lat, homeViewModel.selectedBadeplass.lon)
+
+                        }
+
+                        FarevarselCard(simpleMetAlertList = state.simpleMetAlertList.filter {
+                            it.isRelevantForCoordinate(koordinater)
+                        })
+
+
+                    }
+
+                    is FarevarselUiState.Loading -> {
+                        Text(text = "Loading")
+                        Log.i("TestAlerts", "Loading")
+                    }
+
+                    is FarevarselUiState.Error -> {
+                        Text(text = "Error")
+                        Log.i("TestAlerts", "Error")
+                    }
+                }
+            }
+
 
             val locationForecastUiState by homeViewModel.locationForecastUiState.collectAsState()
 
@@ -164,7 +198,6 @@ fun BadeplassInfoCard(
                             windFromDirection = state.locationForecast.properties.timeseries[0].data.instant.details.windFromDirection,
                             windSpeed = state.locationForecast.properties.timeseries[0].data.instant.details.wind_speed
                         )
-
 
 
                     }
@@ -187,7 +220,8 @@ fun BadeplassInfoCard(
                             WaterCard(
                                 temperature = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_water_temperature,
                                 waveHeight = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_surface_wave_height,
-                                waveToDirection = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_water_to_direction)
+                                waveToDirection = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_water_to_direction
+                            )
                         }
 
                         is OceanForecastUiState.Loading -> {
@@ -205,9 +239,16 @@ fun BadeplassInfoCard(
         }
 
 
+    }
+}
 
 
-
+@Composable
+fun FarevarselCard(
+    simpleMetAlertList: List<SimpleMetAlert>
+) {
+    Column {
+        Text(text = "Det er ${simpleMetAlertList.size} aktive farevarsler for denne badeplassen")
     }
 }
 
@@ -232,13 +273,14 @@ fun WeatherCard(
 
     }
 }
+
 @Composable
 fun WaterCard(
     temperature: Double,
     waveHeight: Double,
     waveToDirection: Double,
-    
-) {
+
+    ) {
     Card(
         modifier = Modifier
             .padding(8.dp)
@@ -253,7 +295,6 @@ fun WaterCard(
         }
     }
 }
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -29,9 +29,9 @@ class FarevarselRepository(
 
             try {
                 multiPolygon = if (it.geometry.type == "Polygon") {
-                    it.geometry.coordinates as List<List<List<List<Float>>>>
-                } else {
                     listOf(it.geometry.coordinates as List<List<List<Float>>>)
+                } else {
+                    it.geometry.coordinates as List<List<List<List<Float>>>>
                 }
                 val area: String = it.properties.area
                 val awarenessLevel: String = it.properties.awarenessLevel

@@ -85,6 +85,7 @@ class HomeViewModel : ViewModel() {
         Badeplass("01", "Katten", 59.85526122555474, 10.783288859002855),
         Badeplass("02", "Hovedøya", 59.89531481816671, 10.724690847364073),
         Badeplass("03", "Tjuvholmen", 59.9064275008578, 10.721101654359384),
+        Badeplass("04", "Testbadeplass", 62.2631564, 5.2425385),
     )
     val badeplasser = badeplasserDummy
     var customBadeplass by mutableStateOf<Badeplass>(Badeplass("", "Valgt sted", 59.895002996529485, 10.67554858599053))
@@ -101,6 +102,7 @@ class HomeViewModel : ViewModel() {
         showCustomMarker = false
         loadLocationForecast(badeplass.lat, badeplass.lon)
         loadOceanForecast(badeplass.lat, badeplass.lon)
+        loadFarevarsler()
     }
 
     fun onMapBackroundClick(
