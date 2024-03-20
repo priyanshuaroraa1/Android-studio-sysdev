@@ -21,11 +21,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import no.uio.ifi.in2000.martirhe.appsolution.R
+import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AboutUsScreen(navController: NavHostController) {
+fun AboutUsScreen(
+//    navController: NavHostController
+    onNavigate: (UiEvent.Navigate) -> Unit,
+) {
     var selectedTab by remember { mutableStateOf(0) }
     val scrollState = rememberScrollState()
 
@@ -43,7 +47,9 @@ fun AboutUsScreen(navController: NavHostController) {
                     modifier = Modifier
                         .background(Color(0xFF0E2D4E)),
                     navigationIcon = {
-                        IconButton(onClick = { navController.navigateUp() }) {
+                        IconButton(onClick = {
+//                            navController.navigateUp()
+                        }) {
                             Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                         }
                     }
