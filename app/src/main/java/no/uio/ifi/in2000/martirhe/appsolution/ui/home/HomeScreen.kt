@@ -74,6 +74,7 @@ fun HomeScreen(
         // The map goes here - it could be a composable that displays the map
         // Replace "MapComposable()" with your map
 
+        HomeSearchBar(homeViewModel = homeViewModel)
 
         GoogleMap(
             modifier = Modifier,
@@ -308,68 +309,3 @@ fun WaterCard(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
-@Composable
-fun MapSearchBar(
-    homeViewModel: HomeViewModel = viewModel()
-) {
-    SearchBar(
-        query = homeViewModel.searchBarText,
-        onQueryChange = { homeViewModel.searchBarText = it },
-        onSearch = { homeViewModel.onSearch() },
-        active = homeViewModel.searchBarActive,
-        onActiveChange = { homeViewModel.searchBarActive = it },
-        modifier = Modifier
-            .fillMaxWidth(),
-        placeholder = {
-            Text(text = "Finn badeplass")
-        },
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = "Search Icon"
-            ) // TODO: Description?
-        },
-        trailingIcon = {
-            if (homeViewModel.searchBarActive) {
-                Icon(
-                    modifier = Modifier.clickable {
-                        if (homeViewModel.searchBarText.isNotEmpty()) {
-                            homeViewModel.searchBarText = ""
-                        } else {
-                            homeViewModel.searchBarActive = false
-                        }
-                    },
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Close Icon"
-                )
-            }
-
-        },
-
-        ) {
-        homeViewModel.searchBarHistory.forEach {
-            Row(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clickable {
-                        homeViewModel.searchBarText = it
-                        homeViewModel.onSearch()
-                    }
-            ) {
-                Icon(
-                    modifier = Modifier.padding(8.dp),
-                    imageVector = Icons.Default.History,
-                    contentDescription = "History Icon"
-                )
-                Text(text = it)
-
-            }
-        }
-    }
-}
-
-
-// Her er den store TODO-lista
-// TODO: Lagre tidligere søk i en lokal eller ekstern database

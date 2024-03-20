@@ -152,8 +152,14 @@ class HomeViewModel : ViewModel() {
 
     fun onSearch() {
         updateSearchBarHistory()
+        if (badeplasser.find { it.navn.lowercase() == searchBarText.lowercase() } != null) {
+
+            onBadeplassPinClick(badeplasser.find { it.navn.lowercase() == searchBarText.lowercase() }!!)
+
+        }
         searchBarText = ""
         searchBarActive = false
+
     }
 
 
