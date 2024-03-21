@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.FarevarselCollection
 import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.Feature
+import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.SimpleMetAlert
 import java.time.format.TextStyle
 
 
@@ -70,7 +71,11 @@ fun PocFarevarselScreen(
             when (farevarslerState) {
                 is FarevarselUiState.Success -> {
                     val farevarsler = (farevarslerState).farevarsler
-                    FarevarslerLazyColumn(farevarselCollection = farevarsler)
+                    val simpleMetAlerts = (farevarslerState).simpleMetAlerts
+                    FarevarslerLazyColumn(
+                        farevarselCollection = farevarsler,
+                        simpleMetAlerts = simpleMetAlerts
+                    )
                 }
                 is FarevarselUiState.Loading -> {
                     Text(text = "Loading")
@@ -87,13 +92,36 @@ fun PocFarevarselScreen(
 
 @Composable
 fun FarevarslerLazyColumn(
-    farevarselCollection: FarevarselCollection
+    farevarselCollection: FarevarselCollection,
+    simpleMetAlerts: List<SimpleMetAlert>
 ) {
     LazyColumn(
         contentPadding = PaddingValues(all = 16.dp)
     ) {
-        items(farevarselCollection.features) {feature ->
-            FarevarselCard(feature)
+        items(simpleMetAlerts) {
+            FarevarselCard2(it.description)
+        }
+    }
+}
+
+
+
+
+
+@Composable
+fun FarevarselCard2(
+    info: String
+) {
+    Card (
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+    ){
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
+            Text(text = info)
         }
     }
 }
