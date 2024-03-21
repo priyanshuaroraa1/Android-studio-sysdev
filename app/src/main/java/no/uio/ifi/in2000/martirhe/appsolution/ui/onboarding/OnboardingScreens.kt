@@ -156,7 +156,7 @@ fun OnboardingBottomBar(
             colors = ButtonDefaults.buttonColors(Color(0xFF0E2D4E))
         ) {
             Text(
-                text = if (currentPage < totalPages - 1) "Next" else "Done",
+                text = if (currentPage < totalPages - 1) "Neste" else "Ferdig",
                 color = Color.White
             )
         }
