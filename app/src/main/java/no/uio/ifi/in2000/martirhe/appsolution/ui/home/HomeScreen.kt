@@ -1,51 +1,38 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.home
 
-import android.content.res.Configuration
 import android.util.Log
-import androidx.compose.animation.core.animate
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
 
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.capitalize
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-import kotlinx.coroutines.launch
+import io.ktor.utils.io.errors.IOException
 import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.SimpleMetAlert
 import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
 
@@ -65,6 +52,13 @@ fun HomeScreen(
         position = CameraPosition.fromLatLngZoom(homeViewModel.customMarkerLocation, 11f)
     }
 
+    val mapStyleString = loadMapStyleFromAssets()
+    val mapProperties = MapProperties(
+        isMyLocationEnabled = false,
+        mapStyleOptions = MapStyleOptions(mapStyleString)
+    )
+
+
     // Obtain a coroutine scope tied to the lifecycle of this composable
     val coroutineScope = rememberCoroutineScope()
 
@@ -81,7 +75,8 @@ fun HomeScreen(
             cameraPositionState = cameraPositionState,
             onMapClick = {
                 homeViewModel.onMapBackroundClick(it, coroutineScope, cameraPositionState)
-            }
+            },
+            properties = mapProperties
         ) {
 
             homeViewModel.badeplasser.forEach { badeplass ->
@@ -309,3 +304,13 @@ fun WaterCard(
 }
 
 
+@Composable
+fun loadMapStyleFromAssets(): String {
+    val context = LocalContext.current
+    return try {
+        context.assets.open("map_style_light.json").bufferedReader().use { it.readText() }
+    } catch (e: IOException) {
+        e.printStackTrace()
+        ""
+    }
+}
