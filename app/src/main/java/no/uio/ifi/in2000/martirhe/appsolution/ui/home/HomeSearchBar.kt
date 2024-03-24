@@ -1,5 +1,6 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.home
 
+import android.content.res.Resources.Theme
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,10 +13,15 @@ import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarColors
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -63,10 +69,13 @@ fun HomeSearchBar(
                     contentDescription = "Close Icon"
                 )
             }
-
         },
+        colors = SearchBarDefaults.colors(
+            containerColor = MaterialTheme.colorScheme.onPrimary // Change this color to your preferred background color
+        ),
 
-        ) {
+
+    ) {
 
         if (homeViewModel.searchBarText == "") {
             homeViewModel.searchBarHistory.forEach {
@@ -84,7 +93,6 @@ fun HomeSearchBar(
                         contentDescription = "History Icon"
                     )
                     Text(text = it)
-
                 }
             }
         } else {
@@ -111,7 +119,3 @@ fun HomeSearchBar(
 
     }
 }
-
-
-// Her er den store TODO-lista
-// TODO: Lagre tidligere søk i en lokal eller ekstern database
