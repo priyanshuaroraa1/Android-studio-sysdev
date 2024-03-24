@@ -9,12 +9,13 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.serialization.gson.gson
+import no.uio.ifi.in2000.martirhe.appsolution.BuildConfig
 import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.LocationForecast
 import no.uio.ifi.in2000.martirhe.appsolution.model.oceanforecast.OceanForecast
 
 class OceanForecastDataSource {
 
-    private val apiKey = "d51d9a9a-cb2e-4299-9c77-d41f1de3b854"
+    private val apiKey = BuildConfig.UIO_PROXY_API_KEY
 
     private val client = HttpClient(CIO) {
         defaultRequest {
