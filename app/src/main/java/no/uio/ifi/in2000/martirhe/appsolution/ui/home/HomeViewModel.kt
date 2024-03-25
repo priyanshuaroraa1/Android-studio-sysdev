@@ -1,9 +1,13 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.home
 
+import androidx.compose.material3.BottomSheetScaffoldState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,7 +19,6 @@ import com.google.maps.android.compose.CameraPositionState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.martirhe.appsolution.data.locationforecast.LocationForecastRepository
@@ -68,6 +71,13 @@ data class PocFarevarselUiState(
     val farevarselUiState: FarevarselUiState = FarevarselUiState.Loading
 )
 
+
+enum class BottomSheetHeightState(val heightDp: Dp) {
+    Hidden(0.dp),
+    Showing(125.dp)
+} // TODO: Flytte denne og de over til egne filer
+
+
 class HomeViewModel : ViewModel() {
 
     val locationForecastRepository: LocationForecastRepositoryInterface = LocationForecastRepository()
@@ -96,6 +106,19 @@ class HomeViewModel : ViewModel() {
     var showCustomMarker by mutableStateOf(false)
     var customMarkerLocation by mutableStateOf<LatLng>(LatLng(59.911491, 10.757933))
 
+    // BottomSheet LiveData
+    private val _bottomSheetState = MutableLiveData(BottomSheetHeightState.Showing) // Initial value
+    val bottomSheetState: LiveData<BottomSheetHeightState> = _bottomSheetState
+
+    // Change BottomSheetHeight
+    fun showBottomSheet() {
+        _bottomSheetState.value = BottomSheetHeightState.Showing
+    }
+    fun hideBottomSheet() {
+        _bottomSheetState.value = BottomSheetHeightState.Hidden
+    }
+
+
     fun onBadeplassPinClick(badeplass: Badeplass) {
         selectedBadeplass = badeplass
         showBadeplassCard = true
@@ -105,14 +128,19 @@ class HomeViewModel : ViewModel() {
         loadFarevarsler()
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     fun onMapBackroundClick(
         latLng: LatLng,
         coroutineScope: CoroutineScope,
-        cameraPositionState: CameraPositionState) {
+        cameraPositionState: CameraPositionState,
+        scaffoldState: BottomSheetScaffoldState) {
         if (showBadeplassCard) {
             showBadeplassCard = false
             showCustomMarker = false
+            showBottomSheet()
+            coroutineScope.launch { scaffoldState.bottomSheetState.partialExpand() }
         } else {
+            coroutineScope.launch { scaffoldState.bottomSheetState.expand() }
             customMarkerLocation = latLng
             customBadeplass.lat = latLng.latitude
             customBadeplass.lon = latLng.longitude
@@ -163,13 +191,13 @@ class HomeViewModel : ViewModel() {
     }
 
 
-    // Variables for SimpleMetAlerts
-    private val _metAlertsForCurrentLocation = MutableLiveData<List<SimpleMetAlert>>(emptyList())
-    val metAlertsForCurrentLocation: LiveData<List<SimpleMetAlert>> = _metAlertsForCurrentLocation
-
-    fun updateMetAlerts(newAlerts: List<SimpleMetAlert>) {
-        _metAlertsForCurrentLocation.value = newAlerts
-    }
+//    // Variables for SimpleMetAlerts
+//    private val _metAlertsForCurrentLocation = MutableLiveData<List<SimpleMetAlert>>(emptyList())
+//    val metAlertsForCurrentLocation: LiveData<List<SimpleMetAlert>> = _metAlertsForCurrentLocation
+//
+//    fun updateMetAlerts(newAlerts: List<SimpleMetAlert>) {
+//        _metAlertsForCurrentLocation.value = newAlerts
+//    }
 
 
 
