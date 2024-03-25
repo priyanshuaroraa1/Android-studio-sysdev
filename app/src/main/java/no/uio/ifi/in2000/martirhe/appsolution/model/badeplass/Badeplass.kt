@@ -1,5 +1,8 @@
 package no.uio.ifi.in2000.martirhe.appsolution.model.badeplass
 
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+
 data class Badeplass(
     val id: String,
     val navn: String,
@@ -9,4 +12,13 @@ data class Badeplass(
     val fasiliteter: String? = null,
     val tilgjengelighet: String? = null,
     val beskrivelse: String? = null,
-)
+) {
+    fun getMarkerOptions(): MarkerOptions {
+        return MarkerOptions()
+            .position(LatLng(lat, lon))
+    }
+
+    fun getLatLng(): LatLng {
+        return LatLng(lat, lon)
+    }
+}

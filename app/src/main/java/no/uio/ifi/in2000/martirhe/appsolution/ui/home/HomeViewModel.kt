@@ -6,10 +6,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -30,10 +26,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.data.metalert.MetAlertRepositoryIn
 import java.io.IOException
 
 
-enum class BottomSheetHeightState(val heightDp: Dp) {
-    Hidden(0.dp),
-    Showing(125.dp)
-} // TODO: Flytte denne og de andre greiene over til egne filer
+
 
 
 
@@ -60,6 +53,16 @@ class HomeViewModel : ViewModel() {
     var customBadeplass by mutableStateOf<Badeplass>(Badeplass("", "Valgt sted", 59.895002996529485, 10.67554858599053))
 
 
+    var homeScreenUiState: HomeScreenUiState by mutableStateOf(HomeScreenUiState(
+        lastKnownLocation = null,
+        swimSpots = badeplasserDummy,
+        customSwimSpot = null,
+        selectedSwimSpot = null,
+        bottomSheetPosition = BottomSheetPosition.Hidden
+    ))
+
+
+
 
 
     // Variables for Map
@@ -71,24 +74,16 @@ class HomeViewModel : ViewModel() {
     var customMarkerLocation by mutableStateOf<LatLng>(LatLng(59.911491, 10.757933))
 
 
-
-    // BottomSheet LiveData
-    private val _bottomSheetState = MutableLiveData(BottomSheetHeightState.Showing) // Initial value
-    val bottomSheetState: LiveData<BottomSheetHeightState> = _bottomSheetState
-
-    // Change BottomSheetHeight
     fun showBottomSheet() {
-        _bottomSheetState.value = BottomSheetHeightState.Showing
+        homeScreenUiState.bottomSheetPosition = BottomSheetPosition.Showing
     }
-    fun hideBottomSheet() {
-        _bottomSheetState.value = BottomSheetHeightState.Hidden
-    }
+
+
 
 
     fun onBadeplassPinClick(
         badeplass: Badeplass) {
-        showBottomSheet()
-        bottomSheetState
+//        showBottomSheet() TODO
         selectedBadeplass = badeplass
         showCustomMarker = false
         showBottomSheet = true
@@ -108,10 +103,10 @@ class HomeViewModel : ViewModel() {
         if (showBadeplassCard) {
             showBadeplassCard = false
 //            showCustomMarker = false
-            showBottomSheet()
+//            showBottomSheet() TODO
             coroutineScope.launch { scaffoldState.bottomSheetState.partialExpand() }
         } else {
-            showBottomSheet()
+//            showBottomSheet() TODO
             coroutineScope.launch { scaffoldState.bottomSheetState.expand() }
             customMarkerLocation = latLng
             customBadeplass.lat = latLng.latitude
@@ -182,7 +177,7 @@ class HomeViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             locationForecastUiState = LocationForecastUiState.Loading
             locationForecastUiState = try {
-                LocationForecastUiState.Success(locationForecastRepository.getLocationForecast())
+                LocationForecastUiState.Success(locationForecastRepository.getLocationForecast(lat, lon))
             } catch (e: IOException) {
                 LocationForecastUiState.Error
             } catch (e: ResponseException) {
@@ -195,7 +190,7 @@ class HomeViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             oceanForecastUiState = OceanForecastState.Loading
             oceanForecastUiState = try {
-                OceanForecastState.Success(oceanForecastRepository.getOceanForecast())
+                OceanForecastState.Success(oceanForecastRepository.getOceanForecast(lat, lon))
             } catch (e: IOException) {
                 OceanForecastState.Error
             } catch (e: ResponseException) {
@@ -218,6 +213,4 @@ class HomeViewModel : ViewModel() {
             }
         }
     }
-
-
 }
