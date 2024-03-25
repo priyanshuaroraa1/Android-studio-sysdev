@@ -6,89 +6,40 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
+import io.ktor.client.plugins.ResponseException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.martirhe.appsolution.data.locationforecast.LocationForecastRepository
 import no.uio.ifi.in2000.martirhe.appsolution.data.locationforecast.LocationForecastRepositoryInterface
 import no.uio.ifi.in2000.martirhe.appsolution.data.oceanforecast.OceanForecastRepository
 import no.uio.ifi.in2000.martirhe.appsolution.data.oceanforecast.OceanForecastRepositoryInterface
 import no.uio.ifi.in2000.martirhe.appsolution.model.badeplass.Badeplass
-import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.LocationForecast
-import no.uio.ifi.in2000.martirhe.appsolution.model.oceanforecast.OceanForecast
-import java.nio.channels.UnresolvedAddressException
-import no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel.FarevarselRepository
-import no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel.FarevarselRepositoryInterface
-import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.FarevarselCollection
-import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.SimpleMetAlert
+import no.uio.ifi.in2000.martirhe.appsolution.data.metalert.MetAlertRepository
+import no.uio.ifi.in2000.martirhe.appsolution.data.metalert.MetAlertRepositoryInterface
+import java.io.IOException
 
 
-sealed interface LocationForecastUiState {
-    data class Success(
-        val locationForecast: LocationForecast
-    ): LocationForecastUiState
-    object Loading: LocationForecastUiState
-    object Error: LocationForecastUiState
-}
 
-sealed interface OceanForecastUiState {
-    data class Success(
-        val oceanForecast: OceanForecast
-    ): OceanForecastUiState
-    object Loading: OceanForecastUiState
-    object Error: OceanForecastUiState
-}
-
-sealed interface FarevarselUiState {
-    data class Success(
-        val farevarselCollection: FarevarselCollection,
-        val simpleMetAlertList: List<SimpleMetAlert>
-    ): FarevarselUiState
-    object Loading: FarevarselUiState
-    object Error: FarevarselUiState
-}
-
-data class PocLocationForecastUiState(
-    val locationForecastUiState: LocationForecastUiState = LocationForecastUiState.Loading
-)
-data class PocOceanForecastUiState(
-    val oceanForecastUiState: OceanForecastUiState = OceanForecastUiState.Loading
-)
-
-data class PocFarevarselUiState(
-    val farevarselUiState: FarevarselUiState = FarevarselUiState.Loading
-)
-
-
-enum class BottomSheetHeightState(val heightDp: Dp) {
-    Hidden(0.dp),
-    Showing(125.dp)
-} // TODO: Flytte denne og de andre greiene over til egne filer
 
 
 
 class HomeViewModel : ViewModel() {
 
     val locationForecastRepository: LocationForecastRepositoryInterface = LocationForecastRepository()
-    var locationForecastUiState = MutableStateFlow(PocLocationForecastUiState())
+    var locationForecastUiState: LocationForecastUiState by mutableStateOf(LocationForecastUiState.Loading)
 
     val oceanForecastRepository: OceanForecastRepositoryInterface = OceanForecastRepository()
-    var oceanForecastUiState = MutableStateFlow(PocOceanForecastUiState())
+    var oceanForecastUiState: OceanForecastState by mutableStateOf(OceanForecastState.Loading)
 
-    val farevarselRepository: FarevarselRepositoryInterface = FarevarselRepository()
-    var farevarselUiState = MutableStateFlow(PocFarevarselUiState())
+    val metAlertRepository: MetAlertRepositoryInterface = MetAlertRepository()
+    var metAlertUiState: MetAlertUiState by mutableStateOf(MetAlertUiState.Loading)
 
     // Dummy data
     val badeplasserDummy: List<Badeplass> = listOf(
@@ -102,6 +53,16 @@ class HomeViewModel : ViewModel() {
     var customBadeplass by mutableStateOf<Badeplass>(Badeplass("", "Valgt sted", 59.895002996529485, 10.67554858599053))
 
 
+    var homeScreenUiState: HomeScreenUiState by mutableStateOf(HomeScreenUiState(
+        lastKnownLocation = null,
+        swimSpots = badeplasserDummy,
+        customSwimSpot = null,
+        selectedSwimSpot = null,
+        bottomSheetPosition = BottomSheetPosition.Hidden
+    ))
+
+
+
 
 
     // Variables for Map
@@ -113,24 +74,16 @@ class HomeViewModel : ViewModel() {
     var customMarkerLocation by mutableStateOf<LatLng>(LatLng(59.911491, 10.757933))
 
 
-
-    // BottomSheet LiveData
-    private val _bottomSheetState = MutableLiveData(BottomSheetHeightState.Showing) // Initial value
-    val bottomSheetState: LiveData<BottomSheetHeightState> = _bottomSheetState
-
-    // Change BottomSheetHeight
     fun showBottomSheet() {
-        _bottomSheetState.value = BottomSheetHeightState.Showing
+        homeScreenUiState.bottomSheetPosition = BottomSheetPosition.Showing
     }
-    fun hideBottomSheet() {
-        _bottomSheetState.value = BottomSheetHeightState.Hidden
-    }
+
+
 
 
     fun onBadeplassPinClick(
         badeplass: Badeplass) {
-        showBottomSheet()
-        bottomSheetState
+//        showBottomSheet() TODO
         selectedBadeplass = badeplass
         showCustomMarker = false
         showBottomSheet = true
@@ -150,10 +103,10 @@ class HomeViewModel : ViewModel() {
         if (showBadeplassCard) {
             showBadeplassCard = false
 //            showCustomMarker = false
-            showBottomSheet()
+//            showBottomSheet() TODO
             coroutineScope.launch { scaffoldState.bottomSheetState.partialExpand() }
         } else {
-            showBottomSheet()
+//            showBottomSheet() TODO
             coroutineScope.launch { scaffoldState.bottomSheetState.expand() }
             customMarkerLocation = latLng
             customBadeplass.lat = latLng.latitude
@@ -173,6 +126,7 @@ class HomeViewModel : ViewModel() {
                     durationMs = 300
                 )
             }
+
         }
     }
 
@@ -221,48 +175,42 @@ class HomeViewModel : ViewModel() {
 
     fun loadLocationForecast(lat: Double, lon: Double) {
         viewModelScope.launch(Dispatchers.IO) {
-            locationForecastUiState.update { it.copy(locationForecastUiState = LocationForecastUiState.Loading) }
-            locationForecastUiState.update {
-                try {
-                    val locationForecast = locationForecastRepository.getLocationForecast(lat, lon)
-                    it.copy(locationForecastUiState = LocationForecastUiState.Success(locationForecast = locationForecast))
-                } catch (e: UnresolvedAddressException) {
-                    it.copy(locationForecastUiState = LocationForecastUiState.Error)
-                }
+            locationForecastUiState = LocationForecastUiState.Loading
+            locationForecastUiState = try {
+                LocationForecastUiState.Success(locationForecastRepository.getLocationForecast(lat, lon))
+            } catch (e: IOException) {
+                LocationForecastUiState.Error
+            } catch (e: ResponseException) {
+                LocationForecastUiState.Error
             }
         }
     }
 
     fun loadOceanForecast(lat: Double, lon: Double) {
         viewModelScope.launch(Dispatchers.IO) {
-            oceanForecastUiState.update { it.copy(oceanForecastUiState = OceanForecastUiState.Loading) }
-            oceanForecastUiState.update {
-                try {
-                    val oceanForecast = oceanForecastRepository.getOceanForecast(lat, lon)
-                    it.copy(oceanForecastUiState = OceanForecastUiState.Success(oceanForecast = oceanForecast))
-                } catch (e: UnresolvedAddressException) {
-                    it.copy(oceanForecastUiState = OceanForecastUiState.Error)
-                }
+            oceanForecastUiState = OceanForecastState.Loading
+            oceanForecastUiState = try {
+                OceanForecastState.Success(oceanForecastRepository.getOceanForecast(lat, lon))
+            } catch (e: IOException) {
+                OceanForecastState.Error
+            } catch (e: ResponseException) {
+                OceanForecastState.Error
             }
         }
     }
 
     fun loadFarevarsler() {
         viewModelScope.launch(Dispatchers.IO) {
-            farevarselUiState.update { it.copy(farevarselUiState = FarevarselUiState.Loading) }
-            farevarselUiState.update {
-                try {
-                    val farevarselCollection = farevarselRepository.getFarevarsler()
-                    val simpleMetAlertList = farevarselRepository.getSimpleMetAlerts()
-                    it.copy(farevarselUiState = FarevarselUiState.Success(
-                        farevarselCollection = farevarselCollection,
-                        simpleMetAlertList = simpleMetAlertList))
-                } catch (e: UnresolvedAddressException) {
-                    it.copy(farevarselUiState = FarevarselUiState.Error)
-                }
+            metAlertUiState = MetAlertUiState.Loading
+            metAlertUiState = try {
+                MetAlertUiState.Success(
+                    metAlertRepository.getMetAlerts(),
+                    metAlertRepository.getSimpleMetAlerts())
+            } catch (e: IOException) {
+                MetAlertUiState.Error
+            } catch (e: ResponseException) {
+                MetAlertUiState.Error
             }
         }
     }
-
-
 }

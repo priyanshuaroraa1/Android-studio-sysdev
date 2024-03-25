@@ -1,9 +1,8 @@
-package no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler
+package no.uio.ifi.in2000.martirhe.appsolution.model.metalert
 
 import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.PolyUtil
-import com.google.maps.android.data.DataPolygon
 
 data class SimpleMetAlert(
     val multiPolygon : List<List<List<List<Float>>>>,

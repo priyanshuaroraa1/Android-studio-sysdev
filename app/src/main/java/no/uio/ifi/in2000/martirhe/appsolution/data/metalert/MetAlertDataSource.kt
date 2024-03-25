@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel
+package no.uio.ifi.in2000.martirhe.appsolution.data.metalert
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -9,9 +9,9 @@ import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.serialization.gson.gson
 import no.uio.ifi.in2000.martirhe.appsolution.BuildConfig
-import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.FarevarselCollection
+import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.MetAlertCollection
 
-class FarevarselDataSource {
+class MetAlertDataSource {
 
     // TODO: Security breach?
     private val apiKey = BuildConfig.UIO_PROXY_API_KEY
@@ -27,9 +27,9 @@ class FarevarselDataSource {
         }
     }
 
-    suspend fun fetchFarevarsler(): FarevarselCollection {
-        val farevarselCollection: FarevarselCollection =
+    suspend fun fetchMetAlerts(): MetAlertCollection {
+        val metAlertCollection: MetAlertCollection =
             client.get("weatherapi/metalerts/2.0/current.json").body()
-        return farevarselCollection
+        return metAlertCollection
     }
 }
