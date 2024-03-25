@@ -5,6 +5,7 @@ import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
@@ -56,7 +57,9 @@ fun BottomNavBar(navController: androidx.navigation.NavController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    NavigationBar {
+    NavigationBar(
+        containerColor = MaterialTheme.colorScheme.onPrimary
+    ) {
         items.forEach { item ->
             NavigationBarItem(
                 label = {
@@ -64,7 +67,8 @@ fun BottomNavBar(navController: androidx.navigation.NavController) {
                 },
                 icon = { Icon(
                     imageVector = item.icon,
-                    contentDescription = "Search Icon"
+                    contentDescription = "Search Icon",
+                    tint = MaterialTheme.colorScheme.primaryContainer
                 ) },
                 selected = currentRoute == item.route,
                 onClick = {
