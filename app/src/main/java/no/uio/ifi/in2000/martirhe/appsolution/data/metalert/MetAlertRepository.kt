@@ -1,31 +1,31 @@
-package no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel
+package no.uio.ifi.in2000.martirhe.appsolution.data.metalert
 
-import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.FarevarselCollection
-import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.SimpleMetAlert
+import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.MetAlertCollection
+import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
 
 
-interface FarevarselRepositoryInterface {
-    suspend fun getFarevarsler(): FarevarselCollection
+interface MetAlertRepositoryInterface {
+    suspend fun getMetAlerts(): MetAlertCollection
     suspend fun getSimpleMetAlerts(): List<SimpleMetAlert>
 
 }
 
-class FarevarselRepository(
-    private val dataSource: FarevarselDataSource = FarevarselDataSource()
-) : FarevarselRepositoryInterface {
+class MetAlertRepository(
+    private val dataSource: MetAlertDataSource = MetAlertDataSource()
+) : MetAlertRepositoryInterface {
 
 
-    override suspend fun getFarevarsler(): FarevarselCollection {
-        return dataSource.fetchFarevarsler()
+    override suspend fun getMetAlerts(): MetAlertCollection {
+        return dataSource.fetchMetAlerts()
     }
 
     override suspend fun getSimpleMetAlerts(): List<SimpleMetAlert> {
 
-        val farevarselCollection = getFarevarsler()
+        val metAlertCollection = getMetAlerts()
         val simpleMetAlertList = mutableListOf<SimpleMetAlert>()
         var multiPolygon: List<List<List<List<Float>>>>
 
-        farevarselCollection.features.forEach{
+        metAlertCollection.features.forEach{
 
             try {
                 multiPolygon = if (it.geometry.type == "Polygon") {

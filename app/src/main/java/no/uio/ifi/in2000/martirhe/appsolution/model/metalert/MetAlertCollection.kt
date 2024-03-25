@@ -1,10 +1,10 @@
-package no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler
+package no.uio.ifi.in2000.martirhe.appsolution.model.metalert
 
 
 import com.google.gson.annotations.SerializedName
 
 
-data class FarevarselCollection (
+data class MetAlertCollection (
     var features: List<Feature>,        // ok
     val lang: String,                   // ok
     val lastChange: String,             // ok

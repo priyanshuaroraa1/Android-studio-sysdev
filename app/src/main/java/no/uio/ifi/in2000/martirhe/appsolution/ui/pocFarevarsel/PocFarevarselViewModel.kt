@@ -6,16 +6,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel.FarevarselRepository
-import no.uio.ifi.in2000.martirhe.appsolution.data.farevarsel.FarevarselRepositoryInterface
-import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.FarevarselCollection
-import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.SimpleMetAlert
+import no.uio.ifi.in2000.martirhe.appsolution.data.metalert.MetAlertRepository
+import no.uio.ifi.in2000.martirhe.appsolution.data.metalert.MetAlertRepositoryInterface
+import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.MetAlertCollection
+import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
 import java.nio.channels.UnresolvedAddressException
 
 
 sealed interface FarevarselUiState {
     data class Success(
-        val farevarsler: FarevarselCollection,
+        val farevarsler: MetAlertCollection,
         val simpleMetAlerts: List<SimpleMetAlert>): FarevarselUiState
     object Loading: FarevarselUiState
     object Error: FarevarselUiState
@@ -26,7 +26,7 @@ data class PocFarevarselUiState(
 )
 
 class PocFarevarselViewModel: ViewModel() {
-    val farevarselRepository: FarevarselRepositoryInterface = FarevarselRepository()
+    val metAlertRepository: MetAlertRepositoryInterface = MetAlertRepository()
     var uiState = MutableStateFlow(PocFarevarselUiState())
 
 
@@ -42,8 +42,8 @@ class PocFarevarselViewModel: ViewModel() {
             uiState.update { it.copy(farevarslerState = FarevarselUiState.Loading) }
             uiState.update {
                 try {
-                    val farevarsler = farevarselRepository.getFarevarsler()
-                    val simpleMetAlerts: List<SimpleMetAlert> = farevarselRepository.getSimpleMetAlerts()
+                    val farevarsler = metAlertRepository.getMetAlerts()
+                    val simpleMetAlerts: List<SimpleMetAlert> = metAlertRepository.getSimpleMetAlerts()
                     it.copy(farevarslerState = FarevarselUiState.Success(
                         farevarsler = farevarsler,
                         simpleMetAlerts = simpleMetAlerts))

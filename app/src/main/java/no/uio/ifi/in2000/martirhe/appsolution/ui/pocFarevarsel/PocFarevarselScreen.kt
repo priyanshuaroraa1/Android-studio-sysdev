@@ -3,13 +3,9 @@ package no.uio.ifi.in2000.martirhe.appsolution.ui.pocFarevarsel
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
@@ -26,14 +22,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 import androidx.compose.runtime.getValue
 //import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.FarevarselCollection
-import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.Feature
-import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.SimpleMetAlert
-import java.time.format.TextStyle
+import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.MetAlertCollection
+import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.Feature
+import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
 
 
 @Preview(
@@ -73,7 +66,7 @@ fun PocFarevarselScreen(
                     val farevarsler = (farevarslerState).farevarsler
                     val simpleMetAlerts = (farevarslerState).simpleMetAlerts
                     FarevarslerLazyColumn(
-                        farevarselCollection = farevarsler,
+                        metAlertCollection = farevarsler,
                         simpleMetAlerts = simpleMetAlerts
                     )
                 }
@@ -92,7 +85,7 @@ fun PocFarevarselScreen(
 
 @Composable
 fun FarevarslerLazyColumn(
-    farevarselCollection: FarevarselCollection,
+    metAlertCollection: MetAlertCollection,
     simpleMetAlerts: List<SimpleMetAlert>
 ) {
     LazyColumn(

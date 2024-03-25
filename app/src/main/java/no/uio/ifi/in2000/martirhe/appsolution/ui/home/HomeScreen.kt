@@ -9,26 +9,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Maximize
-import androidx.compose.material.icons.filled.MyLocation
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.Button
 
 import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -48,7 +41,7 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import io.ktor.utils.io.errors.IOException
 import kotlinx.coroutines.launch
-import no.uio.ifi.in2000.martirhe.appsolution.model.farevarsler.SimpleMetAlert
+import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
 import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
 import java.util.Locale
 
@@ -189,11 +182,9 @@ fun BottomSheetBadeplassContent(
                     fontSize = 18.sp
                 )
 
-                val farevarselUiState by homeViewModel.farevarselUiState.collectAsState()
-
-                farevarselUiState.farevarselUiState.let { state ->
+                homeViewModel.metAlertUiState.let { state ->
                     when (state) {
-                        is FarevarselUiState.Success -> {
+                        is MetAlertUiState.Success -> {
 
                             val koordinater = if (homeViewModel.showCustomMarker) {
                                 LatLng(
@@ -215,12 +206,12 @@ fun BottomSheetBadeplassContent(
 
                         }
 
-                        is FarevarselUiState.Loading -> {
+                        is MetAlertUiState.Loading -> {
                             Text(text = "Loading")
                             Log.i("TestAlerts", "Loading")
                         }
 
-                        is FarevarselUiState.Error -> {
+                        is MetAlertUiState.Error -> {
                             Text(text = "Error")
                             Log.i("TestAlerts", "Error")
                         }
@@ -228,9 +219,8 @@ fun BottomSheetBadeplassContent(
                 }
 
 
-                val locationForecastUiState by homeViewModel.locationForecastUiState.collectAsState()
 
-                locationForecastUiState.locationForecastUiState.let { state ->
+                homeViewModel.locationForecastUiState.let { state ->
                     when (state) {
                         is LocationForecastUiState.Success -> {
 
@@ -252,12 +242,9 @@ fun BottomSheetBadeplassContent(
                         }
                     }
 
-
-                    val oceanForecastUiState by homeViewModel.oceanForecastUiState.collectAsState()
-
-                    oceanForecastUiState.oceanForecastUiState.let { state ->
+                    homeViewModel.oceanForecastUiState.let { state ->
                         when (state) {
-                            is OceanForecastUiState.Success -> {
+                            is OceanForecastState.Success -> {
                                 WaterCard(
                                     temperature = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_water_temperature,
                                     waveHeight = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_surface_wave_height,
@@ -265,11 +252,11 @@ fun BottomSheetBadeplassContent(
                                 )
                             }
 
-                            is OceanForecastUiState.Loading -> {
+                            is OceanForecastState.Loading -> {
                                 Text(text = "Loading")
                             }
 
-                            is OceanForecastUiState.Error -> {
+                            is OceanForecastState.Error -> {
                                 Text(text = "Error")
                             }
                         }
