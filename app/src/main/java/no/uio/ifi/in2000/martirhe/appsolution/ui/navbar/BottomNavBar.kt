@@ -58,7 +58,7 @@ fun BottomNavBar(navController: androidx.navigation.NavController) {
     val currentRoute = navBackStackEntry?.destination?.route
 
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.onPrimary
+//        containerColor = MaterialTheme.colorScheme.onPrimary
     ) {
         items.forEach { item ->
             NavigationBarItem(
