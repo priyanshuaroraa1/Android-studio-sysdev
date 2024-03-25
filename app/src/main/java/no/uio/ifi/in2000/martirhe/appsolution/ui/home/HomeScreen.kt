@@ -14,12 +14,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Maximize
+import androidx.compose.material.icons.filled.MyLocation
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 
 import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -128,7 +132,12 @@ fun HomeScreen(
                 modifier = Modifier,
                 cameraPositionState = cameraPositionState,
                 onMapClick = {
-                    homeViewModel.onMapBackroundClick(it, coroutineScope, cameraPositionState, scaffoldState)
+                    homeViewModel.onMapBackroundClick(
+                        it,
+                        coroutineScope,
+                        cameraPositionState,
+                        scaffoldState
+                    )
                 },
                 properties = mapProperties
             ) {
@@ -147,25 +156,14 @@ fun HomeScreen(
                 if (homeViewModel.showCustomMarker) {
                     Marker(
                         state = MarkerState(position = homeViewModel.customMarkerLocation),
-
+                        onClick = {
+                            coroutineScope.launch { scaffoldState.bottomSheetState.expand() }
+                            false
+                        }
                         )
                 }
             }
-
-            Button(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(16.dp)
-                    .offset(y = (-125).dp),
-                onClick = { /*TODO*/ }
-            ) {
-                Text(text = "Zoom")
-            }
-
-
         }
-
-
     }
 }
 
@@ -188,7 +186,8 @@ fun BottomSheetBadeplassContent(
 
                 Text(
                     text = homeViewModel.selectedBadeplass.navn,
-                    fontSize = 18.sp)
+                    fontSize = 18.sp
+                )
 
                 val farevarselUiState by homeViewModel.farevarselUiState.collectAsState()
 
@@ -280,14 +279,12 @@ fun BottomSheetBadeplassContent(
                 }
 
 
-
             }
         }
 
     }
 
 }
-
 
 
 @Composable
@@ -309,8 +306,8 @@ fun FarevarselCard(
                 simpleMetAlertList.forEach {
                     Text(
                         text = "- " + it.awarenessType.split(';')[1] + ", " + it.awarenessLevel.split(
-                                                ';'
-                                            )[1].replaceFirstChar {
+                            ';'
+                        )[1].replaceFirstChar {
                             if (it.isLowerCase()) it.titlecase(
                                 Locale.getDefault()
                             ) else it.toString()

@@ -75,7 +75,8 @@ data class PocFarevarselUiState(
 enum class BottomSheetHeightState(val heightDp: Dp) {
     Hidden(0.dp),
     Showing(125.dp)
-} // TODO: Flytte denne og de over til egne filer
+} // TODO: Flytte denne og de andre greiene over til egne filer
+
 
 
 class HomeViewModel : ViewModel() {
@@ -100,11 +101,18 @@ class HomeViewModel : ViewModel() {
     val badeplasser = badeplasserDummy
     var customBadeplass by mutableStateOf<Badeplass>(Badeplass("", "Valgt sted", 59.895002996529485, 10.67554858599053))
 
+
+
+
     // Variables for Map
     var selectedBadeplass by mutableStateOf<Badeplass>(badeplasser[0])
+    var showBottomSheet by mutableStateOf(false)
+    var isCustomBadeplass by mutableStateOf(false)
     var showBadeplassCard by mutableStateOf(false)
     var showCustomMarker by mutableStateOf(false)
     var customMarkerLocation by mutableStateOf<LatLng>(LatLng(59.911491, 10.757933))
+
+
 
     // BottomSheet LiveData
     private val _bottomSheetState = MutableLiveData(BottomSheetHeightState.Showing) // Initial value
@@ -119,13 +127,18 @@ class HomeViewModel : ViewModel() {
     }
 
 
-    fun onBadeplassPinClick(badeplass: Badeplass) {
+    fun onBadeplassPinClick(
+        badeplass: Badeplass) {
+        showBottomSheet()
+        bottomSheetState
         selectedBadeplass = badeplass
-        showBadeplassCard = true
         showCustomMarker = false
+        showBottomSheet = true
+        isCustomBadeplass = false
         loadLocationForecast(badeplass.lat, badeplass.lon)
         loadOceanForecast(badeplass.lat, badeplass.lon)
         loadFarevarsler()
+
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -136,10 +149,11 @@ class HomeViewModel : ViewModel() {
         scaffoldState: BottomSheetScaffoldState) {
         if (showBadeplassCard) {
             showBadeplassCard = false
-            showCustomMarker = false
+//            showCustomMarker = false
             showBottomSheet()
             coroutineScope.launch { scaffoldState.bottomSheetState.partialExpand() }
         } else {
+            showBottomSheet()
             coroutineScope.launch { scaffoldState.bottomSheetState.expand() }
             customMarkerLocation = latLng
             customBadeplass.lat = latLng.latitude
