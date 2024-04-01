@@ -103,5 +103,11 @@ dependencies {
     implementation("com.google.maps.android:maps-compose:4.3.3")
     implementation("com.google.maps.android:android-maps-utils:2.3.0")
 
+    // ViewModel og LiveData
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation ("androidx.activity:activity-compose:1.8.2")
+
+    // Jetpack Compose LiveData-integrasjon
+    implementation ("androidx.compose.runtime:runtime-livedata:1.6.4")
 
 }
