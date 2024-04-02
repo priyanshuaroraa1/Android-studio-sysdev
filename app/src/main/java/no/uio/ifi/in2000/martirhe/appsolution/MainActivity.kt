@@ -30,11 +30,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 import no.uio.ifi.in2000.martirhe.appsolution.ui.about.AboutUsScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.home.HomeScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navbar.BottomNavBar
 import no.uio.ifi.in2000.martirhe.appsolution.util.Routes
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
