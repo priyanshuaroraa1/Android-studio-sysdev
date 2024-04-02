@@ -1,5 +1,6 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.home
 
+import android.content.Context
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.getValue
@@ -12,6 +13,8 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
+//import dagger.hilt.android.lifecycle.HiltViewModel
+//import dagger.hilt.android.qualifiers.ApplicationContext
 import io.ktor.client.plugins.ResponseException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,13 +29,11 @@ import no.uio.ifi.in2000.martirhe.appsolution.data.metalert.MetAlertRepositoryIn
 import java.io.IOException
 
 
-
-
-
-
 class HomeViewModel : ViewModel() {
 
-    val locationForecastRepository: LocationForecastRepositoryInterface = LocationForecastRepository()
+
+    val locationForecastRepository: LocationForecastRepositoryInterface =
+        LocationForecastRepository()
     var locationForecastUiState: LocationForecastUiState by mutableStateOf(LocationForecastUiState.Loading)
 
     val oceanForecastRepository: OceanForecastRepositoryInterface = OceanForecastRepository()
@@ -50,19 +51,25 @@ class HomeViewModel : ViewModel() {
         Badeplass("04", "Testbadeplass", 62.2631564, 5.2425385),
     )
     val badeplasser = badeplasserDummy
-    var customBadeplass by mutableStateOf<Badeplass>(Badeplass("", "Valgt sted", 59.895002996529485, 10.67554858599053))
+    var customBadeplass by mutableStateOf<Badeplass>(
+        Badeplass(
+            "",
+            "Valgt sted",
+            59.895002996529485,
+            10.67554858599053
+        )
+    )
 
 
-    var homeScreenUiState: HomeScreenUiState by mutableStateOf(HomeScreenUiState(
-        lastKnownLocation = null,
-        swimSpots = badeplasserDummy,
-        customSwimSpot = null,
-        selectedSwimSpot = null,
-        bottomSheetPosition = BottomSheetPosition.Hidden
-    ))
-
-
-
+    var homeScreenUiState: HomeScreenUiState by mutableStateOf(
+        HomeScreenUiState(
+            lastKnownLocation = null,
+            swimSpots = badeplasserDummy,
+            customSwimSpot = null,
+            selectedSwimSpot = null,
+            bottomSheetPosition = BottomSheetPosition.Hidden
+        )
+    )
 
 
     // Variables for Map
@@ -79,10 +86,9 @@ class HomeViewModel : ViewModel() {
     }
 
 
-
-
     fun onBadeplassPinClick(
-        badeplass: Badeplass) {
+        badeplass: Badeplass
+    ) {
 //        showBottomSheet() TODO
         selectedBadeplass = badeplass
         showCustomMarker = false
@@ -99,7 +105,8 @@ class HomeViewModel : ViewModel() {
         latLng: LatLng,
         coroutineScope: CoroutineScope,
         cameraPositionState: CameraPositionState,
-        scaffoldState: BottomSheetScaffoldState) {
+        scaffoldState: BottomSheetScaffoldState
+    ) {
         if (showBadeplassCard) {
             showBadeplassCard = false
 //            showCustomMarker = false
@@ -159,25 +166,17 @@ class HomeViewModel : ViewModel() {
     }
 
 
-//    // Variables for SimpleMetAlerts
-//    private val _metAlertsForCurrentLocation = MutableLiveData<List<SimpleMetAlert>>(emptyList())
-//    val metAlertsForCurrentLocation: LiveData<List<SimpleMetAlert>> = _metAlertsForCurrentLocation
-//
-//    fun updateMetAlerts(newAlerts: List<SimpleMetAlert>) {
-//        _metAlertsForCurrentLocation.value = newAlerts
-//    }
-
-
-
-
-
-
 
     fun loadLocationForecast(lat: Double, lon: Double) {
         viewModelScope.launch(Dispatchers.IO) {
             locationForecastUiState = LocationForecastUiState.Loading
             locationForecastUiState = try {
-                LocationForecastUiState.Success(locationForecastRepository.getLocationForecast(lat, lon))
+                LocationForecastUiState.Success(
+                    locationForecastRepository.getLocationForecast(
+                        lat,
+                        lon
+                    )
+                )
             } catch (e: IOException) {
                 LocationForecastUiState.Error
             } catch (e: ResponseException) {
@@ -205,7 +204,8 @@ class HomeViewModel : ViewModel() {
             metAlertUiState = try {
                 MetAlertUiState.Success(
                     metAlertRepository.getMetAlerts(),
-                    metAlertRepository.getSimpleMetAlerts())
+                    metAlertRepository.getSimpleMetAlerts()
+                )
             } catch (e: IOException) {
                 MetAlertUiState.Error
             } catch (e: ResponseException) {

@@ -33,7 +33,6 @@ import androidx.navigation.compose.rememberNavController
 import no.uio.ifi.in2000.martirhe.appsolution.ui.about.AboutUsScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.home.HomeScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navbar.BottomNavBar
-import no.uio.ifi.in2000.martirhe.appsolution.ui.pocmap.PocMapScreen
 import no.uio.ifi.in2000.martirhe.appsolution.util.Routes
 
 class MainActivity : ComponentActivity() {

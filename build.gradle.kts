@@ -12,7 +12,6 @@ buildscript {
     }
     dependencies {
         classpath("com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:2.0.1")
-        classpath("com.google.dagger:hilt-android-gradle-plugin:2.42")
     }
 }
 

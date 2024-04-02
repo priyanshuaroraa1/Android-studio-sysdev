@@ -2,7 +2,6 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-//    id("dagger.hilt.android.plugin")
     id("kotlin-kapt")
 }
 
@@ -103,7 +102,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
     // Extended Icons
-    implementation("androidx.compose.material:material-icons-extended-android:1.6.3")
+    implementation("androidx.compose.material:material-icons-extended-android:1.6.4")
 
     // Kotlin Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3") // use the latest version available
@@ -129,7 +128,6 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:0.35.0-alpha")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
 
-
     // Android Maps Compose composables for the Maps SDK for Android
     implementation("com.google.maps.android:maps-compose:4.3.3")
     implementation("com.google.maps.android:android-maps-utils:2.3.0")
@@ -140,9 +138,5 @@ dependencies {
     implementation("com.google.maps.android:maps-ktx:5.0.0")
     // KTX for the Maps SDK for Android Utility Library
     implementation("com.google.maps.android:maps-utils-ktx:3.2.1")
-
-//    // Hilt
-//    implementation("com.google.dagger:hilt-android:2.42")
-//    kapt("com.google.dagger:hilt-compiler:2.42")
 
 }
