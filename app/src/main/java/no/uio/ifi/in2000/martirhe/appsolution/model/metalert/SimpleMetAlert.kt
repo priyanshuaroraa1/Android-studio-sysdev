@@ -16,10 +16,8 @@ data class SimpleMetAlert(
     fun isRelevantForCoordinate(latLng: LatLng): Boolean {
 
         Log.i("TestCoordinates", "Starting")
-//        Log.i("TestCoordinatesx", multiPolygon.toString())
         for (collection in multiPolygon) {
             Log.i("TestCoordinates", "Inni første loop")
-//            Log.i("TestCoordinatesx", collection.toString())
             for (polygon in collection) {
                 Log.i("TestCoordinates", "Inni andre loop")
                 Log.i("TestCoordinatesx", area)
@@ -31,9 +29,6 @@ data class SimpleMetAlert(
                     polygonPath.add(LatLng(coordList[1].toDouble(), coordList[0].toDouble()))
                 }
 
-//                val polygonPath: List<LatLng> = polygon.map {
-//                    LatLng(it[0].toDouble(), it[1].toDouble())
-//                }
                 Log.i("TestCoordinates", polygonPath.toString())
 
                 Log.i("TestCoordinatesx", PolyUtil.containsLocation(latLng, polygonPath, true).toString())

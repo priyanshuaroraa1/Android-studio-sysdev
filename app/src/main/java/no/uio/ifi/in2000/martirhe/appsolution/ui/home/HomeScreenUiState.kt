@@ -20,6 +20,6 @@ data class HomeScreenUiState(
 
 enum class BottomSheetPosition(val heightDp: Dp) {
     Hidden(0.dp),
-    Peeking(125.dp),
+    Peeking(125.dp), // TODO: Trengs denne?
     Showing(125.dp),
 } // TODO: Flytte denne og de andre greiene over til egne filer

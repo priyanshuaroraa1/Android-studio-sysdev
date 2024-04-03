@@ -27,7 +27,6 @@ import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutUsScreen(
-//    navController: NavHostController
     onNavigate: (UiEvent.Navigate) -> Unit,
 ) {
     var selectedTab by remember { mutableStateOf(0) }

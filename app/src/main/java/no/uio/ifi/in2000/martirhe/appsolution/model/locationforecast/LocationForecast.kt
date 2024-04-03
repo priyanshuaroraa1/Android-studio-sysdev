@@ -1,6 +1,5 @@
 package no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast
 
-//TODO: Endre navn på variabler til at det er likt som JSON eller endre det
 
 data class LocationForecast (
     val type: String,
@@ -25,12 +24,12 @@ data class Meta (
 
 data class Units (
     val airPressureAtSeaLevel: String,
-    val air_temperature: String,    //S: endret navn etter hva det heter i JSON-fil
-    val cloud_area_fraction: String,    //S: endret navn etter hva det heter i JSON-fil
+    val air_temperature: String,
+    val cloud_area_fraction: String,
     val precipitationAmount: String,
     val relativeHumidity: String,
     val windFromDirection: String,
-    val wind_speed: String  //S: endret navn etter hva det heter i JSON-fil
+    val wind_speed: String
 )
 
 data class Timesery (
@@ -51,11 +50,11 @@ data class Instant (
 
 data class InstantDetails (
     val airPressureAtSeaLevel: Double,
-    val air_temperature: Double, //S: endret navn etter hva det heter i JSON-fil
-    val cloud_area_fraction: Double, //S: endret navn etter hva det heter i JSON-fil
+    val air_temperature: Double,
+    val cloud_area_fraction: Double,
     val relativeHumidity: Double,
     val windFromDirection: Double,
-    val wind_speed: Double //S: endret navn etter hva det heter i JSON-fil
+    val wind_speed: Double
 )
 
 data class Next12_Hours (

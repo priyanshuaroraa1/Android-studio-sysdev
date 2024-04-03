@@ -6,13 +6,12 @@ import javax.inject.Inject
 
 interface LocationForecastRepositoryInterface {
     suspend fun getLocationForecast(
-        lat: Double = 59.920244,
-        lon: Double = 10.756355,
+        lat: Double,
+        lon: Double,
     ): LocationForecast
 }
 
 class LocationForecastRepository @Inject constructor(
-//    private val dataSource: LocationForecastDataSource = LocationForecastDataSource()
     private val dataSource: LocationForecastDataSource
 ) : LocationForecastRepositoryInterface {
 

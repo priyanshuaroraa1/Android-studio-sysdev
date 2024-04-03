@@ -71,7 +71,6 @@ fun HomeScreen(
     val coroutineScope = rememberCoroutineScope()
 
 
-//    val bottomSheetState by homeViewModel.bottomSheetState.observeAsState(BottomSheetHeightState.Showing)
     val scaffoldState = rememberBottomSheetScaffoldState()
 
     BottomSheetScaffold(
@@ -99,7 +98,6 @@ fun HomeScreen(
 
                 IconButton(
                     onClick = {
-//                        homeViewModel.hideBottomSheet()
                         coroutineScope.launch {
                             scaffoldState.bottomSheetState.partialExpand()
                         }
@@ -174,37 +172,12 @@ fun HomeScreen(
                             swimSpot
                     }
 
-
-
                     homeViewModel.homeScreenUiState.swimSpots.forEach { swimSpot ->
                         map.addMarker(
                             swimSpot.getMarkerOptions()
                         )
                     }
                 }
-
-
-//                  TODO: Slette dette
-//                homeViewModel.badeplasser.forEach { badeplass ->
-//                    Marker(
-//                        state = MarkerState(position = LatLng(badeplass.lat, badeplass.lon)),
-//                        onClick = {
-//                            homeViewModel.onBadeplassPinClick(badeplass)
-//                            coroutineScope.launch { scaffoldState.bottomSheetState.expand() }
-//                            false
-//                        }
-//                    )
-//                }
-
-//                if (homeViewModel.showCustomMarker) {
-//                    Marker(
-//                        state = MarkerState(position = homeViewModel.customMarkerLocation),
-//                        onClick = {
-//                            coroutineScope.launch { scaffoldState.bottomSheetState.expand() }
-//                            false
-//                        }
-//                    )
-//                }
             }
         }
     }
@@ -235,7 +208,6 @@ fun BottomSheetBadeplassContent(
                     text = homeViewModel.homeScreenUiState.selectedSwimSpot?.navn.toString(),
                     fontSize = 18.sp
                 )
-
 
                 homeViewModel.metAlertUiState.let { state ->
                     when (state) {
@@ -314,8 +286,6 @@ fun BottomSheetBadeplassContent(
         }
     }
 }
-
-
 
 
 @Composable

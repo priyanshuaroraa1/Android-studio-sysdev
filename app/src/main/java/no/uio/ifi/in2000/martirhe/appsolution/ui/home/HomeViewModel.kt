@@ -37,13 +37,8 @@ class HomeViewModel @Inject constructor(
     private val metAlertRepository: MetAlertRepositoryInterface,
 ) : ViewModel() {
 
-//    val locationForecastRepository: LocationForecastRepositoryInterface = LocationForecastRepository()
     var locationForecastUiState: LocationForecastUiState by mutableStateOf(LocationForecastUiState.Loading)
-
-//    val oceanForecastRepository: OceanForecastRepositoryInterface = OceanForecastRepository()
     var oceanForecastUiState: OceanForecastState by mutableStateOf(OceanForecastState.Loading)
-
-//    val metAlertRepository: MetAlertRepositoryInterface = MetAlertRepository()
     var metAlertUiState: MetAlertUiState by mutableStateOf(MetAlertUiState.Loading)
 
     // Dummy data
@@ -114,11 +109,8 @@ class HomeViewModel @Inject constructor(
     ) {
         if (showBadeplassCard) {
             showBadeplassCard = false
-//            showCustomMarker = false
-//            showBottomSheet() TODO
             coroutineScope.launch { scaffoldState.bottomSheetState.partialExpand() }
         } else {
-//            showBottomSheet() TODO
             coroutineScope.launch { scaffoldState.bottomSheetState.expand() }
             customMarkerLocation = latLng
             customBadeplass.lat = latLng.latitude

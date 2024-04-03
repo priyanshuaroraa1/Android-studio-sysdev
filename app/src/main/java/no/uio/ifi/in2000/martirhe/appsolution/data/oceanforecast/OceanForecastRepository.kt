@@ -8,13 +8,12 @@ import javax.inject.Inject
 
 interface OceanForecastRepositoryInterface {
     suspend fun getOceanForecast(
-        lat: Double = 59.920244,
-        lon: Double = 10.756355,
+        lat: Double,
+        lon: Double,
     ): OceanForecast
 }
 
 class OceanForecastRepository @Inject constructor(
-//    private val dataSource: OceanForecastDataSource = OceanForecastDataSource()
     private val dataSource: OceanForecastDataSource
 ) : OceanForecastRepositoryInterface {
 
