@@ -53,6 +53,7 @@ class HomeViewModel @Inject constructor(
         Badeplass("02", "Hovedøya", 59.89531481816671, 10.724690847364073),
         Badeplass("03", "Tjuvholmen", 59.9064275008578, 10.721101654359384),
         Badeplass("04", "Testbadeplass", 62.2631564, 5.2425385),
+        Badeplass("05", "Sørenga Sjøbad", 59.90113457139354, 10.750794912975863)
     )
     val badeplasser = badeplasserDummy
     var customBadeplass by mutableStateOf<Badeplass>(
