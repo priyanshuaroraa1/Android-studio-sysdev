@@ -12,7 +12,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.data.oceanforecast.OceanForecastRe
 import no.uio.ifi.in2000.martirhe.appsolution.data.oceanforecast.OceanForecastRepositoryInterface
 
 @Module
-@InstallIn(SingletonComponent::class) // Use ViewModelComponent if scoped to ViewModel lifecycle
+@InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
 
     @Binds

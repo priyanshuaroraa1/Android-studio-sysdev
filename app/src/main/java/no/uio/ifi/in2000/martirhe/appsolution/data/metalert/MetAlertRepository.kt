@@ -12,7 +12,6 @@ interface MetAlertRepositoryInterface {
 }
 
 class MetAlertRepository @Inject constructor(
-//    private val dataSource: MetAlertDataSource = MetAlertDataSource()
     private val dataSource: MetAlertDataSource
 ) : MetAlertRepositoryInterface {
 
