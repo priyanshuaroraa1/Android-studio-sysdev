@@ -10,10 +10,10 @@ import io.ktor.client.request.header
 import io.ktor.serialization.gson.gson
 import no.uio.ifi.in2000.martirhe.appsolution.BuildConfig
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.MetAlertCollection
+import javax.inject.Inject
 
-class MetAlertDataSource {
+class MetAlertDataSource @Inject constructor() {
 
-    // TODO: Security breach?
     private val apiKey = BuildConfig.UIO_PROXY_API_KEY
 
     private val client = HttpClient(CIO) {

@@ -13,6 +13,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
+import dagger.hilt.android.lifecycle.HiltViewModel
 //import dagger.hilt.android.lifecycle.HiltViewModel
 //import dagger.hilt.android.qualifiers.ApplicationContext
 import io.ktor.client.plugins.ResponseException
@@ -27,19 +28,22 @@ import no.uio.ifi.in2000.martirhe.appsolution.model.badeplass.Badeplass
 import no.uio.ifi.in2000.martirhe.appsolution.data.metalert.MetAlertRepository
 import no.uio.ifi.in2000.martirhe.appsolution.data.metalert.MetAlertRepositoryInterface
 import java.io.IOException
+import javax.inject.Inject
 
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val locationForecastRepository: LocationForecastRepositoryInterface,
+    private val oceanForecastRepository: OceanForecastRepositoryInterface,
+    private val metAlertRepository: MetAlertRepositoryInterface,
+) : ViewModel() {
 
-class HomeViewModel : ViewModel() {
-
-
-    val locationForecastRepository: LocationForecastRepositoryInterface =
-        LocationForecastRepository()
+//    val locationForecastRepository: LocationForecastRepositoryInterface = LocationForecastRepository()
     var locationForecastUiState: LocationForecastUiState by mutableStateOf(LocationForecastUiState.Loading)
 
-    val oceanForecastRepository: OceanForecastRepositoryInterface = OceanForecastRepository()
+//    val oceanForecastRepository: OceanForecastRepositoryInterface = OceanForecastRepository()
     var oceanForecastUiState: OceanForecastState by mutableStateOf(OceanForecastState.Loading)
 
-    val metAlertRepository: MetAlertRepositoryInterface = MetAlertRepository()
+//    val metAlertRepository: MetAlertRepositoryInterface = MetAlertRepository()
     var metAlertUiState: MetAlertUiState by mutableStateOf(MetAlertUiState.Loading)
 
     // Dummy data

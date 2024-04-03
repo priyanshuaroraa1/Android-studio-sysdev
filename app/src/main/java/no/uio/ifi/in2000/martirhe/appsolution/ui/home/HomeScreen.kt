@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -39,6 +40,7 @@ import com.google.maps.android.compose.MapEffect
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.rememberCameraPositionState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.utils.io.errors.IOException
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.martirhe.appsolution.model.badeplass.Badeplass
@@ -52,7 +54,7 @@ import java.util.Locale
 @Composable
 fun HomeScreen(
     onNavigate: (UiEvent.Navigate) -> Unit,
-    homeViewModel: HomeViewModel = viewModel()
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(homeViewModel.customMarkerLocation, 11f)

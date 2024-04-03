@@ -12,8 +12,9 @@ import io.ktor.serialization.gson.gson
 import no.uio.ifi.in2000.martirhe.appsolution.BuildConfig
 import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.LocationForecast
 import no.uio.ifi.in2000.martirhe.appsolution.model.oceanforecast.OceanForecast
+import javax.inject.Inject
 
-class OceanForecastDataSource {
+class OceanForecastDataSource @Inject constructor() {
 
     private val apiKey = BuildConfig.UIO_PROXY_API_KEY
 
