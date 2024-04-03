@@ -1,6 +1,11 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.about
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -36,7 +41,6 @@ fun AboutScreen(navController: NavHostController) {
         colorScheme = lightColorScheme(
             onPrimary = Color.White,
             onSecondary = Color.White
-            // Ingen spesifikk bakgrunnsfarge her; vi setter den i Scaffold
         )
     ) {
         Scaffold(
@@ -58,7 +62,7 @@ fun AboutScreen(navController: NavHostController) {
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(scrollState)
-                    .padding(40.dp)
+                    .padding(20.dp)
                     //.background(Color(0xFF87CEEB)) // Sørger for at bakgrunnen er lyseblå
 
             ) {
@@ -66,7 +70,8 @@ fun AboutScreen(navController: NavHostController) {
                     painter = painterResource(id = R.drawable.plasktekst),
                     contentDescription = "App Logo",
                     modifier = Modifier
-                        .size(width = 200.dp, height = 140.dp)
+                        .padding(20.dp)
+                        .size(width = 210.dp, height = 140.dp)
                         .align(Alignment.CenterHorizontally)
                 )
                 Spacer(modifier = Modifier.height(1.dp))
@@ -90,7 +95,7 @@ fun AboutScreen(navController: NavHostController) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(top = 16.dp)
+                        .padding(top = 1.dp)
                 ) {
                     TabRow(
                         selectedTabIndex = selectedTab,
@@ -101,8 +106,7 @@ fun AboutScreen(navController: NavHostController) {
                         Tab(
                             selected = selectedTab == 0,
                             onClick = { selectedTab = 0 },
-                            text = { Text("About Us")
-                            }
+                            text = { Text("About Us") }
                         )
                         Tab(
                             selected = selectedTab == 1,
@@ -111,9 +115,20 @@ fun AboutScreen(navController: NavHostController) {
                         )
                     }
 
-                    when (selectedTab) {
-                        0 -> AboutUsInfo()
-                        1 -> ContactUsInfo()
+                    AnimatedVisibility(
+                        visible = selectedTab == 0,
+                        enter = fadeIn() + expandIn(),
+                        exit = shrinkOut() + fadeOut()
+                    ) {
+                        AboutUsInfo()
+                    }
+
+                    AnimatedVisibility(
+                        visible = selectedTab == 1,
+                        enter = fadeIn() + expandIn(),
+                        exit = shrinkOut() + fadeOut()
+                    ) {
+                        ContactUsInfo()
                     }
                 }
             }

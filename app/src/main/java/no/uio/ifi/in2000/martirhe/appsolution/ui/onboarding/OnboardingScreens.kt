@@ -28,7 +28,7 @@ val OffWhite = Color(0xFFF2EDEC)
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun OnboardingScreen(navController: NavController) {
+fun OnboardingScreens(navController: NavController) {
     var currentPage by remember { mutableStateOf(0) }
     val totalPages = 4
 
@@ -69,7 +69,7 @@ fun OnboardingScreen(navController: NavController) {
                 painter = painterResource(id = R.drawable.plasktekst),
                 contentDescription = "Tekst",
                 modifier = Modifier
-                    .size(300.dp)
+                    .size(250.dp)
             )
             Spacer(modifier = Modifier.height((1).dp))
             Image(
@@ -162,7 +162,5 @@ fun OnboardingBottomBar(
         }
     }
 }
-
-
 
 
