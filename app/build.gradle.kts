@@ -2,7 +2,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-    id("kotlin-kapt")
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -134,9 +135,20 @@ dependencies {
     // Need this or MapEffect throws exception.
     implementation("androidx.appcompat:appcompat:1.6.1")
 
+    // Hilt
+    implementation("com.google.dagger:hilt-android:2.49")
+    kapt("com.google.dagger:hilt-android-compiler:2.49")
+    kapt("com.google.dagger:hilt-compiler:2.49")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
     // KTX for the Maps SDK for Android
     implementation("com.google.maps.android:maps-ktx:5.0.0")
     // KTX for the Maps SDK for Android Utility Library
     implementation("com.google.maps.android:maps-utils-ktx:3.2.1")
 
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }

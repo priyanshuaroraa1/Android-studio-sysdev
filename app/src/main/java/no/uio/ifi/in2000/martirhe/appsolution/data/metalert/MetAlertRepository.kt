@@ -2,6 +2,7 @@ package no.uio.ifi.in2000.martirhe.appsolution.data.metalert
 
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.MetAlertCollection
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
+import javax.inject.Inject
 
 
 interface MetAlertRepositoryInterface {
@@ -10,8 +11,9 @@ interface MetAlertRepositoryInterface {
 
 }
 
-class MetAlertRepository(
-    private val dataSource: MetAlertDataSource = MetAlertDataSource()
+class MetAlertRepository @Inject constructor(
+//    private val dataSource: MetAlertDataSource = MetAlertDataSource()
+    private val dataSource: MetAlertDataSource
 ) : MetAlertRepositoryInterface {
 
 

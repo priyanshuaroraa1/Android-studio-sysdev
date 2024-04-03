@@ -9,6 +9,7 @@
 
     <!-- TODO: Skal alow backup være true? Gjør sånn at den ber om permissions på nytt etter reinstallering-->
     <application
+        android:name=".PlaskApp"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
