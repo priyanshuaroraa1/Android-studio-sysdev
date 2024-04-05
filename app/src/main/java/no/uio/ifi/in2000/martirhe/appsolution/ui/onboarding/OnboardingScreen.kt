@@ -34,7 +34,7 @@ fun OnboardingScreen(navController: NavController) {
         val totalPages = 4
 
         val (mainTitle, subTitle, bodyText) = when (currentPage) {
-            0 -> Triple("Velkommen til Plask", "Ditt vindu til Norges badesteder", "Oppdag og utforsk de beste badestedene rundt om i landet.")
+            0 -> Triple("Velkommen til Plask!", "Ditt vindu til Norges badesteder", "Oppdag og utforsk de beste badestedene rundt om i landet.")
             1 -> Triple("Utforsk Vannkvalitet", "Informasjon ved fingertuppene", "Få oppdatert informasjon om vannkvalitet og værforhold ved dine favorittbadesteder.")
             2 -> Triple("Favorittsteder", "Lagre og Organiser", "Marker dine favorittbadesteder for rask tilgang og personlig oppdateringer.")
             else -> Triple("Finn Ditt Perfekte Badested", "Søk og Oppdag", "Bruk vårt søkeverktøy for å finne badesteder basert på dine preferanser, fra vannkvalitet til værforhold.")
