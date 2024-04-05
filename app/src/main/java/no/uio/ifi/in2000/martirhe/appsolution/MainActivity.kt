@@ -9,11 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import no.uio.ifi.in2000.martirhe.appsolution.ui.about.About
-import no.uio.ifi.in2000.martirhe.appsolution.ui.about.AboutScreen
-import no.uio.ifi.in2000.martirhe.appsolution.ui.onboarding.OnboardingScreens
+import no.uio.ifi.in2000.martirhe.appsolution.ui.onboarding.OnboardingScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.theme.AppSolutionTheme
 
 class MainActivity : ComponentActivity() {
@@ -33,8 +30,8 @@ class MainActivity : ComponentActivity() {
 //                    PocMapScreen()
                       val navController = rememberNavController()
                       //AboutScreen(navController)
-                      //OnboardingScreens(navController)
-                      About(navController, statusBarPadding = 24.dp)
+                      OnboardingScreen(navController)
+
                 }
             }
         }
