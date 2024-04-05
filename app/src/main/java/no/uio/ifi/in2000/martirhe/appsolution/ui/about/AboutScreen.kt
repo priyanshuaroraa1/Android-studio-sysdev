@@ -25,15 +25,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import no.uio.ifi.in2000.martirhe.appsolution.R
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreen(navController: NavHostController) {
+
+    MaterialTheme(
+        colorScheme = lightColorScheme(
+            primary = Color(0xFF7DCCE9), // Primærfargen
+            secondary = Color(0xFF0E2D4E), // Sekundærfargen
+            tertiary = Color(0xFFF2EDEC), // Tertiærfargen
+            onPrimary = Color.White, // Tekst på primærfarge bakgrunn
+            onSecondary = Color.White // Tekst på sekundærfarge bakgrunn
+        )
+    ) {
+    }
+
     var selectedTab by remember { mutableStateOf(0) }
     val scrollState = rememberScrollState()
 
@@ -208,4 +222,11 @@ fun ContactUsInfo() {
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun AboutScreenPreview() {
+    val navController = rememberNavController()
+    AboutScreen(navController = navController)
 }
