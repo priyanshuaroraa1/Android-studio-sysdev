@@ -23,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +36,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapEffect
 import com.google.maps.android.compose.MapProperties
@@ -59,6 +61,8 @@ fun HomeScreen(
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(homeViewModel.customMarkerLocation, 11f)
     }
+
+    val swimspotsState = homeViewModel.swimspotsState.collectAsState().value
 
     val mapStyleString = loadMapStyleFromAssets()
     val mapProperties = MapProperties(
@@ -177,6 +181,13 @@ fun HomeScreen(
                             swimSpot.getMarkerOptions()
                         )
                     }
+
+                    swimspotsState.allSwimspots.forEach { swimspot ->
+                        map.addMarker(
+                            MarkerOptions().position(LatLng(swimspot.lat, swimspot.lon))
+                        )
+                    }
+                    Log.i("dblen", swimspotsState.allSwimspots.size.toString())
                 }
             }
         }
