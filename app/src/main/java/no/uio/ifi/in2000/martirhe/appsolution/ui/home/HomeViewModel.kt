@@ -1,6 +1,5 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.home
 
-import android.content.Context
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.getValue
@@ -14,18 +13,18 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import dagger.hilt.android.lifecycle.HiltViewModel
-//import dagger.hilt.android.lifecycle.HiltViewModel
-//import dagger.hilt.android.qualifiers.ApplicationContext
 import io.ktor.client.plugins.ResponseException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import no.uio.ifi.in2000.martirhe.appsolution.data.locationforecast.LocationForecastRepository
+import no.uio.ifi.in2000.martirhe.appsolution.data.local.SwimspotRepository
 import no.uio.ifi.in2000.martirhe.appsolution.data.locationforecast.LocationForecastRepositoryInterface
-import no.uio.ifi.in2000.martirhe.appsolution.data.oceanforecast.OceanForecastRepository
 import no.uio.ifi.in2000.martirhe.appsolution.data.oceanforecast.OceanForecastRepositoryInterface
 import no.uio.ifi.in2000.martirhe.appsolution.model.badeplass.Badeplass
-import no.uio.ifi.in2000.martirhe.appsolution.data.metalert.MetAlertRepository
 import no.uio.ifi.in2000.martirhe.appsolution.data.metalert.MetAlertRepositoryInterface
 import java.io.IOException
 import javax.inject.Inject
@@ -35,11 +34,21 @@ class HomeViewModel @Inject constructor(
     private val locationForecastRepository: LocationForecastRepositoryInterface,
     private val oceanForecastRepository: OceanForecastRepositoryInterface,
     private val metAlertRepository: MetAlertRepositoryInterface,
+    private val swimspotRepository: SwimspotRepository,
 ) : ViewModel() {
 
     var locationForecastUiState: LocationForecastUiState by mutableStateOf(LocationForecastUiState.Loading)
     var oceanForecastUiState: OceanForecastState by mutableStateOf(OceanForecastState.Loading)
     var metAlertUiState: MetAlertUiState by mutableStateOf(MetAlertUiState.Loading)
+
+    private val _swimspotsState = MutableStateFlow(SwimspotsState())
+    val swimspotsState = _swimspotsState.asStateFlow()
+
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            _swimspotsState.update { swimspotsState -> swimspotsState.copy(allSwimspots = swimspotRepository.getAllSwimspots().first()) }
+        }
+    }
 
     // Dummy data
     val badeplasserDummy: List<Badeplass> = listOf(

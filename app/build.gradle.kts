@@ -4,13 +4,16 @@ plugins {
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("androidx.room")
 }
 
 android {
     namespace = "no.uio.ifi.in2000.martirhe.appsolution"
     compileSdk = 34
 
-
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
 
     defaultConfig {
         applicationId = "no.uio.ifi.in2000.martirhe.appsolution"
@@ -25,6 +28,12 @@ android {
         }
         buildConfigField("String", "UIO_PROXY_API_KEY", "\"${System.getenv("api.key")}\"")
 
+        // Specifies that Room should generate a schema file in the specified folder.
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments["room.schemaLocation"] = "$projectDir/schemas".toString()
+            }
+        }
 
     }
 
@@ -58,6 +67,7 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
 }
 
 secrets {
@@ -146,9 +156,25 @@ dependencies {
     // KTX for the Maps SDK for Android Utility Library
     implementation("com.google.maps.android:maps-utils-ktx:3.2.1")
 
+    // Room
+    val room_version = "2.6.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+
+
 }
 
 // Allow references to generated code
 kapt {
     correctErrorTypes = true
+}
+
+// Setting up Room schema directory in Kotlin DSL
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class.java).configureEach {
+    kotlinOptions {
+        // Room schema location for Kotlin projects
+        freeCompilerArgs += listOf("-Xopt-in=kotlin.RequiresOptIn", "-Xroom.schemaLocation=$projectDir/schemas")
+    }
 }
