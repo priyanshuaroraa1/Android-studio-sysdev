@@ -77,11 +77,9 @@ fun AboutScreen(navController: NavHostController) {
                     .fillMaxSize()
                     .verticalScroll(scrollState)
                     .padding(20.dp)
-                    //.background(Color(0xFF87CEEB)) // Sørger for at bakgrunnen er lyseblå
-
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.plasktekst),
+                    painter = painterResource(id = R.drawable.plasklogo1),
                     contentDescription = "App Logo",
                     modifier = Modifier
                         .padding(20.dp)

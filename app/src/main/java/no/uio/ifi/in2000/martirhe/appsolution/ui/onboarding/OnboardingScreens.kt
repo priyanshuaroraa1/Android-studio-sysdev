@@ -66,17 +66,12 @@ fun OnboardingScreens(navController: NavController) {
                 .padding(16.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.plasktekst),
+                painter = painterResource(id = R.drawable.plasklogo1),
                 contentDescription = "Tekst",
                 modifier = Modifier
                     .size(250.dp)
             )
-            Spacer(modifier = Modifier.height((1).dp))
-            Image(
-                painter = painterResource(id = R.drawable.plasklogo),
-                contentDescription = "Logo",
-                modifier = Modifier.size(200.dp)
-            )
+
             PageIndicator(currentPage = currentPage, totalPages = totalPages)
             Spacer(modifier = Modifier.height(16.dp))
             Text(
