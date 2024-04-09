@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,19 +32,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapEffect
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.rememberCameraPositionState
-import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.utils.io.errors.IOException
 import kotlinx.coroutines.launch
-import no.uio.ifi.in2000.martirhe.appsolution.model.badeplass.Badeplass
+import no.uio.ifi.in2000.martirhe.appsolution.data.local.Swimspot
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
+import no.uio.ifi.in2000.martirhe.appsolution.ui.home.composables.HomeSearchBar
 import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
 import java.util.Locale
 
@@ -56,20 +56,22 @@ fun HomeScreen(
     onNavigate: (UiEvent.Navigate) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
+    val homeState = homeViewModel.homeState.collectAsState().value
+
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(homeViewModel.customMarkerLocation, 11f)
+        position = homeState.defaultCameraPosition
     }
 
+
+    // TODO: Flytte dette til homeState?
     val mapStyleString = loadMapStyleFromAssets()
     val mapProperties = MapProperties(
         isMyLocationEnabled = false,
         mapStyleOptions = MapStyleOptions(mapStyleString)
     )
 
-
     // Obtain a coroutine scope tied to the lifecycle of this composable
     val coroutineScope = rememberCoroutineScope()
-
 
     val scaffoldState = rememberBottomSheetScaffoldState()
 
@@ -77,7 +79,7 @@ fun HomeScreen(
         scaffoldState = scaffoldState,
         sheetContent = {
 
-            BottomSheetBadeplassContent(
+            BottomSheetSwimspotContent(
                 homeViewModel = homeViewModel
             )
         },
@@ -114,7 +116,7 @@ fun HomeScreen(
             }
 
         },
-        sheetPeekHeight = homeViewModel.homeScreenUiState.bottomSheetPosition.heightDp
+        sheetPeekHeight = homeState.bottomSheetPosition.heightDp
     ) { innerPadding ->
 
         Box(
@@ -127,24 +129,24 @@ fun HomeScreen(
                 modifier = Modifier,
                 cameraPositionState = cameraPositionState,
                 onMapClick = {
-                    homeViewModel.onMapBackroundClick(
-                        it,
-                        coroutineScope,
-                        cameraPositionState,
-                        scaffoldState
-                    )
+                    homeViewModel.onMapBackroundClick(it)
+                        coroutineScope.launch {
+                            scaffoldState.bottomSheetState.expand()
+                            Log.i("Sheet", "expand")
+                        }
                 },
                 properties = mapProperties
             ) {
 
-                MapEffect(homeViewModel.homeScreenUiState.swimSpots) { map ->
+                MapEffect() { map ->
+
 
                     map.setOnMarkerClickListener { marker ->
                         // Dette skjer når en Marker blir klikket på:
-                        val swimSpot = marker.tag as? Badeplass // Cast the tag to your data type
-                        homeViewModel.homeScreenUiState.selectedSwimSpot = swimSpot
-                        if (swimSpot != null) {
-                            homeViewModel.onBadeplassPinClick(swimSpot)
+                        val swimspot = marker.tag as? Swimspot // Cast the tag to your data type
+                        Log.i("Marker tag cast:", swimspot.toString())
+                        if (swimspot != null) {
+                            homeViewModel.onSwimspotPinClick(swimspot)
                         }
 
                         Log.i("Marker tag:", marker.tag.toString())
@@ -153,29 +155,37 @@ fun HomeScreen(
                                 update = CameraUpdateFactory.newLatLng(marker.position),
                                 durationMs = 250
                             )
-                            homeViewModel.showBottomSheet()
-                            coroutineScope.launch { scaffoldState.bottomSheetState.expand() }
-
-
                         }
-                        Log.i(
-                            "Selected swimspot:",
-                            homeViewModel.homeScreenUiState.selectedSwimSpot.toString()
-                        )
+                        // Expand BottomSheet
+                        coroutineScope.launch {
+                            scaffoldState.bottomSheetState.expand()
+                        }
+
                         true // Return true to indicate that the click event has been handled
                     }
 
-                    homeViewModel.homeScreenUiState.swimSpots.forEach { swimSpot ->
-                        // Add each marker and set a tag to identify it later
-                        val marker = map.addMarker(swimSpot.getMarkerOptions())
-                        marker?.tag =
-                            swimSpot
+                    homeState.allSwimspots.forEach { swimspot ->
+                        val marker = map.addMarker(
+                            MarkerOptions().position(
+                                LatLng(
+                                    swimspot.lat,
+                                    swimspot.lon
+                                )
+                            )
+                        )
+                        marker?.tag = swimspot
                     }
 
-                    homeViewModel.homeScreenUiState.swimSpots.forEach { swimSpot ->
-                        map.addMarker(
-                            swimSpot.getMarkerOptions()
+                    if (homeState.customSwimspot != null) {
+                        val marker = map.addMarker(
+                            MarkerOptions().position(
+                                LatLng(
+                                    homeState.customSwimspot.lat,
+                                    homeState.customSwimspot.lon,
+                                )
+                            )
                         )
+                        marker?.tag = homeState.customSwimspot
                     }
                 }
             }
@@ -184,9 +194,12 @@ fun HomeScreen(
 }
 
 @Composable
-fun BottomSheetBadeplassContent(
+fun BottomSheetSwimspotContent(
     homeViewModel: HomeViewModel,
 ) {
+
+    val homeState = homeViewModel.homeState.collectAsState().value
+
     // This box limits the size of the content
     Box(
         modifier = Modifier
@@ -198,87 +211,82 @@ fun BottomSheetBadeplassContent(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
         ) {
+
             item {
 
-                Log.i(
-                    "Showing swimspot: ",
-                    homeViewModel.homeScreenUiState.selectedSwimSpot?.navn.toString()
-                )
-                Text(
-                    text = homeViewModel.homeScreenUiState.selectedSwimSpot?.navn.toString(),
-                    fontSize = 18.sp
-                )
+                if (homeState.selectedSwimspot == null) {
+                    Text(
+                        text = "Utforsk badeplasser",
+                        fontSize = 18.sp
+                    )
+                } else {
 
-                homeViewModel.metAlertUiState.let { state ->
-                    when (state) {
-                        is MetAlertUiState.Success -> {
+                    Text(
+                        text = homeState.selectedSwimspot.spotName,
+                        fontSize = 18.sp
+                    )
 
-                            val koordinater = if (homeViewModel.showCustomMarker) {
-                                LatLng(
-                                    homeViewModel.customBadeplass.lat,
-                                    homeViewModel.customBadeplass.lon
-                                )
-                            } else {
-                                LatLng(
-                                    homeViewModel.selectedBadeplass.lat,
-                                    homeViewModel.selectedBadeplass.lon
+                    homeViewModel.metAlertUiState.let { state ->
+                        when (state) {
+                            is MetAlertUiState.Success -> {
+
+                                val koordinater = homeState.selectedSwimspot!!.getLatLng()
+
+                                FarevarselCard(simpleMetAlertList = state.simpleMetAlertList.filter {
+                                    it.isRelevantForCoordinate(koordinater)
+                                })
+                            }
+
+                            is MetAlertUiState.Loading -> {
+                                Text(text = "Loading")
+                                Log.i("TestAlerts", "Loading")
+                            }
+
+                            is MetAlertUiState.Error -> {
+                                Text(text = "Error")
+                                Log.i("TestAlerts", "Error")
+                            }
+                        }
+                    }
+
+                    homeViewModel.locationForecastUiState.let { state ->
+                        when (state) {
+                            is LocationForecastUiState.Success -> {
+
+                                WeatherCard(
+                                    temperature = state.locationForecast.properties.timeseries[0].data.instant.details.air_temperature,
+                                    windFromDirection = state.locationForecast.properties.timeseries[0].data.instant.details.windFromDirection,
+                                    windSpeed = state.locationForecast.properties.timeseries[0].data.instant.details.wind_speed
                                 )
                             }
 
-                            FarevarselCard(simpleMetAlertList = state.simpleMetAlertList.filter {
-                                it.isRelevantForCoordinate(koordinater)
-                            })
-                        }
+                            is LocationForecastUiState.Loading -> {
+                                Text(text = "Loading")
+                            }
 
-                        is MetAlertUiState.Loading -> {
-                            Text(text = "Loading")
-                            Log.i("TestAlerts", "Loading")
-                        }
-
-                        is MetAlertUiState.Error -> {
-                            Text(text = "Error")
-                            Log.i("TestAlerts", "Error")
+                            is LocationForecastUiState.Error -> {
+                                Text(text = "Error")
+                            }
                         }
                     }
-                }
 
-                homeViewModel.locationForecastUiState.let { state ->
-                    when (state) {
-                        is LocationForecastUiState.Success -> {
+                    homeViewModel.oceanForecastUiState.let { state ->
+                        when (state) {
+                            is OceanForecastState.Success -> {
+                                WaterCard(
+                                    temperature = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_water_temperature,
+                                    waveHeight = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_surface_wave_height,
+                                    waveToDirection = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_water_to_direction
+                                )
+                            }
 
-                            WeatherCard(
-                                temperature = state.locationForecast.properties.timeseries[0].data.instant.details.air_temperature,
-                                windFromDirection = state.locationForecast.properties.timeseries[0].data.instant.details.windFromDirection,
-                                windSpeed = state.locationForecast.properties.timeseries[0].data.instant.details.wind_speed
-                            )
-                        }
+                            is OceanForecastState.Loading -> {
+                                Text(text = "Loading")
+                            }
 
-                        is LocationForecastUiState.Loading -> {
-                            Text(text = "Loading")
-                        }
-
-                        is LocationForecastUiState.Error -> {
-                            Text(text = "Error")
-                        }
-                    }
-                }
-
-                homeViewModel.oceanForecastUiState.let { state ->
-                    when (state) {
-                        is OceanForecastState.Success -> {
-                            WaterCard(
-                                temperature = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_water_temperature,
-                                waveHeight = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_surface_wave_height,
-                                waveToDirection = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_water_to_direction
-                            )
-                        }
-
-                        is OceanForecastState.Loading -> {
-                            Text(text = "Loading")
-                        }
-
-                        is OceanForecastState.Error -> {
-                            Text(text = "Error")
+                            is OceanForecastState.Error -> {
+                                Text(text = "Error")
+                            }
                         }
                     }
                 }
