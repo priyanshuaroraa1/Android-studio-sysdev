@@ -1,8 +1,6 @@
-package no.uio.ifi.in2000.martirhe.appsolution.ui.home
+package no.uio.ifi.in2000.martirhe.appsolution.ui.home.composables
 
-import android.content.res.Resources.Theme
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,18 +13,15 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarColors
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import java.util.Locale
+import no.uio.ifi.in2000.martirhe.appsolution.ui.home.HomeViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,14 +30,14 @@ import java.util.Locale
 fun HomeSearchBar(
     homeViewModel: HomeViewModel = viewModel()
 ) {
-
+    val homeState = homeViewModel.homeState.collectAsState().value
 
     SearchBar(
-        query = homeViewModel.searchBarText,
-        onQueryChange = { homeViewModel.searchBarText = it },
-        onSearch = { homeViewModel.onSearch() },
-        active = homeViewModel.searchBarActive,
-        onActiveChange = { homeViewModel.searchBarActive = it },
+        query = homeState.searchBarText,
+        onQueryChange = { homeViewModel.updateSearchbarText(it) },
+        onSearch = { homeViewModel.onSearchBarSearch() },
+        active = homeState.searchBarActive,
+        onActiveChange = { homeViewModel.updateSearchbarActive(it) },
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
@@ -56,13 +51,13 @@ fun HomeSearchBar(
             ) // TODO: Description?
         },
         trailingIcon = {
-            if (homeViewModel.searchBarActive) {
+            if (homeState.searchBarActive) {
                 Icon(
                     modifier = Modifier.clickable {
-                        if (homeViewModel.searchBarText.isNotEmpty()) {
-                            homeViewModel.searchBarText = ""
+                        if (homeState.searchBarText.isNotEmpty()) {
+                            homeViewModel.updateSearchbarText("")
                         } else {
-                            homeViewModel.searchBarActive = false
+                            homeViewModel.updateSearchbarActive(false)
                         }
                     },
                     imageVector = Icons.Default.Close,
@@ -77,14 +72,14 @@ fun HomeSearchBar(
 
     ) {
 
-        if (homeViewModel.searchBarText == "") {
-            homeViewModel.searchBarHistory.forEach {
+        if (homeState.searchBarText == "") {
+            homeState.searchBarHistory.forEach {
                 Row(
                     modifier = Modifier
                         .padding(8.dp)
                         .clickable {
-                            homeViewModel.searchBarText = it
-                            homeViewModel.onSearch()
+                            homeViewModel.updateSearchbarText(it)
+                            homeViewModel.onSearchBarSearch()
                         }
                 ) {
                     Icon(
@@ -96,15 +91,15 @@ fun HomeSearchBar(
                 }
             }
         } else {
-            homeViewModel.badeplasserDummy.map { it.navn.lowercase()}.filter {
-                homeViewModel.searchBarText.lowercase() in it
+            homeState.allSwimspots.map { it.spotName.lowercase() }.filter {
+                homeState.searchBarText.lowercase() in it
             }.forEach {
                 Row(
                     modifier = Modifier
                         .padding(8.dp)
                         .clickable {
-                            homeViewModel.searchBarText = it
-                            homeViewModel.onSearch()
+                            homeViewModel.updateSearchbarText(it)
+                            homeViewModel.onSearchBarSearch()
                         }
                 ) {
                     Icon(

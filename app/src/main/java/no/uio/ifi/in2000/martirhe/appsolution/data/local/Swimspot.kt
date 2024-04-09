@@ -2,6 +2,7 @@ package no.uio.ifi.in2000.martirhe.appsolution.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.android.gms.maps.model.LatLng
 
 @Entity(tableName = "Swimspot")
 data class Swimspot(
@@ -14,4 +15,8 @@ data class Swimspot(
     val locationstring: String?,
     val original: Boolean?,
     val favourited: Boolean?,
-)
+) {
+    fun getLatLng(): LatLng {
+        return LatLng(lat, lon)
+    }
+}
