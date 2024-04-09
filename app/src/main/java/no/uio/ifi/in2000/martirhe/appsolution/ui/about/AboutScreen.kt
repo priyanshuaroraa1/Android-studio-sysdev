@@ -1,5 +1,5 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.about
-
+/*
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandIn
@@ -209,3 +209,4 @@ fun ContactUsInfo() {
         }
     }
 }
+*/

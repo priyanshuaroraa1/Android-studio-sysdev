@@ -10,7 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import no.uio.ifi.in2000.martirhe.appsolution.ui.onboarding.OnboardingScreen
+import no.uio.ifi.in2000.martirhe.appsolution.ui.about.About
 import no.uio.ifi.in2000.martirhe.appsolution.ui.theme.AppSolutionTheme
 
 class MainActivity : ComponentActivity() {
@@ -30,7 +30,8 @@ class MainActivity : ComponentActivity() {
 //                    PocMapScreen()
                       val navController = rememberNavController()
                       //AboutScreen(navController)
-                      OnboardingScreen(navController)
+                      About(navController)
+                      //OnboardingScreen(navController)
 
                 }
             }
