@@ -2,4 +2,11 @@
     <string name="app_name">AppSolution</string>
     <string name="search_bar_placeholder">Søk etter badeplass</string>
 
+    //About Us
+    <string name="about_screen_label">About Plask</string>
+    <string name="about_screen_title">Velkommen til Plask \nEn app som viser aktuelle badetemperaturer for ulike strender og badeplasser \nlangs kysten</string>
+    <string name="about_screen_info">Her skal det stå generelt om appen vår. Legger bare til random tekst foreløpig. Ønsker en app som gir detaljert informasjon om vann- og lufttemperatur, samt vannkvalitet. Ser etter funksjoner som langtidsvarsel for badetemperatur og muligheten til å legge til favorittbadeplasser.\n Her skal det stå generelt om appen vår. Legger bare til random tekst foreløpig. Ønsker en app som gir detaljert informasjon om vann- og lufttemperatur, samt vannkvalitet. Ser etter funksjoner som langtidsvarsel for badetemperatur og muligheten til å legge til favorittbadeplasser.</string>
+    <string name="about_screen_team">Dette er vårt team! Her skal det stå generelt om våre team medlemmer.</string>
+    <string name="about_screen_teaminfo">Plask is a revolutionary app that enhances your daily water intake tracking with features like customized hydration goals, reminder notifications, and a user-friendly interface. Whether you\'re a fitness enthusiast or just looking to maintain your health, Plask provides the tools you need to stay hydrated! \n Plask is a revolutionary app that enhances your daily water intake tracking with features like customized hydration goals, reminder notifications, and a user-friendly interface. Whether you\'re a fitness enthusiast or just looking to maintain your health, Plask provides the tools you need to stay hydrated! \n Plask is a revolutionary app that enhances your daily water intake tracking with features like customized hydration goals, reminder notifications, and a user-friendly interface. Whether you\'re a fitness enthusiast or just looking to maintain your health, Plask provides the tools you need to stay hydrated!</string>
 </resources>
+
