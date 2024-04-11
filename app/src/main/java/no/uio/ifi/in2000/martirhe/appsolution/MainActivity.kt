@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import no.uio.ifi.in2000.martirhe.appsolution.ui.about.About
+import no.uio.ifi.in2000.martirhe.appsolution.ui.about.AboutNy
+import no.uio.ifi.in2000.martirhe.appsolution.ui.onboarding.OnboardingScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.theme.AppSolutionTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,15 +27,18 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-//                    PocFarevarselScreen()
-//                    PocLocationForecastScreen()
-//                    LocationPermissionScreen()
-//                    PocMapScreen()
-                      val navController = rememberNavController()
-                      //AboutScreen(navController)
-                      About(navController)
+                      //PocFarevarselScreen()
+                      //PocLocationForecastScreen()
+                      //LocationPermissionScreen()
+                      //PocMapScreen()
+                      //val navController = rememberNavController()
+                      //About(navController)
                       //OnboardingScreen(navController)
-
+                    val navController = rememberNavController()
+                    NavHost(navController = navController, startDestination = "onboarding") {
+                        composable("onboarding") { OnboardingScreen(navController) }
+                        composable("about") { AboutNy(navController) }
+                    }
                 }
             }
         }

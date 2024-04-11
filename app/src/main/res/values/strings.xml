@@ -13,5 +13,28 @@
     <string name="about_screen_phone">977 27 150</string>
     <string name="about_screen_license">Her skal det stå litt om lisenser og API vi har brukt. Legger til random tekst.\n\nCopyright © [year] [fullname]\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</string>
     <string name="about_screen_apibutton">Lenke til API og lisenser</string>
+
+    //Onboarding
+    <string name="pageone_maintitle">Velkommen til Plask</string>
+    <string name="pageone_subtitle">Ditt vindu til Norges badesteder</string>
+    <string name="pageone_bodytext">Oppdag og utforsk de beste badestedene rundt om i landet</string>
+
+    <string name="pagetwo_maintitle">Utforsk Vannkvalitet</string>
+    <string name="pagetwo_subtitle">Informasjon ved fingertuppene</string>
+    <string name="pagetwo_bodytext">Få oppdatert informasjon om vannkvalitet og værforhold ved dine favorittbadesteder</string>
+
+    <string name="pagethree_maintitle">Favorittsteder</string>
+    <string name="pagethree_subtitle">Lagre og Organiser</string>
+    <string name="pagethree_bodytext">Marker dine favorittbadesteder for rask tilgang og personlig oppdateringer</string>
+
+    <string name="pagefour_maintitle">Finn Ditt Perfekte Badested</string>
+    <string name="pagefour_subtitle">Søk og Oppdag</string>
+    <string name="pagefour_bodytext">Bruk vårt søkeverktøy for å finne badesteder basert på dine preferanser, fra vannkvalitet til værforhold</string>
+
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_done">Done</string>
+
+
 </resources>
 

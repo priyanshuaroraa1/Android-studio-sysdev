@@ -60,7 +60,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun About(navController: NavController) {
+fun AboutNy(navController: NavController) {
 
     val context = LocalContext.current
     val interactionSource = remember { MutableInteractionSource() }

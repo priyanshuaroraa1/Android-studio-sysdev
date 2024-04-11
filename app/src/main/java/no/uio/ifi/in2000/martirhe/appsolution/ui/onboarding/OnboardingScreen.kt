@@ -11,39 +11,42 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import no.uio.ifi.in2000.martirhe.appsolution.R
 
-private val ThemeColors = lightColorScheme(
-    primary = Color(0xFF7DCCE9),
-    onPrimary = Color.White,
-    secondary = Color(0xFF0E2D4E),
-    onSecondary = Color.White,
-    surface = Color(0xFFF2EDEC),
-    onSurface = Color(0xFF0E2D4E)
-)
-
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun OnboardingScreen(navController: NavController) {
-    MaterialTheme(colorScheme = ThemeColors) {
+
+    MaterialTheme(
+        colorScheme = lightColorScheme(
+            primary = Color(0xFF7DCCE9),
+            secondary = Color(0xFF0E2D4E),
+            tertiary = Color(0xFFF2EDEC),
+            onPrimary = Color.White,
+        )
+    ){
         var currentPage by remember { mutableStateOf(0) }
         val totalPages = 4
 
         val (mainTitle, subTitle, bodyText) = when (currentPage) {
-            0 -> Triple("Velkommen til Plask!", "Ditt vindu til Norges badesteder", "Oppdag og utforsk de beste badestedene rundt om i landet.")
-            1 -> Triple("Utforsk Vannkvalitet", "Informasjon ved fingertuppene", "Få oppdatert informasjon om vannkvalitet og værforhold ved dine favorittbadesteder.")
-            2 -> Triple("Favorittsteder", "Lagre og Organiser", "Marker dine favorittbadesteder for rask tilgang og personlig oppdateringer.")
-            else -> Triple("Finn Ditt Perfekte Badested", "Søk og Oppdag", "Bruk vårt søkeverktøy for å finne badesteder basert på dine preferanser, fra vannkvalitet til værforhold.")
+            0 -> Triple(stringResource(id = R.string.pageone_maintitle), stringResource(id = R.string.pageone_subtitle), stringResource(id = R.string.pageone_bodytext))
+            1 -> Triple(stringResource(id = R.string.pagetwo_maintitle), stringResource(id = R.string.pagetwo_subtitle), stringResource(id = R.string.pagetwo_bodytext))
+            2 -> Triple(stringResource(id = R.string.pagethree_maintitle), stringResource(id = R.string.pagethree_subtitle), stringResource(id = R.string.pagethree_bodytext))
+            else -> Triple(stringResource(id = R.string.pagefour_maintitle), stringResource(id = R.string.pagefour_subtitle), stringResource(id = R.string.pagefour_bodytext))
         }
 
-
         Scaffold(
-            containerColor = ThemeColors.primary,
-            contentColor = ThemeColors.onPrimary,
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.tertiary,
             bottomBar = {
                 OnboardingBottomBar(
                     currentPage = currentPage,
@@ -53,7 +56,7 @@ fun OnboardingScreen(navController: NavController) {
                         if (currentPage < totalPages - 1) {
                             currentPage++
                         } else {
-                            navController.navigate("next_route")
+                            navController.navigate("about")
                         }
                     }
                 )
@@ -74,28 +77,24 @@ fun OnboardingContent(mainTitle: String, subTitle: String, bodyText: String, cur
             .padding(16.dp)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.plasktekst),
+            painter = painterResource(id = R.drawable.plasklogo1),
             contentDescription = "Main Illustration",
-            modifier = Modifier.size(250.dp)
+            modifier = Modifier.size(300.dp)
         )
-        Image(
-            painter = painterResource(id = R.drawable.plasklogo),
-            contentDescription = "Main Illustration",
-            modifier = Modifier.size(180.dp)
-        )
+
         Spacer(modifier = Modifier.height(16.dp))
-        Text(mainTitle, style = MaterialTheme.typography.headlineMedium, color = ThemeColors.secondary)
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(subTitle, style = MaterialTheme.typography.bodyLarge, color = ThemeColors.secondary)
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(bodyText, style = MaterialTheme.typography.bodySmall, color = ThemeColors.secondary)
-        Spacer(modifier = Modifier.height(32.dp))
+        Text(mainTitle,
+            style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, fontFamily = FontFamily(Font(R.font.font1)))
+        Spacer(modifier = Modifier.height(16.dp).size(36.dp))
+        Text(subTitle,
+            style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.secondary, textAlign = TextAlign.Center, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(16.dp).size(34.dp))
+        Text(bodyText,
+            style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary, textAlign = TextAlign.Center)
+        Spacer(modifier = Modifier.height(16.dp).size(32.dp))
         PageIndicator(currentPage, totalPages)
     }
 }
-
-// PageIndicator and OnboardingBottomBar remain largely unchanged, except for the application of the new color scheme.
-
 
 @Composable
 fun PageIndicator(currentPage: Int, totalPages: Int) {
@@ -137,7 +136,7 @@ fun OnboardingBottomBar(
                 onClick = onSkipClicked,
                 colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.secondary)
             ) {
-                Text("Skip", color = MaterialTheme.colorScheme.onPrimary)
+                Text(stringResource(id = R.string.onboarding_skip), color = MaterialTheme.colorScheme.secondary)
             }
         }
 
@@ -147,7 +146,7 @@ fun OnboardingBottomBar(
             shape = MaterialTheme.shapes.medium
         ) {
             Text(
-                text = if (currentPage < totalPages - 1) "Next" else "Done",
+                text = if (currentPage < totalPages - 1) stringResource(id = R.string.onboarding_next) else stringResource(id = R.string.onboarding_done),
                 color = MaterialTheme.colorScheme.onSecondary
             )
         }
