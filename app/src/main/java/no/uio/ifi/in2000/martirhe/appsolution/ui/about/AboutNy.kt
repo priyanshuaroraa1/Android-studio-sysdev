@@ -3,22 +3,15 @@ package no.uio.ifi.in2000.martirhe.appsolution.ui.about
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -27,15 +20,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Attribution
-import androidx.compose.material.icons.filled.Copyright
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Filter5
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -51,31 +38,21 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Yellow
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -94,7 +71,7 @@ fun About(navController: NavController) {
             secondary = Color(0xFF0E2D4E),
             tertiary = Color(0xFFF2EDEC),
             onPrimary = Color.White,
-        )
+            )
     ) {
         Scaffold(
             topBar = {
@@ -108,7 +85,7 @@ fun About(navController: NavController) {
                     },
                     navigationIcon = {
                         IconButton(onClick = { navController.navigateUp() }) {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     },
                     colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.tertiary)
@@ -164,7 +141,7 @@ fun About(navController: NavController) {
                         .fillMaxWidth()
                 )
 
-                Spacer(Modifier.height(25.dp))
+                Spacer(Modifier.height(30.dp))
 
                 Text(
                     stringResource(id = R.string.about_screen_info),
@@ -206,12 +183,16 @@ fun About(navController: NavController) {
                         ) {
                             Ansatte("Priyanshu", R.drawable.priyanshu)
                             Spacer(modifier = Modifier.width(8.dp))
+
                             Ansatte("Vetle", R.drawable.vetle)
                             Spacer(modifier = Modifier.width(8.dp))
+
                             Ansatte("Bernd", R.drawable.bernd)
                             Spacer(modifier = Modifier.width(8.dp))
+
                             Ansatte("Martine", R.drawable.martine)
                             Spacer(modifier = Modifier.width(8.dp))
+
                             Ansatte("Sindre", R.drawable.sindre)
                         }
 
@@ -252,7 +233,7 @@ fun About(navController: NavController) {
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
 
                         Card(
                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
@@ -263,7 +244,6 @@ fun About(navController: NavController) {
                                     .padding(16.dp)
                                     .align(Alignment.CenterHorizontally)
                             ) {
-
                                 Row(
                                     modifier = Modifier
                                         .clickable(
@@ -284,7 +264,7 @@ fun About(navController: NavController) {
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
                                     Text(
-                                        "info@plask.no",
+                                        stringResource(id = R.string.about_screen_mail),
                                         color = MaterialTheme.colorScheme.secondary,
                                         style = TextStyle(textDecoration = TextDecoration.Underline)
                                     )
@@ -313,7 +293,7 @@ fun About(navController: NavController) {
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
                                     Text(
-                                        "123 456 7890",
+                                        stringResource(id = R.string.about_screen_phone),
                                         color = MaterialTheme.colorScheme.secondary,
                                         style = TextStyle(textDecoration = TextDecoration.Underline)
                                     )
@@ -348,7 +328,9 @@ fun About(navController: NavController) {
                         .fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
                 ) {
-                    Text("Lenke til API og lisenser", fontSize = 12.sp)
+                    Text(
+                        stringResource(id = R.string.about_screen_apibutton),
+                        fontSize = 12.sp)
                 }
 
                 Spacer(Modifier.height(8.dp))
