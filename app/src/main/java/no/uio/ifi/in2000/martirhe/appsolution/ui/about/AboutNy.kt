@@ -1,9 +1,13 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.about
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,6 +36,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -57,15 +62,18 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -77,7 +85,8 @@ import no.uio.ifi.in2000.martirhe.appsolution.R
 @Composable
 fun About(navController: NavController) {
 
-    val isCardExpanded = remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val interactionSource = remember { MutableInteractionSource() }
 
     MaterialTheme(
         colorScheme = lightColorScheme(
@@ -113,7 +122,6 @@ fun About(navController: NavController) {
                     .fillMaxSize()
                     .padding(0.dp)
                     .padding(horizontal = 16.dp)
-                    //.background(Color.White)
             ) {
 
                 Column(
@@ -133,10 +141,24 @@ fun About(navController: NavController) {
                     color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleLarge.copy(
-                        fontSize = 25.sp,
+                        fontSize = 35.sp,
                         lineHeight = 28.sp,
                         fontFamily = FontFamily(Font(R.font.font1)),
                         fontWeight = FontWeight.Bold
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+
+                Text(
+                    stringResource(id = R.string.about_screen_description),
+                    color = MaterialTheme.colorScheme.secondary,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontSize = 25.sp,
+                        lineHeight = 28.sp,
+                        fontFamily = FontFamily(Font(R.font.font1)),
+                        //fontWeight = FontWeight.Bold
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -230,58 +252,110 @@ fun About(navController: NavController) {
                             }
                         }
 
-                        Column(modifier = Modifier.padding(16.dp).align(Alignment.CenterHorizontally)) {
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Row {
-                                Icon(Icons.Filled.Email, contentDescription = "Email", tint = MaterialTheme.colorScheme.primary)
-                                Spacer(modifier = Modifier.width(4.dp))
-                                Text("info@plask.no", color = MaterialTheme.colorScheme.primary)
-                            }
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Row {
-                                Icon(Icons.Filled.Phone, contentDescription = "Phone", tint = MaterialTheme.colorScheme.primary)
-                                Spacer(modifier = Modifier.width(4.dp))
-                                Text("123 456 7890", color = MaterialTheme.colorScheme.primary)
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        Card(
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .align(Alignment.CenterHorizontally)
+                            ) {
+
+                                Row(
+                                    modifier = Modifier
+                                        .clickable(
+                                            interactionSource = interactionSource,
+                                            indication = rememberRipple(bounded = true),
+                                            onClick = {
+                                                val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+                                                    data = Uri.parse("mailto:info@plask.no")
+                                                }
+                                                context.startActivity(emailIntent)
+                                            }
+                                        )
+                                ) {
+                                    Icon(
+                                        Icons.Filled.Email,
+                                        contentDescription = "Email",
+                                        tint = MaterialTheme.colorScheme.secondary
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text(
+                                        "info@plask.no",
+                                        color = MaterialTheme.colorScheme.secondary,
+                                        style = TextStyle(textDecoration = TextDecoration.Underline)
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.height(4.dp))
+
+                                // Phone Row
+                                Row(
+                                    modifier = Modifier
+                                        .clickable(
+                                            interactionSource = interactionSource,
+                                            indication = rememberRipple(bounded = true),
+                                            onClick = {
+                                                val phoneIntent = Intent(Intent.ACTION_DIAL).apply {
+                                                    data = Uri.parse("tel:1234567890")
+                                                }
+                                                context.startActivity(phoneIntent)
+                                            }
+                                        )
+                                ) {
+                                    Icon(
+                                        Icons.Filled.Phone,
+                                        contentDescription = "Phone",
+                                        tint = MaterialTheme.colorScheme.secondary
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text(
+                                        "123 456 7890",
+                                        color = MaterialTheme.colorScheme.secondary,
+                                        style = TextStyle(textDecoration = TextDecoration.Underline)
+                                    )
+                                }
                             }
                         }
                     }
                 }
 
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(12.dp))
 
-                Column(modifier = Modifier.padding(16.dp).align(Alignment.CenterHorizontally)) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Row {
-                        Icon(Icons.Filled.Email, contentDescription = "Email", tint = MaterialTheme.colorScheme.primary)
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("info@plask.no", color = MaterialTheme.colorScheme.primary)
-                    }
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Row {
-                        Icon(Icons.Filled.Phone, contentDescription = "Phone", tint = MaterialTheme.colorScheme.primary)
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("123 456 7890", color = MaterialTheme.colorScheme.primary)
-                    }
-                }
+                Text(
+                    stringResource(id = R.string.about_screen_license),
+                    color = MaterialTheme.colorScheme.secondary,
+                    textAlign = TextAlign.Center,
+                    lineHeight = 23.sp,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                )
 
                 Spacer(Modifier.height(16.dp))
 
                 Button(
-                    onClick = { /* API-knapp handling */ },
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_VIEW).apply {
+                            data = Uri.parse("https://www.vg.no")
+                        }
+                        context.startActivity(intent)
+                    },
                     modifier = Modifier
                         .fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
                 ) {
-                    Text("API-knapp", fontSize = 10.sp)
+                    Text("Lenke til API og lisenser", fontSize = 12.sp)
                 }
 
-                Spacer(Modifier.height(16.dp))
-
+                Spacer(Modifier.height(8.dp))
             }
         }
     }
 }
-
 @Composable
 fun Ansatte(name: String, drawableId: Int) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -289,7 +363,7 @@ fun Ansatte(name: String, drawableId: Int) {
             painter = painterResource(id = drawableId),
             contentDescription = "Ansatte Image",
             modifier = Modifier
-                .size(44.dp)
+                .size(55.dp)
                 .clip(CircleShape)
         )
         Text(name, color = MaterialTheme.colorScheme.primary)
