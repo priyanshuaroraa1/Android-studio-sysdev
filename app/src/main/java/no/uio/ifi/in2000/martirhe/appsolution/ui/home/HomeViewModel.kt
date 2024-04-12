@@ -20,6 +20,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.data.locationforecast.LocationFore
 import no.uio.ifi.in2000.martirhe.appsolution.data.oceanforecast.OceanForecastRepositoryInterface
 import no.uio.ifi.in2000.martirhe.appsolution.data.metalert.MetAlertRepositoryInterface
 import java.io.IOException
+import java.nio.channels.UnresolvedAddressException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -142,6 +143,10 @@ class HomeViewModel @Inject constructor(
                 LocationForecastUiState.Error
             } catch (e: ResponseException) {
                 LocationForecastUiState.Error
+            } catch (e: UnresolvedAddressException) {
+                LocationForecastUiState.Error
+            } catch (e: Error) {
+                LocationForecastUiState.Error
             }
         }
     }
@@ -154,6 +159,10 @@ class HomeViewModel @Inject constructor(
             } catch (e: IOException) {
                 OceanForecastState.Error
             } catch (e: ResponseException) {
+                OceanForecastState.Error
+            } catch (e: UnresolvedAddressException) {
+                OceanForecastState.Error
+            } catch (e: Error) {
                 OceanForecastState.Error
             }
         }
@@ -170,6 +179,10 @@ class HomeViewModel @Inject constructor(
             } catch (e: IOException) {
                 MetAlertUiState.Error
             } catch (e: ResponseException) {
+                MetAlertUiState.Error
+            } catch (e: UnresolvedAddressException) {
+                MetAlertUiState.Error
+            } catch (e: Error) {
                 MetAlertUiState.Error
             }
         }

@@ -163,6 +163,9 @@ dependencies {
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
 
+    // Coil (for AsyncImage)
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
 
 }
 

@@ -3,19 +3,19 @@ package no.uio.ifi.in2000.martirhe.appsolution.ui.theme
 import androidx.compose.ui.graphics.Color
 
 // Våre selvdefinerte farger
-val lys_blaa = Color(0xFF7DCCE9)
-val mork_blaa = Color(0xFF0E2D4E)
-val lys_beige = Color(0xFFF2EDEC)
+val light_blue = Color(0xFF7DCCE9)
+val dark_blue = Color(0xFF0E2D4E)
+val light_gray = Color(0xFFF2EDEC)
 
-val md_theme_light_primary = Color(0xFF7DCCE9)
-val md_theme_light_onPrimary = Color(0xFFFFFFFF)
-val md_theme_light_primaryContainer = Color(0xFF0E2D4E)
-val md_theme_light_onPrimaryContainer = Color(0xFFF2EDEC)
-val md_theme_light_secondary = Color(0xFF1760A5)
+val md_theme_light_primary = light_blue
+val md_theme_light_onPrimary = dark_blue
+val md_theme_light_primaryContainer = light_gray
+val md_theme_light_onPrimaryContainer = dark_blue
+val md_theme_light_secondary = dark_blue
 val md_theme_light_onSecondary = Color(0xFFFFFFFF)
 val md_theme_light_secondaryContainer = Color(0xFFD3E3FF)
 val md_theme_light_onSecondaryContainer = Color(0xFF001C39)
-val md_theme_light_tertiary = Color(0xFF5A5B7E)
+val md_theme_light_tertiary = Color(0xFFF2EDEC)
 val md_theme_light_onTertiary = Color(0xFFFFFFFF)
 val md_theme_light_tertiaryContainer = Color(0xFFE1E0FF)
 val md_theme_light_onTertiaryContainer = Color(0xFF171837)
@@ -23,7 +23,7 @@ val md_theme_light_error = Color(0xFFBA1A1A)
 val md_theme_light_errorContainer = Color(0xFFFFDAD6)
 val md_theme_light_onError = Color(0xFFFFFFFF)
 val md_theme_light_onErrorContainer = Color(0xFF410002)
-val md_theme_light_background = Color(0xFFFBFCFE)
+val md_theme_light_background = Color(0xFFFFFFFF)
 val md_theme_light_onBackground = Color(0xFF191C1D)
 val md_theme_light_surface = Color(0xFFFBFCFE)
 val md_theme_light_onSurface = Color(0xFF191C1D)

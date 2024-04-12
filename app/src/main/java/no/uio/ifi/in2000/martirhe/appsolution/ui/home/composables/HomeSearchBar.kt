@@ -66,7 +66,7 @@ fun HomeSearchBar(
             }
         },
         colors = SearchBarDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.onPrimary // Change this color to your preferred background color
+            containerColor = MaterialTheme.colorScheme.background
         ),
 
 
