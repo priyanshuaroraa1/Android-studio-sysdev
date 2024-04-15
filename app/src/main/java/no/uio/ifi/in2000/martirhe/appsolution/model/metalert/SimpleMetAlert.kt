@@ -1,6 +1,7 @@
 package no.uio.ifi.in2000.martirhe.appsolution.model.metalert
 
 import android.util.Log
+import androidx.compose.ui.graphics.Color
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.PolyUtil
 
@@ -41,6 +42,34 @@ data class SimpleMetAlert(
         Log.i("TestCoordinates", "false")
 
         return false
+    }
+
+    fun getAwarenesLevelInt(): Int {
+        return awarenessLevel.substringBefore(";").toIntOrNull() ?: 0
+    }
+
+    fun getAwarenessLevelColor(): Color {
+        val colorString =  awarenessLevel.split(";").getOrNull(1)?.trim() ?: "green"
+        return when (colorString) {
+            "yellow" -> Color.Yellow
+            "orange" -> Color(0xFFFFA500)
+            "red" -> Color.Red
+            else -> Color.Green
+        }
+    }
+    companion object {
+        fun mostSevereColor(simpleMetAlertList: List<SimpleMetAlert>): Color {
+            // Find the alert with the maximum severity level
+            val mostSevereAlert = simpleMetAlertList.maxByOrNull { simpleMetAlert ->
+                simpleMetAlert.getAwarenesLevelInt()
+            }
+
+            return if (mostSevereAlert == null) {
+                Color.Green
+            } else {
+                mostSevereAlert.getAwarenessLevelColor()
+            }
+        }
     }
 }
 

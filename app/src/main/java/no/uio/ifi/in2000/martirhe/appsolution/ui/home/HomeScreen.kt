@@ -1,21 +1,16 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.home
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
 import android.util.Log
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,14 +20,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.ArrowRightAlt
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Maximize
 import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,17 +37,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -70,10 +58,13 @@ import io.ktor.utils.io.errors.IOException
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.martirhe.appsolution.R
 import no.uio.ifi.in2000.martirhe.appsolution.data.local.Swimspot
+import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.ForecastNextHour
+import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.LocationForecast
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
 import no.uio.ifi.in2000.martirhe.appsolution.ui.home.composables.HomeSearchBar
 import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
 import java.util.Locale
+import kotlin.math.roundToInt
 
 
 @SuppressLint("PotentialBehaviorOverride")
@@ -229,9 +220,10 @@ fun HomeScreen(
 @Composable
 fun BottomSheetSwimspotContent(
     homeViewModel: HomeViewModel,
-    outerEdgePaddingValues: Dp = dimensionResource(id = R.dimen.padding_medium)
 ) {
     val homeState = homeViewModel.homeState.collectAsState().value
+
+    val outerEdgePaddingValues: Dp = dimensionResource(id = R.dimen.padding_medium)
 
     Box(
         modifier = Modifier
@@ -253,130 +245,50 @@ fun BottomSheetSwimspotContent(
                             style = MaterialTheme.typography.headlineMedium,
                         )
 
-                        Card(
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                            ),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = dimensionResource(id = R.dimen.padding_medium))
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .padding(vertical = dimensionResource(id = R.dimen.padding_medium))
-                                    .padding(start = dimensionResource(id = R.dimen.padding_medium))
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.WarningAmber,
-                                    contentDescription = "Warning",
-                                    tint = Color.Red,
-                                )
-                                Text(
-                                    text = "3 aktive farevarsler",
-                                    modifier = Modifier
-                                        .padding(horizontal = dimensionResource(id = R.dimen.padding_medium))
-                                )
-                                Spacer(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                )
-                                Icon(
-                                    imageVector = Icons.Default.ChevronRight,
-                                    contentDescription = "Se farevarsler",
-                                    modifier = Modifier
-                                        .padding(end = dimensionResource(id = R.dimen.padding_medium))
-                                )
-                            }
+                        homeViewModel.metAlertUiState.let { state ->
+                            when (state) {
+                                is MetAlertUiState.Success -> {
+                                    val coordinates = homeState.selectedSwimspot.getLatLng()
+                                    val simpleMetAlertList = state.simpleMetAlertList.filter {
+                                        it.isRelevantForCoordinate(coordinates)
+                                    }
 
-                        }
-
-                        SmallHeader(
-                            text = "Den neste timen",
-                        )
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .padding(vertical = dimensionResource(id = R.dimen.padding_medium))
-                        ) {
-                            Spacer(modifier = Modifier.weight(1f))
-                            WeatherIcon()
-                            Spacer(modifier = Modifier.weight(0.5f))
-
-                            Column(horizontalAlignment = Alignment.Start) {
-                                LargeAndSmallText(
-                                    largeText = "19° ",
-                                    smallText = "i lufta",
-                                )
-                                LargeAndSmallText(
-                                    largeText = "11° ",
-                                    smallText = "i vannet",
-                                )
-                            }
-                            Spacer(modifier = Modifier.weight(1.5f))
-                        }
-
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer
-                            )
-                        ) {
-                            Row(
-                                horizontalArrangement = Arrangement.SpaceAround,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = dimensionResource(id = R.dimen.padding_medium)),
-                            ) {
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    LargeAndSmallText(
-                                        largeText = "4",
-                                        smallText = "mm",
-                                    )
-                                    Text(
-                                        text = "Nedbør",
-                                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                        style = MaterialTheme.typography.bodyMedium,
+                                    MetAlertCard(
+                                        simpleMetAlertList = simpleMetAlertList,
                                     )
                                 }
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    LargeAndSmallText(
-                                        largeText = "6",
-                                        smallText = "m/s",
-                                        icon = Icons.Default.ArrowDownward,
-                                        iconDescription = "Fra nord"
-                                    )
-                                    Text(
-                                        text = "Vind",
-                                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                    )
 
+                                is MetAlertUiState.Loading -> {
+                                    Text(text = "Loading")
                                 }
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    LargeAndSmallText(
-                                        largeText = "40",
-                                        smallText = "cm",
-                                        icon = Icons.Default.ArrowDownward,
-                                        iconDescription = "Fra nord"
-                                    )
-                                    Text(
-                                        text = "Bølger",
-                                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                    )
+
+                                is MetAlertUiState.Error -> {
+                                    Text(text = "Error")
                                 }
                             }
                         }
+
+                        homeViewModel.locationForecastUiState.let {state ->
+                            when (state) {
+                                is LocationForecastUiState.Success -> {
+//                                    WeatherForecastCard(state.forecastNextHour)
+                                    WeatherForecastCard(
+                                        state.forecastNextHour,
+                                        state.locationForecast
+                                    )
+                                }
+                                is LocationForecastUiState.Loading -> {
+                                    Text(text = "Loading")
+                                }
+                                is LocationForecastUiState.Error -> {
+                                    Text(text = "Error")
+                                }
+                            }
+                        }
+
+
+                        // TODO: Værmelding
+
 
                         SmallHeader(text = "Neste 7 dager")
 
@@ -461,6 +373,148 @@ fun BottomSheetSwimspotContent(
 
 
 @Composable
+fun WeatherForecastCard(
+    forecastNextHour: ForecastNextHour,
+    locationForecast: LocationForecast
+) {
+    SmallHeader(
+        text = "Den neste timen",
+    )
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .padding(vertical = dimensionResource(id = R.dimen.padding_medium))
+    ) {
+        Spacer(modifier = Modifier.weight(1f))
+
+//        Log.i("Symbol code", locationForecast.properties.timeseries[0].data.instant.details.air_temperature.toString())
+        Log.i("Symbol code", locationForecast.properties.timeseries[0].data.instant.details.air_temperature.toString())
+
+        forecastNextHour.symbolCode?.let { WeatherIcon(it) }
+        Spacer(modifier = Modifier.weight(0.5f))
+
+        Column(horizontalAlignment = Alignment.Start) {
+            LargeAndSmallText(
+                largeText = "${forecastNextHour.airTemperature?.roundToInt()}° ",
+                smallText = "i lufta",
+            )
+            LargeAndSmallText(
+                largeText = "11° ",
+                smallText = "i vannet",
+            )
+        }
+        Spacer(modifier = Modifier.weight(1.5f))
+    }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        )
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceAround,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = dimensionResource(id = R.dimen.padding_medium)),
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                LargeAndSmallText(
+                    largeText = forecastNextHour.precipitationAmount.toString(),
+                    smallText = "mm",
+                )
+                Text(
+                    text = "Nedbør",
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                LargeAndSmallText(
+                    largeText = "6",
+                    smallText = "m/s",
+                    icon = Icons.Default.ArrowDownward,
+                    iconDescription = "Fra nord"
+                )
+                Text(
+                    text = "Vind",
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                LargeAndSmallText(
+                    largeText = "40",
+                    smallText = "cm",
+                    icon = Icons.Default.ArrowDownward,
+                    iconDescription = "Fra nord"
+                )
+                Text(
+                    text = "Bølger",
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun MetAlertCard(
+    simpleMetAlertList: List<SimpleMetAlert>
+) {
+    val numberOfAlerts = simpleMetAlertList.size
+    val alertColor = SimpleMetAlert.mostSevereColor(simpleMetAlertList)
+
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = dimensionResource(id = R.dimen.padding_medium))
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(vertical = dimensionResource(id = R.dimen.padding_medium))
+                .padding(start = dimensionResource(id = R.dimen.padding_medium))
+        ) {
+            Icon(
+                imageVector = Icons.Default.WarningAmber,
+                contentDescription = "Warning",
+                tint = alertColor,
+            )
+            Text(
+                text = "$numberOfAlerts aktive farevarsler",
+                modifier = Modifier
+                    .padding(horizontal = dimensionResource(id = R.dimen.padding_medium))
+            )
+            Spacer(
+                modifier = Modifier
+                    .weight(1f)
+            )
+            Icon(
+                imageVector = Icons.Default.ChevronRight,
+                contentDescription = "Se farevarsler",
+                modifier = Modifier
+                    .padding(end = dimensionResource(id = R.dimen.padding_medium))
+            )
+        }
+    }
+}
+
+@Composable
 fun SmallHeader(
     text: String,
     color: Color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -532,7 +586,7 @@ fun LargeAndSmallText(
 
 @Composable
 fun WeatherIcon(
-    iconName: String = "fair_day",
+    iconName: String,
     smallerSize: Boolean = false
 ) {
     Box {
