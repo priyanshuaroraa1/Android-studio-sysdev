@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.martirhe.appsolution.ui.onboarding
+package no.uio.ifi.in2000.martirhe.appsolution.ui.screens.onboarding
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image

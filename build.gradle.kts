@@ -5,9 +5,6 @@ plugins {
     id("com.android.library") version "7.2.2" apply false
     id("com.google.dagger.hilt.android") version "2.49" apply false
     id("androidx.room") version "2.6.1" apply false
-
-
-
 }
 
 buildscript {

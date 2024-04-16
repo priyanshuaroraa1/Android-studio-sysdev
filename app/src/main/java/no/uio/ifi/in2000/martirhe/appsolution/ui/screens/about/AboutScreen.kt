@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.martirhe.appsolution.ui.about
+package no.uio.ifi.in2000.martirhe.appsolution.ui.screens.about
 
 import android.content.Intent
 import android.net.Uri
@@ -57,10 +57,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import no.uio.ifi.in2000.martirhe.appsolution.R
+import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AboutNy(navController: NavController) {
+fun AboutScreen(navController: NavController, onNavigate: (UiEvent.Navigate) -> Unit) {
 
     val context = LocalContext.current
     val interactionSource = remember { MutableInteractionSource() }
