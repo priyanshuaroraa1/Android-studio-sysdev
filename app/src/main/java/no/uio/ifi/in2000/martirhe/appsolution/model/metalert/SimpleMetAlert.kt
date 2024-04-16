@@ -48,29 +48,37 @@ data class SimpleMetAlert(
         return awarenessLevel.substringBefore(";").toIntOrNull() ?: 0
     }
 
-    fun getAwarenessLevelColor(): Color {
+    fun getAwarenessLevelColor(): WarningIconColor {
         val colorString =  awarenessLevel.split(";").getOrNull(1)?.trim() ?: "green"
         return when (colorString) {
-            "yellow" -> Color.Yellow
-            "orange" -> Color(0xFFFFA500)
-            "red" -> Color.Red
-            else -> Color.Green
+            "yellow" -> WarningIconColor.YELLOW
+            "orange" -> WarningIconColor.ORANGE
+            "red" -> WarningIconColor.RED
+            else -> WarningIconColor.GREEN
         }
-    }
+    } // TODO: Denne må returnere strenger
+
     companion object {
-        fun mostSevereColor(simpleMetAlertList: List<SimpleMetAlert>): Color {
+        fun mostSevereColor(simpleMetAlertList: List<SimpleMetAlert>): WarningIconColor {
             // Find the alert with the maximum severity level
             val mostSevereAlert = simpleMetAlertList.maxByOrNull { simpleMetAlert ->
                 simpleMetAlert.getAwarenesLevelInt()
             }
 
             return if (mostSevereAlert == null) {
-                Color.Green
+                WarningIconColor.GREEN
             } else {
                 mostSevereAlert.getAwarenessLevelColor()
             }
         }
     }
+}
+
+enum class WarningIconColor {
+    GREEN,
+    YELLOW,
+    ORANGE,
+    RED
 }
 
 //   "Green",   "Yellow",       "Orange",   "Red"
