@@ -97,9 +97,9 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.7")
+    implementation("androidx.compose.material3:material3-android:1.2.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -113,8 +113,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
     // Extended Icons
-    implementation("androidx.compose.material:material-icons-extended-android:1.6.4")
-
+    implementation("androidx.compose.material:material-icons-extended-android:1.6.5")
     // Kotlin Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3") // use the latest version available
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3") // use the latest version available
@@ -155,6 +154,10 @@ dependencies {
     implementation("com.google.maps.android:maps-ktx:5.0.0")
     // KTX for the Maps SDK for Android Utility Library
     implementation("com.google.maps.android:maps-utils-ktx:3.2.1")
+
+    // ViewModel og LiveData
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation ("androidx.activity:activity-compose:1.8.2")
 
     // Room
     val room_version = "2.6.1"

@@ -6,6 +6,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.ui.Modifier
+import no.uio.ifi.in2000.martirhe.appsolution.ui.about.AboutNy
+import no.uio.ifi.in2000.martirhe.appsolution.ui.onboarding.OnboardingScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.theme.AppSolutionTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -25,9 +27,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppSolutionTheme {
-
-                val navController = rememberNavController()
-
                 Scaffold(
                     bottomBar = {
                         BottomNavBar(navController = navController)
