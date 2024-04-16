@@ -4,9 +4,9 @@ import java.time.ZonedDateTime
 
 
 data class ForecastNextWeek(
-    val weekList: List<ForecastFullWeekday>,
+    val weekList: List<ForecastWeekday>,
 )
-data class ForecastFullWeekday (
+data class ForecastWeekday (
     val date: ZonedDateTime,
     val symbolCode: String,
     val airTemperature: String,

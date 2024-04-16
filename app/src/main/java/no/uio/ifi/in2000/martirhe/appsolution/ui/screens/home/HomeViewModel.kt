@@ -135,7 +135,8 @@ class HomeViewModel @Inject constructor(
             locationForecastUiState = try {
                 LocationForecastUiState.Success(
                     locationForecastRepository.getLocationForecast(lat, lon),
-                    locationForecastRepository.getForecastNextHour(lat, lon)
+                    locationForecastRepository.getForecastNextHour(lat, lon),
+                    locationForecastRepository.getForecastNextWeek(lat, lon)
                 )
             } catch (e: IOException) {
                 LocationForecastUiState.Error
