@@ -31,6 +31,10 @@
     <string name="pagefour_subtitle">Søk og Oppdag</string>
     <string name="pagefour_bodytext">Bruk vårt søkeverktøy for å finne badesteder basert på dine preferanser, fra vannkvalitet til værforhold</string>
 
+    <string name="location_maintitle">Vi trenger din posisjon</string>
+    <string name="location_subtitle">Din posisjon</string>
+    <string name="location_bodytext">Ja, Ja, Ja</string>
+
     <string name="onboarding_skip">Skip</string>
     <string name="onboarding_next">Next</string>
     <string name="onboarding_done">Done</string>
