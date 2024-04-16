@@ -1,7 +1,6 @@
 package no.uio.ifi.in2000.martirhe.appsolution.data.remote.locationforecast
 
 import android.os.Build
-import android.text.format.Time
 import android.util.Log
 import androidx.annotation.RequiresApi
 import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.ForecastNextHour
@@ -50,52 +49,36 @@ class LocationForecastRepository @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getForecastNextWeek(lat: Double, lon: Double): ForecastNextWeek {
         val locationForecast = getLocationForecast(lat, lon)
-        val allTimeseries = locationForecast.properties.timeseries
-
-        val forecastMap = allTimeseries.associateBy {
+        val forecastMap = locationForecast.properties.timeseries.associateBy {
             ZonedDateTime.parse(it.time)
         }
 
         // Zone setup
         val zoneId = ZoneId.of("Z") // Adjust if needed
-        val now = ZonedDateTime.now(zoneId)
-        val tomorrow = now.toLocalDate().plusDays(1).atStartOfDay(zoneId)
+        val tomorrow = ZonedDateTime.now(zoneId).toLocalDate().plusDays(1).atStartOfDay(zoneId)
 
-        // Generating 06:00 and 18:00 keys for the next 7 days
-        val validDays06 = (0 until 7).map { dayIndex ->
-            tomorrow.withHour(6).plusDays(dayIndex.toLong())
-        }.toSet()
-        val validDays18 = (0 until 7).map { dayIndex ->
-            tomorrow.withHour(18).plusDays(dayIndex.toLong())
+        // Generate 06:00 and 18:00 keys for the next 7 days
+        val validTimes = (0 until 7).flatMap { dayIndex ->
+            listOf(tomorrow.withHour(6).plusDays(dayIndex.toLong()), tomorrow.withHour(18).plusDays(dayIndex.toLong()))
         }.toSet()
 
-        // Filter to keep only the next 7 days starting from tomorrow at 06:00 and 18:00
-        val nextSevenDaysMap06 = forecastMap.filterKeys {
-            validDays06.contains(it)
-        }
-        val nextSevenDaysMap18 = forecastMap.filterKeys {
-            validDays18.contains(it)
-        }
+        // Filter to keep only valid times
+        val validForecasts = forecastMap.filterKeys { it in validTimes }
 
-        var listOfWeekdayForecast: MutableList<ForecastWeekday> = mutableListOf()
-
-        for (date06 in validDays06) {
-            val timeseries06 = nextSevenDaysMap06[date06]
-            val timeseries18 = nextSevenDaysMap18[date06.withHour(18)]
-
-            if (timeseries06 != null && timeseries18 != null) {
-                listOfWeekdayForecast.add(
-                    ForecastWeekday(
-                        date = date06,
-                        symbolCode = timeseries06.data.next_12_hours?.summary?.symbol_code ?: "unknown",
-                        airTemperature = timeseries18.data.instant.details.air_temperature.toString()
-                    )
+        val listOfWeekdayForecast = validTimes.sorted().chunked(2).mapNotNull { (morning, evening) ->
+            val morningForecast = validForecasts[morning]
+            val eveningForecast = validForecasts[evening]
+            if (morningForecast != null && eveningForecast != null) {
+                ForecastWeekday(
+                    date = morning.toLocalDate(),
+                    symbolCode = morningForecast.data.next_12_hours?.summary?.symbol_code ?: "unknown",
+                    airTemperature = eveningForecast.data.instant.details.air_temperature.toString()
                 )
-            }
+            } else null
         }
 
-        for (d in listOfWeekdayForecast) {
-            Log.i("Timeseries", d.date.toString() + "\n" + d.airTemperature + "\n" + d.symbolCode + "\n\n")
+        listOfWeekdayForecast.forEach { forecast ->
+            Log.i("Timeseries", "${forecast.date}\n${forecast.airTemperature}\n${forecast.symbolCode}\n\n")
         }
 
         return ForecastNextWeek(

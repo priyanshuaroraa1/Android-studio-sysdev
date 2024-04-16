@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -58,6 +59,7 @@ import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.martirhe.appsolution.R
 import no.uio.ifi.in2000.martirhe.appsolution.data.local.database.Swimspot
 import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.ForecastNextHour
+import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.ForecastNextWeek
 import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.LocationForecast
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.WarningIconColor
@@ -138,7 +140,7 @@ fun HomeScreen(
         },
         sheetPeekHeight = homeState.bottomSheetPosition.heightDp,
 
-        ) { innerPadding ->
+        ) {
 
         Box(
             modifier = Modifier
@@ -270,7 +272,7 @@ fun BottomSheetSwimspotContent(
                             when (state) {
                                 is LocationForecastUiState.Success -> {
 //                                    WeatherForecastCard(state.forecastNextHour)
-                                    WeatherForecastCard(
+                                    WeatherNextHourCard(
                                         state.forecastNextHour,
                                         state.locationForecast
                                     )
@@ -285,80 +287,31 @@ fun BottomSheetSwimspotContent(
                                 }
                             }
                         }
-
-
-                        // TODO: Værmelding
-
-
-                        SmallHeader(text = "Neste 7 dager")
-
                     }
                 }
                 item {
 
 
-                    LazyRow() {
-                        item() {
-                            Card(
-                                modifier = Modifier
-//                                    .width(500.dp)
-//                                    .height(100.dp)
-                                    .padding(horizontal = outerEdgePaddingValues),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                                ),
-                            ) {
+                    homeViewModel.locationForecastUiState.let { state ->
+                        when (state) {
+                            is LocationForecastUiState.Success -> {
+//                                    WeatherForecastCard(state.forecastNextHour)
+                                WeatherNextWeekCard(
+                                    outerEdgePaddingValues = outerEdgePaddingValues,
+                                    forecastNextWeek = state.forecastNextWeek,
+                                )
+                            }
 
-                                Row(
-                                    modifier = Modifier
-                                        .padding(horizontal = 16.dp)
-                                ) {
+                            is LocationForecastUiState.Loading -> {
+                                Text(text = "Loading")
+                            }
 
-                                    for (i in 1..7) {
-
-                                        Column(
-                                            horizontalAlignment = Alignment.CenterHorizontally
-                                        ) {
-
-                                            Spacer(
-                                                modifier = Modifier
-                                                    .height(dimensionResource(id = R.dimen.padding_medium))
-                                            )
-                                            Text(
-                                                text = "Ukedag",
-                                                style = MaterialTheme.typography.bodySmall,
-                                                color = MaterialTheme.colorScheme.onPrimaryContainer
-                                            )
-                                            WeatherIcon("fair_day", smallerSize = true)
-                                            LargeAndSmallText(
-                                                largeText = "19° ",
-                                                smallText = "i lufta",
-                                                smallerSize = true,
-                                            )
-                                            LargeAndSmallText(
-                                                largeText = "12° ",
-                                                smallText = "i vannet",
-                                                smallerSize = true,
-                                            )
-                                            Spacer(
-                                                modifier = Modifier
-                                                    .height(dimensionResource(id = R.dimen.padding_medium))
-                                            )
-
-
-                                        }
-                                        if (i < 7) {
-                                            Spacer(
-                                                modifier = Modifier
-                                                    .width(40.dp)
-                                            )
-                                        }
-                                    }
-
-                                }
+                            is LocationForecastUiState.Error -> {
+                                Text(text = "Error")
                             }
                         }
                     }
+
 
                     Spacer(
                         modifier = Modifier
@@ -373,7 +326,78 @@ fun BottomSheetSwimspotContent(
 
 
 @Composable
-fun WeatherForecastCard(
+fun WeatherNextWeekCard(
+    outerEdgePaddingValues: Dp,
+    forecastNextWeek: ForecastNextWeek
+) {
+
+    SmallHeader(text = "Neste 7 dager")
+
+    LazyRow() {
+        item() {
+            Card(
+                modifier = Modifier
+                    .padding(horizontal = outerEdgePaddingValues),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                ),
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = dimensionResource(id = R.dimen.padding_large))
+                ) {
+                    
+                    forecastNextWeek.weekList.forEach {forecastNextWeek ->
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Spacer(
+                                modifier = Modifier
+                                    .height(dimensionResource(id = R.dimen.padding_medium))
+                            )
+                            Text(
+                                text = "Ukedag",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                            WeatherIcon("fair_day", smallerSize = true)
+                            LargeAndSmallText(
+                                largeText = forecastNextWeek.airTemperature,
+                                smallText = "i lufta",
+                                smallerSize = true,
+                            )
+                            LargeAndSmallText(
+                                largeText = "12° ",
+                                smallText = "i vannet",
+                                smallerSize = true,
+                            )
+                            Spacer(
+                                modifier = Modifier
+                                    .height(dimensionResource(id = R.dimen.padding_medium))
+                            )
+                        }
+                        Spacer(
+                            modifier = Modifier
+                                .width(40.dp)
+                        )
+                    }
+//                    for (i in 1..7) {
+//
+//
+//                        if (i < 7) {
+//
+//                        }
+//                    }
+                }
+            }
+        }
+    }
+
+}
+
+
+@Composable
+fun WeatherNextHourCard(
     forecastNextHour: ForecastNextHour,
     locationForecast: LocationForecast
 ) {
@@ -600,7 +624,8 @@ fun LargeAndSmallText(
 
 
 @Composable
-fun WarningIcon( // TODO: Make colors an enum, not string?
+fun WarningIcon(
+    // TODO: Make colors an enum, not string?
     warningIconColor: WarningIconColor = WarningIconColor.GREEN,
     warningIconDescription: String,
 ) {
@@ -726,9 +751,6 @@ fun WeatherIcon(
 //            }
 //        }
 //    }
-
-
-
 
 
 @Composable
