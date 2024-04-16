@@ -1,6 +1,7 @@
 package no.uio.ifi.in2000.martirhe.appsolution.model.metalert
 
 import android.util.Log
+import androidx.compose.ui.graphics.Color
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.PolyUtil
 
@@ -42,6 +43,42 @@ data class SimpleMetAlert(
 
         return false
     }
+
+    fun getAwarenesLevelInt(): Int {
+        return awarenessLevel.substringBefore(";").toIntOrNull() ?: 0
+    }
+
+    fun getAwarenessLevelColor(): WarningIconColor {
+        val colorString =  awarenessLevel.split(";").getOrNull(1)?.trim() ?: "green"
+        return when (colorString) {
+            "yellow" -> WarningIconColor.YELLOW
+            "orange" -> WarningIconColor.ORANGE
+            "red" -> WarningIconColor.RED
+            else -> WarningIconColor.GREEN
+        }
+    } // TODO: Denne må returnere strenger
+
+    companion object {
+        fun mostSevereColor(simpleMetAlertList: List<SimpleMetAlert>): WarningIconColor {
+            // Find the alert with the maximum severity level
+            val mostSevereAlert = simpleMetAlertList.maxByOrNull { simpleMetAlert ->
+                simpleMetAlert.getAwarenesLevelInt()
+            }
+
+            return if (mostSevereAlert == null) {
+                WarningIconColor.GREEN
+            } else {
+                mostSevereAlert.getAwarenessLevelColor()
+            }
+        }
+    }
+}
+
+enum class WarningIconColor {
+    GREEN,
+    YELLOW,
+    ORANGE,
+    RED
 }
 
 //   "Green",   "Yellow",       "Orange",   "Red"
