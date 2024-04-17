@@ -41,7 +41,11 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            _homeState.update { swimspotsState -> swimspotsState.copy(allSwimspots = swimspotRepository.getAllSwimspots().first()) }
+            _homeState.update { swimspotsState ->
+                swimspotsState.copy(
+                    allSwimspots = swimspotRepository.getAllSwimspots().first()
+                )
+            }
         }
     }
 
@@ -56,7 +60,7 @@ class HomeViewModel @Inject constructor(
 
     fun onMapBackroundClick(
         latLng: LatLng,
-        ) {
+    ) {
 
         if (homeState.value.customSwimspot == null) {
             val customSwimspot = Swimspot(
@@ -68,7 +72,8 @@ class HomeViewModel @Inject constructor(
                 accessibility = null,
                 locationstring = null,
                 original = false,
-                favourited = false)
+                favourited = false
+            )
 
             updateCustomSwimspot(customSwimspot)
             updateSelectedSwimspot(customSwimspot)
@@ -105,6 +110,7 @@ class HomeViewModel @Inject constructor(
             homeState.copy(showMetAlertDialog = showMetAlertDialog)
         }
     }
+
     fun updateMetAlertDialogList(metAlertDialogList: List<SimpleMetAlert>) {
         _homeState.update { homeState ->
             homeState.copy(metAlertDialogList = metAlertDialogList)
@@ -166,7 +172,10 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             oceanForecastUiState = OceanForecastState.Loading
             oceanForecastUiState = try {
-                OceanForecastState.Success(oceanForecastRepository.getOceanForecast(lat, lon))
+                OceanForecastState.Success(
+                    oceanForecastRepository.getOceanForecast(lat, lon), // TODO: Dette bør jo gjøres i ett kall, ikke flere
+                    oceanForecastRepository.getOceanForecastRightNow(lat, lon)
+                )
             } catch (e: IOException) {
                 OceanForecastState.Error
             } catch (e: ResponseException) {
