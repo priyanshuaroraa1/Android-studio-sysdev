@@ -1,8 +1,6 @@
 package no.uio.ifi.in2000.martirhe.appsolution.data.remote.locationforecast
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.ForecastNextHour
 import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.ForecastNextWeek
 import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.ForecastWeekday
@@ -46,7 +44,6 @@ class LocationForecastRepository @Inject constructor(
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getForecastNextWeek(lat: Double, lon: Double): ForecastNextWeek {
         val locationForecast = getLocationForecast(lat, lon)
         val forecastMap = locationForecast.properties.timeseries.associateBy {
@@ -72,7 +69,7 @@ class LocationForecastRepository @Inject constructor(
                 ForecastWeekday(
                     date = morning.toLocalDate(),
                     symbolCode = morningForecast.data.next_12_hours?.summary?.symbol_code ?: "unknown",
-                    airTemperature = eveningForecast.data.instant.details.air_temperature.toString()
+                    airTemperature = eveningForecast.data.instant.details.air_temperature
                 )
             } else null
         }

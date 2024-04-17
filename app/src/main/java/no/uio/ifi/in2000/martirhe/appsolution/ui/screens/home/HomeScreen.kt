@@ -9,7 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -303,11 +302,17 @@ fun BottomSheetSwimspotContent(
                             }
 
                             is LocationForecastUiState.Loading -> {
-                                Text(text = "Loading")
+                                Row {
+                                    Spacer(modifier = Modifier.width(outerEdgePaddingValues))
+                                    Text(text = "Loading")
+                                }
                             }
 
                             is LocationForecastUiState.Error -> {
-                                Text(text = "Error")
+                                Row {
+                                    Spacer(modifier = Modifier.width(outerEdgePaddingValues))
+                                    Text(text = "Loading")
+                                }
                             }
                         }
                     }
@@ -331,8 +336,10 @@ fun WeatherNextWeekCard(
     forecastNextWeek: ForecastNextWeek
 ) {
 
-    SmallHeader(text = "Neste 7 dager")
-
+    Row {
+        Spacer(modifier = Modifier.width(outerEdgePaddingValues))
+        SmallHeader(text = "Neste 7 dager")
+    }
     LazyRow() {
         item() {
             Card(
@@ -346,8 +353,8 @@ fun WeatherNextWeekCard(
                     modifier = Modifier
                         .padding(horizontal = dimensionResource(id = R.dimen.padding_large))
                 ) {
-                    
-                    forecastNextWeek.weekList.forEach {forecastNextWeek ->
+
+                    forecastNextWeek.weekList.forEach { forecastWeekday ->
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
@@ -356,13 +363,13 @@ fun WeatherNextWeekCard(
                                     .height(dimensionResource(id = R.dimen.padding_medium))
                             )
                             Text(
-                                text = "Ukedag",
+                                text = forecastWeekday.getWeekdayString(),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer
                             )
-                            WeatherIcon("fair_day", smallerSize = true)
+                            WeatherIcon(forecastWeekday.symbolCode, smallerSize = true)
                             LargeAndSmallText(
-                                largeText = forecastNextWeek.airTemperature,
+                                largeText = forecastWeekday.getTemperatureString() + "° ",
                                 smallText = "i lufta",
                                 smallerSize = true,
                             )
@@ -381,13 +388,6 @@ fun WeatherNextWeekCard(
                                 .width(40.dp)
                         )
                     }
-//                    for (i in 1..7) {
-//
-//
-//                        if (i < 7) {
-//
-//                        }
-//                    }
                 }
             }
         }
@@ -404,7 +404,6 @@ fun WeatherNextHourCard(
     SmallHeader(
         text = "Den neste timen",
     )
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -412,15 +411,12 @@ fun WeatherNextHourCard(
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
-//        Log.i("Symbol code", locationForecast.properties.timeseries[0].data.instant.details.air_temperature.toString())
         Log.i(
             "Symbol code",
             locationForecast.properties.timeseries[0].data.instant.details.air_temperature.toString()
         )
-
         forecastNextHour.symbolCode?.let { WeatherIcon(it) }
         Spacer(modifier = Modifier.weight(0.5f))
-
         Column(horizontalAlignment = Alignment.Start) {
             LargeAndSmallText(
                 largeText = "${forecastNextHour.getTemperatureString()}° ",
@@ -433,7 +429,6 @@ fun WeatherNextHourCard(
         }
         Spacer(modifier = Modifier.weight(1.5f))
     }
-
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -519,11 +514,6 @@ fun MetAlertCard(
                 .padding(vertical = dimensionResource(id = R.dimen.padding_medium))
                 .padding(start = dimensionResource(id = R.dimen.padding_medium))
         ) {
-//            Icon(
-//                imageVector = Icons.Default.WarningAmber,
-//                contentDescription = "Warning",
-//                tint = alertColor,
-//            )
             WarningIcon(
                 warningIconColor,
                 warningIconDescription.toString()
@@ -589,13 +579,7 @@ fun LargeAndSmallText(
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (image != null) {
-//            Icon(
-//                imageVector = icon,
-//                tint = color,
-//                contentDescription = iconDescription,
-//                modifier = Modifier
-//                    .padding(bottom = 2.dp),
-//            )
+
             Image(
                 painter = image,
                 contentDescription = imageDescription,
@@ -609,12 +593,12 @@ fun LargeAndSmallText(
             if (smallerSize) MaterialTheme.typography.bodySmall else MaterialTheme.typography.bodyLarge
         Text(
             text = largeText,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            color = color,
             style = largeStyle,
         )
         Text(
             text = smallText,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            color = color,
             style = smallStyle,
             modifier = Modifier
                 .padding(bottom = if (smallerSize) 0.dp else 3.dp)
