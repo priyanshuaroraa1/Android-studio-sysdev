@@ -6,6 +6,7 @@ import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import no.uio.ifi.in2000.martirhe.appsolution.data.local.database.Swimspot
+import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
 
 data class HomeState(
     val allSwimspots: List<Swimspot> = emptyList(),
@@ -20,6 +21,10 @@ data class HomeState(
     val searchBarText: String = "",
     val searchBarActive: Boolean = false,
     val searchBarHistory: List<String> = emptyList(),
+
+    // For MetAlertDialog
+    val showMetAlertDialog: Boolean = false,
+    val metAlertDialogList: List<SimpleMetAlert> = emptyList()
 )
 
 

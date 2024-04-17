@@ -3,6 +3,7 @@ package no.uio.ifi.in2000.martirhe.appsolution.ui.screens.home
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -19,11 +20,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Maximize
 import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -42,6 +46,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -63,6 +68,8 @@ import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.LocationFor
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.WarningIconColor
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.HomeSearchBar
+import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.MediumHeader
+import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.SmallHeader
 import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
 
 
@@ -213,6 +220,11 @@ fun HomeScreen(
             }
         }
     }
+    if (homeState.showMetAlertDialog) {
+        MetAlertDialog(
+            homeViewModel,
+        )
+    }
 }
 
 
@@ -254,7 +266,9 @@ fun BottomSheetSwimspotContent(
 
                                     MetAlertCard(
                                         simpleMetAlertList = simpleMetAlertList,
+                                        onClick = { homeViewModel.updateShowMetAlertDialog(true) },
                                     )
+                                    homeViewModel.updateMetAlertDialogList(simpleMetAlertList)
                                 }
 
                                 is MetAlertUiState.Loading -> {
@@ -493,7 +507,8 @@ fun WeatherNextHourCard(
 
 @Composable
 fun MetAlertCard(
-    simpleMetAlertList: List<SimpleMetAlert>
+    simpleMetAlertList: List<SimpleMetAlert>,
+    onClick: () -> Unit,
 ) {
     val numberOfAlerts = simpleMetAlertList.size
     val warningIconColor = SimpleMetAlert.mostSevereColor(simpleMetAlertList)
@@ -507,6 +522,7 @@ fun MetAlertCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = dimensionResource(id = R.dimen.padding_medium))
+            .clickable(onClick = onClick)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -538,21 +554,104 @@ fun MetAlertCard(
 }
 
 @Composable
-fun SmallHeader(
-    text: String,
-    color: Color = MaterialTheme.colorScheme.onPrimaryContainer,
-) {
-    Text(
-        text = text,
-        color = color,
-        style = MaterialTheme.typography.bodyLarge,
-        modifier = Modifier
-            .padding(
-                top = dimensionResource(id = R.dimen.padding_large),
-                bottom = dimensionResource(id = R.dimen.padding_small)
+fun MetAlertDialog(
+    homeViewModel: HomeViewModel,
+//    simpleMetAlertList: List<SimpleMetAlert>,
+    ) {
+    val homeState = homeViewModel.homeState.collectAsState().value
+
+    Dialog(
+        onDismissRequest = { homeViewModel.updateShowMetAlertDialog(false) },
+    ) {
+        Card(
+            modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.padding_medium))
+                .fillMaxWidth()
+                .fillMaxHeight(0.4f),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                
             )
-    )
+        ) {
+            
+            Column(
+                modifier = Modifier
+                    .padding(dimensionResource(id = R.dimen.padding_medium)),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                val headerString = if (homeState.selectedSwimspot?.spotName != "Plassert pin") {
+                    "Farevarsler for ${homeState.selectedSwimspot?.spotName}"
+                } else {
+                    "Farevarsler for plassert pin"
+                }
+                MediumHeader(
+                    text = headerString,
+                    paddingTop = 0.dp
+                )
+                Spacer(
+                    modifier = Modifier
+                        .height(dimensionResource(id = R.dimen.padding_small)))
+
+                
+                LazyColumn(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    homeState.metAlertDialogList
+                        .sortedByDescending { it.getAwarenesLevelInt() }
+                        .takeIf { it.isNotEmpty() }
+                        ?.let { sortedList ->
+                            itemsIndexed(sortedList) { index, simpleMetAlert ->
+
+                                if (index > 0) {
+//                                    Divider(color = MaterialTheme.colors.onSurface.copy(alpha = 0.08f))
+                                    Spacer(modifier = Modifier
+                                        .height(dimensionResource(id = R.dimen.padding_medium)))
+                                }
+                                
+                                Column {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        WarningIcon(
+                                            warningIconColor = simpleMetAlert.getAwarenessLevelColor(),
+                                            warningIconDescription = simpleMetAlert.getAwarenessLevelDescription()
+                                        )
+                                        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding_small)))
+                                        SmallHeader(
+                                            text = simpleMetAlert.eventAwarenessName + ": " + simpleMetAlert.area,
+                                            paddingTop = 0.dp,
+                                            paddingBottom = 0.dp
+                                        )
+
+                                    }
+                                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_small)))
+                                    Text(text = simpleMetAlert.description)
+                                }
+                            }
+                        }
+                        ?: item {
+                            Text(text = "Det er ingen aktive farevarsler nå.")
+                        }
+                }
+
+                Button(
+                    onClick = { homeViewModel.updateShowMetAlertDialog(false) },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                ) {
+                    Text(text = "Lukk")
+                }
+            }
+        }
+    }
 }
+
+
 
 @Preview(showBackground = true)
 @Composable
@@ -610,7 +709,7 @@ fun LargeAndSmallText(
 @Composable
 fun WarningIcon(
     // TODO: Make colors an enum, not string?
-    warningIconColor: WarningIconColor = WarningIconColor.GREEN,
+    warningIconColor: WarningIconColor,
     warningIconDescription: String,
 ) {
     val imageResource = when (warningIconColor) {

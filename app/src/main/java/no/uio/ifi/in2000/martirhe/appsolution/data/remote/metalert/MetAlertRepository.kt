@@ -39,13 +39,15 @@ class MetAlertRepository @Inject constructor(
                 val awarenessType: String = it.properties.awarenessType
                 val consequences: String = it.properties.consequences
                 val description: String = it.properties.description
+                val eventAwarenessName: String = it.properties.eventAwarenessName
                 simpleMetAlertList.add(SimpleMetAlert(
                     multiPolygon = multiPolygon,
                     area = area,
                     awarenessLevel = awarenessLevel,
                     awarenessType = awarenessType,
                     consequences = consequences,
-                    description = description))
+                    description = description,
+                    eventAwarenessName = eventAwarenessName))
             } catch (_: Exception) {  } // TODO: Føler dette er en billig løsning
         }
 

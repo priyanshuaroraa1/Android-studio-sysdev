@@ -19,6 +19,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.data.local.database.SwimspotReposi
 import no.uio.ifi.in2000.martirhe.appsolution.data.remote.locationforecast.LocationForecastRepositoryInterface
 import no.uio.ifi.in2000.martirhe.appsolution.data.remote.oceanforecast.OceanForecastRepositoryInterface
 import no.uio.ifi.in2000.martirhe.appsolution.data.remote.metalert.MetAlertRepositoryInterface
+import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
 import java.io.IOException
 import java.nio.channels.UnresolvedAddressException
 import javax.inject.Inject
@@ -96,6 +97,17 @@ class HomeViewModel @Inject constructor(
     fun updateCustomSwimspot(swimspot: Swimspot?) {
         _homeState.update { homeState ->
             homeState.copy(customSwimspot = swimspot)
+        }
+    }
+
+    fun updateShowMetAlertDialog(showMetAlertDialog: Boolean) {
+        _homeState.update { homeState ->
+            homeState.copy(showMetAlertDialog = showMetAlertDialog)
+        }
+    }
+    fun updateMetAlertDialogList(metAlertDialogList: List<SimpleMetAlert>) {
+        _homeState.update { homeState ->
+            homeState.copy(metAlertDialogList = metAlertDialogList)
         }
     }
 
