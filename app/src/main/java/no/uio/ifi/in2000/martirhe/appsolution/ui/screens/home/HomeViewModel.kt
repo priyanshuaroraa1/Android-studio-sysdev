@@ -113,7 +113,7 @@ class HomeViewModel @Inject constructor(
 
     // TODO: Change name/remove yeah
     fun updateBottomSheetPosition(makeVisible: Boolean) {
-        val bottomSheetPosition: BottomSheetPosition;
+        val bottomSheetPosition: BottomSheetPosition
         bottomSheetPosition = if (makeVisible) {
             BottomSheetPosition.Showing
         } else {
