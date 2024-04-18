@@ -380,7 +380,7 @@ fun WaterCard(
 fun loadMapStyleFromAssets(): String {
     val context = LocalContext.current
     return try {
-        context.assets.open("map_style_light.json").bufferedReader().use { it.readText() }
+        context.assets.open("map_style_dark.json").bufferedReader().use { it.readText() }
     } catch (e: IOException) {
         e.printStackTrace()
         ""
