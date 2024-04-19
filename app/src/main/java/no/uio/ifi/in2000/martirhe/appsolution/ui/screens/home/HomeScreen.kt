@@ -64,9 +64,9 @@ import no.uio.ifi.in2000.martirhe.appsolution.R
 import no.uio.ifi.in2000.martirhe.appsolution.data.local.database.Swimspot
 import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.ForecastNextHour
 import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.ForecastNextWeek
-import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.LocationForecast
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.WarningIconColor
+import no.uio.ifi.in2000.martirhe.appsolution.model.oceanforecast.OceanForecastRightNow
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.HomeSearchBar
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.MediumHeader
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.SmallHeader
@@ -94,9 +94,7 @@ fun HomeScreen(
         mapStyleOptions = MapStyleOptions(mapStyleString)
     )
 
-    // Obtain a coroutine scope tied to the lifecycle of this composable
     val coroutineScope = rememberCoroutineScope()
-
     val scaffoldState = rememberBottomSheetScaffoldState()
 
     BottomSheetScaffold(
@@ -281,14 +279,29 @@ fun BottomSheetSwimspotContent(
                             }
                         }
 
-                        homeViewModel.locationForecastUiState.let { state ->
-                            when (state) {
+                        homeViewModel.locationForecastUiState.let { locationForecastUiState ->
+                            when (locationForecastUiState) {
                                 is LocationForecastUiState.Success -> {
-//                                    WeatherForecastCard(state.forecastNextHour)
-                                    WeatherNextHourCard(
-                                        state.forecastNextHour,
-                                        state.locationForecast
-                                    )
+
+                                    homeViewModel.oceanForecastUiState.let { oceanForecastState ->
+                                        when (oceanForecastState) {
+                                            is OceanForecastState.Success -> {
+                                                WeatherNextHourCard(
+                                                    locationForecastUiState.forecastNextHour,
+                                                    oceanForecastState.oceanForecastRightNow
+                                                )
+                                            }
+
+                                            else -> {
+                                                WeatherNextHourCard(
+                                                    locationForecastUiState.forecastNextHour,
+                                                )
+                                            }
+                                        }
+
+                                    }
+
+
                                 }
 
                                 is LocationForecastUiState.Loading -> {
@@ -305,14 +318,34 @@ fun BottomSheetSwimspotContent(
                 item {
 
 
-                    homeViewModel.locationForecastUiState.let { state ->
-                        when (state) {
+                    homeViewModel.locationForecastUiState.let { locationForecastState ->
+                        when (locationForecastState) {
                             is LocationForecastUiState.Success -> {
-//                                    WeatherForecastCard(state.forecastNextHour)
-                                WeatherNextWeekCard(
-                                    outerEdgePaddingValues = outerEdgePaddingValues,
-                                    forecastNextWeek = state.forecastNextWeek,
-                                )
+
+                                homeViewModel.oceanForecastUiState.let { oceanForecastState ->
+                                    when (oceanForecastState) {
+                                        is OceanForecastState.Success -> {
+                                            WeatherNextWeekCard(
+                                                outerEdgePaddingValues = outerEdgePaddingValues,
+                                                forecastNextWeek = locationForecastState.forecastNextWeek,
+                                                oceanForecastRightNow = oceanForecastState.oceanForecastRightNow,
+                                            )
+                                        }
+
+                                        else -> {
+                                            WeatherNextWeekCard(
+                                                outerEdgePaddingValues = outerEdgePaddingValues,
+                                                forecastNextWeek = locationForecastState.forecastNextWeek,
+                                                oceanForecastRightNow = null,
+                                            )
+                                        }
+                                    }
+                                }
+
+
+
+
+
                             }
 
                             is LocationForecastUiState.Loading -> {
@@ -325,7 +358,7 @@ fun BottomSheetSwimspotContent(
                             is LocationForecastUiState.Error -> {
                                 Row {
                                     Spacer(modifier = Modifier.width(outerEdgePaddingValues))
-                                    Text(text = "Loading")
+                                    Text(text = "Error")
                                 }
                             }
                         }
@@ -347,7 +380,8 @@ fun BottomSheetSwimspotContent(
 @Composable
 fun WeatherNextWeekCard(
     outerEdgePaddingValues: Dp,
-    forecastNextWeek: ForecastNextWeek
+    forecastNextWeek: ForecastNextWeek,
+    oceanForecastRightNow: OceanForecastRightNow?
 ) {
 
     Row {
@@ -387,11 +421,13 @@ fun WeatherNextWeekCard(
                                 smallText = "i lufta",
                                 smallerSize = true,
                             )
-                            LargeAndSmallText(
-                                largeText = "12° ",
-                                smallText = "i vannet",
-                                smallerSize = true,
-                            )
+                            if (oceanForecastRightNow != null) {
+                                LargeAndSmallText(
+                                    largeText = oceanForecastRightNow.getWaterTemperatureString() + "° ",
+                                    smallText = "i vannet",
+                                    smallerSize = true,
+                                )
+                            }
                             Spacer(
                                 modifier = Modifier
                                     .height(dimensionResource(id = R.dimen.padding_medium))
@@ -413,7 +449,7 @@ fun WeatherNextWeekCard(
 @Composable
 fun WeatherNextHourCard(
     forecastNextHour: ForecastNextHour,
-    locationForecast: LocationForecast
+    oceanForecastRightNow: OceanForecastRightNow? = null,
 ) {
     SmallHeader(
         text = "Den neste timen",
@@ -425,10 +461,6 @@ fun WeatherNextHourCard(
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
-        Log.i(
-            "Symbol code",
-            locationForecast.properties.timeseries[0].data.instant.details.air_temperature.toString()
-        )
         forecastNextHour.symbolCode?.let { WeatherIcon(it) }
         Spacer(modifier = Modifier.weight(0.5f))
         Column(horizontalAlignment = Alignment.Start) {
@@ -436,10 +468,17 @@ fun WeatherNextHourCard(
                 largeText = "${forecastNextHour.getTemperatureString()}° ",
                 smallText = "i lufta",
             )
-            LargeAndSmallText(
-                largeText = "11° ",
-                smallText = "i vannet",
-            )
+            if (oceanForecastRightNow != null) {
+                LargeAndSmallText(
+                    largeText = oceanForecastRightNow.getWaterTemperatureString() + "° ",
+                    smallText = "i vannet",
+                )
+            } else {
+                LargeAndSmallText(
+                    largeText = "N/A ",
+                    smallText = "i vannet",
+                )
+            }
         }
         Spacer(modifier = Modifier.weight(1.5f))
     }
@@ -475,10 +514,9 @@ fun WeatherNextHourCard(
                 LargeAndSmallText(
                     largeText = forecastNextHour.getWindSpeedString(),
                     smallText = "m/s",
-                    image = getWindDirectionPainterResource(forecastNextHour.getWindDirectionString()),
+                    image = getFromDirectionPainterResource(forecastNextHour.getWindDirectionString()),
                     imageDescription = "Wind from " + forecastNextHour.getWindDirectionString(),
                 )
-                Log.i("Winddir", forecastNextHour.getWindDirectionString())
                 Text(
                     text = "Vind",
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -489,12 +527,20 @@ fun WeatherNextHourCard(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                LargeAndSmallText(
-                    largeText = "40",
-                    smallText = "cm",
-                    image = painterResource(id = R.drawable.north),
-                    imageDescription = "Wind from " + forecastNextHour.getWindDirectionString(),
-                )
+                if (oceanForecastRightNow != null) {
+                    LargeAndSmallText(
+                        largeText = oceanForecastRightNow.getWaveHeightString(),
+                        smallText = "cm",
+                        image = getFromDirectionPainterResource(oceanForecastRightNow.getWaveDirectionString()),
+                        imageDescription = "Waves from " + oceanForecastRightNow.getWaveDirectionString(),
+                    )
+                } else {
+                    LargeAndSmallText(
+                        largeText = "",
+                        smallText = "N/A",
+                    )
+                }
+
                 Text(
                     text = "Bølger",
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -556,7 +602,6 @@ fun MetAlertCard(
 @Composable
 fun MetAlertDialog(
     homeViewModel: HomeViewModel,
-//    simpleMetAlertList: List<SimpleMetAlert>,
     ) {
     val homeState = homeViewModel.homeState.collectAsState().value
 
@@ -604,7 +649,6 @@ fun MetAlertDialog(
                             itemsIndexed(sortedList) { index, simpleMetAlert ->
 
                                 if (index > 0) {
-//                                    Divider(color = MaterialTheme.colors.onSurface.copy(alpha = 0.08f))
                                     Spacer(modifier = Modifier
                                         .height(dimensionResource(id = R.dimen.padding_medium)))
                                 }
@@ -708,7 +752,6 @@ fun LargeAndSmallText(
 
 @Composable
 fun WarningIcon(
-    // TODO: Make colors an enum, not string?
     warningIconColor: WarningIconColor,
     warningIconDescription: String,
 ) {
@@ -741,101 +784,6 @@ fun WeatherIcon(
 }
 
 
-//    // This box limits the size of the content
-//    Box(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .height(280.dp)
-//    ) {
-//
-//        LazyColumn(
-//            modifier = Modifier
-//                .padding(horizontal = 16.dp)
-//        ) {
-//
-//            item {
-//
-//                if (homeState.selectedSwimspot == null) {
-//                    Text(
-//                        text = "Utforsk badeplasser",
-//                        fontSize = 18.sp
-//                    )
-//                } else {
-//
-//                    Text(
-//                        text = homeState.selectedSwimspot.spotName,
-//                        fontSize = 18.sp
-//                    )
-//
-//                    homeViewModel.metAlertUiState.let { state ->
-//                        when (state) {
-//                            is MetAlertUiState.Success -> {
-//
-//                                val koordinater = homeState.selectedSwimspot!!.getLatLng()
-//
-//                                FarevarselCard(simpleMetAlertList = state.simpleMetAlertList.filter {
-//                                    it.isRelevantForCoordinate(koordinater)
-//                                })
-//                            }
-//
-//                            is MetAlertUiState.Loading -> {
-//                                Text(text = "Loading")
-//                                Log.i("TestAlerts", "Loading")
-//                            }
-//
-//                            is MetAlertUiState.Error -> {
-//                                Text(text = "Error")
-//                                Log.i("TestAlerts", "Error")
-//                            }
-//                        }
-//                    }
-//
-//                    homeViewModel.locationForecastUiState.let { state ->
-//                        when (state) {
-//                            is LocationForecastUiState.Success -> {
-//
-//                                WeatherCard(
-//                                    temperature = state.locationForecast.properties.timeseries[0].data.instant.details.air_temperature,
-//                                    windFromDirection = state.locationForecast.properties.timeseries[0].data.instant.details.windFromDirection,
-//                                    windSpeed = state.locationForecast.properties.timeseries[0].data.instant.details.wind_speed
-//                                )
-//                            }
-//
-//                            is LocationForecastUiState.Loading -> {
-//                                Text(text = "Loading")
-//                            }
-//
-//                            is LocationForecastUiState.Error -> {
-//                                Text(text = "Error")
-//                            }
-//                        }
-//                    }
-//
-//                    homeViewModel.oceanForecastUiState.let { state ->
-//                        when (state) {
-//                            is OceanForecastState.Success -> {
-//                                WaterCard(
-//                                    temperature = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_water_temperature,
-//                                    waveHeight = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_surface_wave_height,
-//                                    waveToDirection = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_water_to_direction
-//                                )
-//                            }
-//
-//                            is OceanForecastState.Loading -> {
-//                                Text(text = "Loading")
-//                            }
-//
-//                            is OceanForecastState.Error -> {
-//                                Text(text = "Error")
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-
 @Composable
 fun loadMapStyleFromAssets(): String {
     val context = LocalContext.current
@@ -848,7 +796,7 @@ fun loadMapStyleFromAssets(): String {
 }
 
 @Composable
-fun getWindDirectionPainterResource(windDirection: String): Painter {
+fun getFromDirectionPainterResource(windDirection: String): Painter {
     val resourceId = when (windDirection) {
         "north" -> R.drawable.north
         "north_northeast" -> R.drawable.north_northeast
@@ -866,7 +814,7 @@ fun getWindDirectionPainterResource(windDirection: String): Painter {
         "west_northwest" -> R.drawable.west_northwest
         "northwest" -> R.drawable.northwest
         "north_northwest" -> R.drawable.north_northwest
-        else -> R.drawable.north // Handle unexpected cases
+        else -> R.drawable.north
     }
     return painterResource(id = resourceId)
 }
