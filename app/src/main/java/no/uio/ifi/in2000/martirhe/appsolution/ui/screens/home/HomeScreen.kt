@@ -3,6 +3,7 @@ package no.uio.ifi.in2000.martirhe.appsolution.ui.screens.home
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
@@ -117,18 +119,22 @@ fun HomeScreen(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .fillMaxWidth()
+
             ) {
 
-                Icon(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .size(40.dp),
-                    imageVector = Icons.Default.Maximize,
-                    tint = MaterialTheme.colorScheme.primaryContainer,
-                    contentDescription = "Handle"
-                )
 
-
+                if (homeState.selectedSwimspot != null) {
+                    Text(
+                        text = homeState.selectedSwimspot.spotName,
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(top = dimensionResource(id = R.dimen.padding_medium))
+                    )
+                }
+                Box(modifier = Modifier.align(Alignment.TopCenter)) {
+                    DragHandle()
+                }
 
                 IconButton(
                     onClick = {
@@ -242,6 +248,22 @@ fun HomeScreen(
     }
 }
 
+@Composable
+fun DragHandle(
+    color: Color = MaterialTheme.colorScheme.primaryContainer,
+    width: Dp = 50.dp,
+    height: Dp = 5.dp,
+) {
+    Box(
+        modifier = Modifier
+            .padding(top = 8.dp)
+            .size(width = width, height = height)
+            .background(
+                color = color,
+                shape = RoundedCornerShape(50)
+            )
+    )
+}
 
 @Composable
 fun BottomSheetSwimspotContent(
@@ -265,11 +287,6 @@ fun BottomSheetSwimspotContent(
                         modifier = Modifier.padding(horizontal = outerEdgePaddingValues)
 
                     ) {
-                        Text(
-                            text = homeState.selectedSwimspot.spotName,
-                            style = MaterialTheme.typography.headlineMedium,
-                        )
-
                         val metAlertStateNew = homeViewModel.metAlertUiState.collectAsState().value
 //                        val homeState = homeViewModel.homeState.collectAsState().value
 
