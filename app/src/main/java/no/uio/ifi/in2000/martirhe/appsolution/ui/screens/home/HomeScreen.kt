@@ -34,6 +34,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -50,6 +51,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
@@ -59,7 +62,11 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.rememberCameraPositionState
 import io.ktor.utils.io.errors.IOException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import no.uio.ifi.in2000.martirhe.appsolution.R
 import no.uio.ifi.in2000.martirhe.appsolution.data.local.database.Swimspot
 import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.ForecastNextHour
@@ -77,10 +84,10 @@ import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
 @OptIn(ExperimentalMaterial3Api::class, MapsComposeExperimentalApi::class)
 @Composable
 fun HomeScreen(
-    onNavigate: (UiEvent.Navigate) -> Unit,
-    homeViewModel: HomeViewModel = hiltViewModel()
+    onNavigate: (UiEvent.Navigate) -> Unit, homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val homeState = homeViewModel.homeState.collectAsState().value
+    val metAlertUiState = homeViewModel.metAlertUiState.collectAsState().value
 
     val cameraPositionState = rememberCameraPositionState {
         position = homeState.defaultCameraPosition
@@ -90,8 +97,7 @@ fun HomeScreen(
     // TODO: Flytte dette til homeState?
     val mapStyleString = loadMapStyleFromAssets()
     val mapProperties = MapProperties(
-        isMyLocationEnabled = false,
-        mapStyleOptions = MapStyleOptions(mapStyleString)
+        isMyLocationEnabled = false, mapStyleOptions = MapStyleOptions(mapStyleString)
     )
 
     val coroutineScope = rememberCoroutineScope()
@@ -129,8 +135,7 @@ fun HomeScreen(
                         coroutineScope.launch {
                             scaffoldState.bottomSheetState.partialExpand()
                         }
-                    },
-                    modifier = Modifier.align(Alignment.TopEnd)
+                    }, modifier = Modifier.align(Alignment.TopEnd)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
@@ -147,26 +152,23 @@ fun HomeScreen(
         ) {
 
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         ) {
             HomeSearchBar(homeViewModel = homeViewModel)
 
             GoogleMap(
-                modifier = Modifier,
-                cameraPositionState = cameraPositionState,
-                onMapClick = {
+                modifier = Modifier, cameraPositionState = cameraPositionState, onMapClick = {
                     homeViewModel.onMapBackroundClick(it)
                     coroutineScope.launch {
                         scaffoldState.bottomSheetState.expand()
                         Log.i("Sheet", "expand")
                     }
-                },
-                properties = mapProperties
+                }, properties = mapProperties
             ) {
-
-                MapEffect() { map ->
-
+                MapEffect(
+//                    key1 = homeState.customSwimspot
+                    key1 = metAlertUiState
+                ) { map ->
 
                     map.setOnMarkerClickListener { marker ->
                         // Dette skjer når en Marker blir klikket på:
@@ -191,17 +193,32 @@ fun HomeScreen(
                         true // Return true to indicate that the click event has been handled
                     }
 
-                    homeState.allSwimspots.forEach { swimspot ->
-                        val marker = map.addMarker(
-                            MarkerOptions().position(
-                                LatLng(
-                                    swimspot.lat,
-                                    swimspot.lon
-                                )
-                            )
-                        )
-                        marker?.tag = swimspot
+
+                    coroutineScope.launch {
+                        val markersWithSwimspots = withContext(Dispatchers.Default) {
+                            // Generate pairs of MarkerOptions and Swimspots
+                            homeState.allSwimspots.map { swimspot ->
+                                async {
+                                    val icon = swimspot.getMarkerIcon(metAlertUiState)
+                                    val options = MarkerOptions()
+                                        .position(swimspot.getLatLng())
+                                        .icon(icon)
+                                    options to swimspot  // Return a pair of options and swimspot
+                                }
+                            }.awaitAll()
+                        }
+
+                        withContext(Dispatchers.Main) {
+                            // Add markers to the map with tags
+                            markersWithSwimspots.forEach { (options, swimspot) ->
+                                map.addMarker(options)?.apply {
+                                    tag = swimspot  // Set the swimspot as the tag for the marker
+                                }
+                            }
+                        }
                     }
+
+
 
                     if (homeState.customSwimspot != null) {
                         val marker = map.addMarker(
@@ -245,8 +262,7 @@ fun BottomSheetSwimspotContent(
                 item {
 
                     Column(
-                        modifier = Modifier
-                            .padding(horizontal = outerEdgePaddingValues)
+                        modifier = Modifier.padding(horizontal = outerEdgePaddingValues)
 
                     ) {
                         Text(
@@ -254,7 +270,10 @@ fun BottomSheetSwimspotContent(
                             style = MaterialTheme.typography.headlineMedium,
                         )
 
-                        homeViewModel.metAlertUiState.let { state ->
+                        val metAlertStateNew = homeViewModel.metAlertUiState.collectAsState().value
+//                        val homeState = homeViewModel.homeState.collectAsState().value
+
+                        metAlertStateNew.let { state ->
                             when (state) {
                                 is MetAlertUiState.Success -> {
                                     val coordinates = homeState.selectedSwimspot.getLatLng()
@@ -343,9 +362,6 @@ fun BottomSheetSwimspotContent(
                                 }
 
 
-
-
-
                             }
 
                             is LocationForecastUiState.Loading -> {
@@ -366,8 +382,7 @@ fun BottomSheetSwimspotContent(
 
 
                     Spacer(
-                        modifier = Modifier
-                            .height(dimensionResource(id = R.dimen.padding_large))
+                        modifier = Modifier.height(dimensionResource(id = R.dimen.padding_large))
                     )
 
                 }
@@ -391,15 +406,13 @@ fun WeatherNextWeekCard(
     LazyRow() {
         item() {
             Card(
-                modifier = Modifier
-                    .padding(horizontal = outerEdgePaddingValues),
+                modifier = Modifier.padding(horizontal = outerEdgePaddingValues),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
                 ),
             ) {
                 Row(
-                    modifier = Modifier
-                        .padding(horizontal = dimensionResource(id = R.dimen.padding_large))
+                    modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_large))
                 ) {
 
                     forecastNextWeek.weekList.forEach { forecastWeekday ->
@@ -407,8 +420,7 @@ fun WeatherNextWeekCard(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Spacer(
-                                modifier = Modifier
-                                    .height(dimensionResource(id = R.dimen.padding_medium))
+                                modifier = Modifier.height(dimensionResource(id = R.dimen.padding_medium))
                             )
                             Text(
                                 text = forecastWeekday.getWeekdayString(),
@@ -429,13 +441,11 @@ fun WeatherNextWeekCard(
                                 )
                             }
                             Spacer(
-                                modifier = Modifier
-                                    .height(dimensionResource(id = R.dimen.padding_medium))
+                                modifier = Modifier.height(dimensionResource(id = R.dimen.padding_medium))
                             )
                         }
                         Spacer(
-                            modifier = Modifier
-                                .width(40.dp)
+                            modifier = Modifier.width(40.dp)
                         )
                     }
                 }
@@ -456,8 +466,7 @@ fun WeatherNextHourCard(
     )
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .padding(vertical = dimensionResource(id = R.dimen.padding_medium))
+        modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding_medium))
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
@@ -483,9 +492,7 @@ fun WeatherNextHourCard(
         Spacer(modifier = Modifier.weight(1.5f))
     }
     Card(
-        modifier = Modifier
-            .fillMaxWidth(),
-        colors = CardDefaults.cardColors(
+        modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         )
     ) {
@@ -577,23 +584,19 @@ fun MetAlertCard(
                 .padding(start = dimensionResource(id = R.dimen.padding_medium))
         ) {
             WarningIcon(
-                warningIconColor,
-                warningIconDescription.toString()
+                warningIconColor, warningIconDescription.toString()
             )
             Text(
                 text = "$numberOfAlerts aktive farevarsler",
-                modifier = Modifier
-                    .padding(horizontal = dimensionResource(id = R.dimen.padding_medium))
+                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_medium))
             )
             Spacer(
-                modifier = Modifier
-                    .weight(1f)
+                modifier = Modifier.weight(1f)
             )
             Icon(
                 imageVector = Icons.Default.ChevronRight,
                 contentDescription = "Se farevarsler",
-                modifier = Modifier
-                    .padding(end = dimensionResource(id = R.dimen.padding_medium))
+                modifier = Modifier.padding(end = dimensionResource(id = R.dimen.padding_medium))
             )
         }
     }
@@ -602,7 +605,7 @@ fun MetAlertCard(
 @Composable
 fun MetAlertDialog(
     homeViewModel: HomeViewModel,
-    ) {
+) {
     val homeState = homeViewModel.homeState.collectAsState().value
 
     Dialog(
@@ -612,17 +615,15 @@ fun MetAlertDialog(
             modifier = Modifier
                 .padding(dimensionResource(id = R.dimen.padding_medium))
                 .fillMaxWidth()
-                .fillMaxHeight(0.4f),
-            colors = CardDefaults.cardColors(
+                .fillMaxHeight(0.4f), colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                
-            )
+
+                )
         ) {
-            
+
             Column(
-                modifier = Modifier
-                    .padding(dimensionResource(id = R.dimen.padding_medium)),
+                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val headerString = if (homeState.selectedSwimspot?.spotName != "Plassert pin") {
@@ -631,28 +632,26 @@ fun MetAlertDialog(
                     "Farevarsler for plassert pin"
                 }
                 MediumHeader(
-                    text = headerString,
-                    paddingTop = 0.dp
+                    text = headerString, paddingTop = 0.dp
                 )
                 Spacer(
-                    modifier = Modifier
-                        .height(dimensionResource(id = R.dimen.padding_small)))
+                    modifier = Modifier.height(dimensionResource(id = R.dimen.padding_small))
+                )
 
-                
+
                 LazyColumn(
                     modifier = Modifier.weight(1f)
                 ) {
-                    homeState.metAlertDialogList
-                        .sortedByDescending { it.getAwarenesLevelInt() }
-                        .takeIf { it.isNotEmpty() }
-                        ?.let { sortedList ->
+                    homeState.metAlertDialogList.sortedByDescending { it.getAwarenesLevelInt() }
+                        .takeIf { it.isNotEmpty() }?.let { sortedList ->
                             itemsIndexed(sortedList) { index, simpleMetAlert ->
 
                                 if (index > 0) {
-                                    Spacer(modifier = Modifier
-                                        .height(dimensionResource(id = R.dimen.padding_medium)))
+                                    Spacer(
+                                        modifier = Modifier.height(dimensionResource(id = R.dimen.padding_medium))
+                                    )
                                 }
-                                
+
                                 Column {
                                     Row(
                                         verticalAlignment = Alignment.CenterVertically
@@ -673,10 +672,9 @@ fun MetAlertDialog(
                                     Text(text = simpleMetAlert.description)
                                 }
                             }
-                        }
-                        ?: item {
-                            Text(text = "Det er ingen aktive farevarsler nå.")
-                        }
+                        } ?: item {
+                        Text(text = "Det er ingen aktive farevarsler nå.")
+                    }
                 }
 
                 Button(
@@ -685,8 +683,7 @@ fun MetAlertDialog(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary,
                     ),
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(text = "Lukk")
                 }
@@ -694,7 +691,6 @@ fun MetAlertDialog(
         }
     }
 }
-
 
 
 @Preview(showBackground = true)
@@ -743,8 +739,7 @@ fun LargeAndSmallText(
             text = smallText,
             color = color,
             style = smallStyle,
-            modifier = Modifier
-                .padding(bottom = if (smallerSize) 0.dp else 3.dp)
+            modifier = Modifier.padding(bottom = if (smallerSize) 0.dp else 3.dp)
         )
     }
 }
@@ -770,15 +765,13 @@ fun WarningIcon(
 
 @Composable
 fun WeatherIcon(
-    iconName: String,
-    smallerSize: Boolean = false
+    iconName: String, smallerSize: Boolean = false
 ) {
     Box {
         AsyncImage(
             model = "https://raw.githubusercontent.com/metno/weathericons/main/weather/png/$iconName.png",
             contentDescription = iconName,
-            modifier = Modifier
-                .size(if (smallerSize) 60.dp else 120.dp)
+            modifier = Modifier.size(if (smallerSize) 60.dp else 120.dp)
         )
     }
 }

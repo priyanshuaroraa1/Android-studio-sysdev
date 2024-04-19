@@ -15,31 +15,18 @@ data class SimpleMetAlert(
 )  {
 
     fun isRelevantForCoordinate(latLng: LatLng): Boolean {
-
-        Log.i("TestCoordinates", "Starting")
+        Log.i("Function called:", "isRelevantForCoordinate")
         for (collection in multiPolygon) {
-            Log.i("TestCoordinates", "Inni første loop")
             for (polygon in collection) {
-                Log.i("TestCoordinates", "Inni andre loop")
-                Log.i("TestCoordinatesx", area)
-                Log.i("TestCoordinatesx", polygon.toString())
-
                 val polygonPath: MutableList<LatLng> = mutableListOf()
                 for (coordList in polygon) {
-                    Log.i("TestCoordinates", coordList.toString())
                     polygonPath.add(LatLng(coordList[1].toDouble(), coordList[0].toDouble()))
                 }
-
-                Log.i("TestCoordinates", polygonPath.toString())
-
-                Log.i("TestCoordinatesx", PolyUtil.containsLocation(latLng, polygonPath, true).toString())
                 if (PolyUtil.containsLocation(latLng, polygonPath, true)) {
-                    Log.i("TestCoordinates", "true")
                     return true
                 }
             }
         }
-        Log.i("TestCoordinates", "false")
 
         return false
     }
