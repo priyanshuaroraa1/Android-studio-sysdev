@@ -7,6 +7,8 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import no.uio.ifi.in2000.martirhe.appsolution.data.local.database.Swimspot
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
+import java.time.Instant
+import java.time.ZonedDateTime
 
 data class HomeState(
     val allSwimspots: List<Swimspot> = emptyList(),
@@ -15,7 +17,7 @@ data class HomeState(
     val customSwimspot: Swimspot? = null,
     val bottomSheetPosition: BottomSheetPosition = BottomSheetPosition.Showing,
     val defaultCameraPosition: CameraPosition = CameraPosition.fromLatLngZoom(
-        LatLng(59.911491,10.757933), 11f),
+        LatLng(59.911491,10.757933), 5f),
 
     // For searchbar
     val searchBarText: String = "",
@@ -24,7 +26,7 @@ data class HomeState(
 
     // For MetAlertDialog
     val showMetAlertDialog: Boolean = false,
-    val metAlertDialogList: List<SimpleMetAlert> = emptyList()
+    val metAlertDialogList: List<SimpleMetAlert> = emptyList(),
 )
 
 

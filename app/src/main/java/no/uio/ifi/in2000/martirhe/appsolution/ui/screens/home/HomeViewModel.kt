@@ -34,7 +34,10 @@ class HomeViewModel @Inject constructor(
 
     var locationForecastUiState: LocationForecastUiState by mutableStateOf(LocationForecastUiState.Loading)
     var oceanForecastUiState: OceanForecastState by mutableStateOf(OceanForecastState.Loading)
-    var metAlertUiState: MetAlertUiState by mutableStateOf(MetAlertUiState.Loading)
+//    var metAlertUiState: MetAlertUiState by mutableStateOf(MetAlertUiState.Loading)
+
+    private val _metAlertUiState = MutableStateFlow<MetAlertUiState>(MetAlertUiState.Loading)
+    val metAlertUiState = _metAlertUiState.asStateFlow()
 
     private val _homeState = MutableStateFlow(HomeState())
     val homeState = _homeState.asStateFlow()
@@ -47,6 +50,7 @@ class HomeViewModel @Inject constructor(
                 )
             }
         }
+        loadFarevarsler()
     }
 
     fun onSwimspotPinClick(swimspot: Swimspot) {
@@ -54,7 +58,7 @@ class HomeViewModel @Inject constructor(
         updateBottomSheetPosition(true)
         loadLocationForecast(swimspot.lat, swimspot.lon)
         loadOceanForecast(swimspot.lat, swimspot.lon)
-        loadFarevarsler()
+//        loadFarevarsler()
         // TODO: Er det noe mer som skal gjøres her?
     }
 
@@ -190,20 +194,24 @@ class HomeViewModel @Inject constructor(
 
     fun loadFarevarsler() {
         viewModelScope.launch(Dispatchers.IO) {
-            metAlertUiState = MetAlertUiState.Loading
-            metAlertUiState = try {
-                MetAlertUiState.Success(
-                    metAlertRepository.getMetAlerts(),
-                    metAlertRepository.getSimpleMetAlerts()
-                )
-            } catch (e: IOException) {
-                MetAlertUiState.Error
-            } catch (e: ResponseException) {
-                MetAlertUiState.Error
-            } catch (e: UnresolvedAddressException) {
-                MetAlertUiState.Error
-            } catch (e: Error) {
-                MetAlertUiState.Error
+            _metAlertUiState.update {
+                MetAlertUiState.Loading
+            }
+            _metAlertUiState.update {
+                try {
+                    MetAlertUiState.Success(
+                        metAlertRepository.getMetAlerts(),
+                        metAlertRepository.getSimpleMetAlerts()
+                    )
+                } catch (e: IOException) {
+                    MetAlertUiState.Error
+                } catch (e: ResponseException) {
+                    MetAlertUiState.Error
+                } catch (e: UnresolvedAddressException) {
+                    MetAlertUiState.Error
+                } catch (e: Error) {
+                    MetAlertUiState.Error
+                }
             }
         }
     }
