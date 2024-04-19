@@ -42,9 +42,9 @@ data class Timeseries (
 
 data class Data (
     val instant: Instant,
-    val next12_Hours: Next12_Hours? = null,
+    val next_12_hours: Next_12_Hours? = null,
     val next_1_hours: Next_1_Hours? = null,
-    val next6_Hours: NextHours? = null
+    val next_6_hours: Next_6_Hours? = null
 )
 
 data class Instant (
@@ -60,19 +60,25 @@ data class InstantDetails (
     @SerializedName("wind_speed") val wind_speed: Double
 )
 
-data class Next12_Hours (
-    val summary: Summary,
+data class Next_12_Hours (
+    @SerializedName("summary") val summary: Summary,
     @SerializedName("details") val details: Next_12_Hours_Details
 )
-
-class Next_12_Hours_Details()
-
-
+data class Next_6_Hours (
+    val summary: Summary,
+    val details: Next_6_Hours_Details
+)
 data class Next_1_Hours (
     val summary: Summary,
     val details: Next_1_Hours_Details
 )
+
+class Next_12_Hours_Details()
+
 data class Next_1_Hours_Details(
+    @SerializedName("precipitation_amount") val precipitation_amount : Double
+)
+data class Next_6_Hours_Details(
     @SerializedName("precipitation_amount") val precipitation_amount : Double
 )
 
@@ -80,11 +86,4 @@ data class Summary (
     @SerializedName("symbol_code") val symbol_code : String
 )
 
-data class NextHours (
-    val summary: Summary,
-    val details: Next1_HoursDetails
-)
 
-data class Next1_HoursDetails (
-    val precipitationAmount: Double
-)

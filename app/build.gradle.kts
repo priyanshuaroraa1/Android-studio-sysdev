@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId = "no.uio.ifi.in2000.martirhe.appsolution"
-        minSdk = 24
+        minSdk = 26 // Updated from 24 to 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -31,7 +31,7 @@ android {
         // Specifies that Room should generate a schema file in the specified folder.
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments["room.schemaLocation"] = "$projectDir/schemas".toString()
+                arguments["room.schemaLocation"] = "$projectDir/schemas"
             }
         }
 

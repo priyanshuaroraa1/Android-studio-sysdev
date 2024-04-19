@@ -19,6 +19,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.data.local.database.SwimspotReposi
 import no.uio.ifi.in2000.martirhe.appsolution.data.remote.locationforecast.LocationForecastRepositoryInterface
 import no.uio.ifi.in2000.martirhe.appsolution.data.remote.oceanforecast.OceanForecastRepositoryInterface
 import no.uio.ifi.in2000.martirhe.appsolution.data.remote.metalert.MetAlertRepositoryInterface
+import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
 import java.io.IOException
 import java.nio.channels.UnresolvedAddressException
 import javax.inject.Inject
@@ -40,7 +41,11 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            _homeState.update { swimspotsState -> swimspotsState.copy(allSwimspots = swimspotRepository.getAllSwimspots().first()) }
+            _homeState.update { swimspotsState ->
+                swimspotsState.copy(
+                    allSwimspots = swimspotRepository.getAllSwimspots().first()
+                )
+            }
         }
     }
 
@@ -55,7 +60,7 @@ class HomeViewModel @Inject constructor(
 
     fun onMapBackroundClick(
         latLng: LatLng,
-        ) {
+    ) {
 
         if (homeState.value.customSwimspot == null) {
             val customSwimspot = Swimspot(
@@ -67,7 +72,8 @@ class HomeViewModel @Inject constructor(
                 accessibility = null,
                 locationstring = null,
                 original = false,
-                favourited = false)
+                favourited = false
+            )
 
             updateCustomSwimspot(customSwimspot)
             updateSelectedSwimspot(customSwimspot)
@@ -99,9 +105,21 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun updateShowMetAlertDialog(showMetAlertDialog: Boolean) {
+        _homeState.update { homeState ->
+            homeState.copy(showMetAlertDialog = showMetAlertDialog)
+        }
+    }
+
+    fun updateMetAlertDialogList(metAlertDialogList: List<SimpleMetAlert>) {
+        _homeState.update { homeState ->
+            homeState.copy(metAlertDialogList = metAlertDialogList)
+        }
+    }
+
     // TODO: Change name/remove yeah
     fun updateBottomSheetPosition(makeVisible: Boolean) {
-        val bottomSheetPosition: BottomSheetPosition;
+        val bottomSheetPosition: BottomSheetPosition
         bottomSheetPosition = if (makeVisible) {
             BottomSheetPosition.Showing
         } else {
@@ -135,7 +153,8 @@ class HomeViewModel @Inject constructor(
             locationForecastUiState = try {
                 LocationForecastUiState.Success(
                     locationForecastRepository.getLocationForecast(lat, lon),
-                    locationForecastRepository.getForecastNextHour(lat, lon)
+                    locationForecastRepository.getForecastNextHour(lat, lon),
+                    locationForecastRepository.getForecastNextWeek(lat, lon),
                 )
             } catch (e: IOException) {
                 LocationForecastUiState.Error
@@ -153,7 +172,10 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             oceanForecastUiState = OceanForecastState.Loading
             oceanForecastUiState = try {
-                OceanForecastState.Success(oceanForecastRepository.getOceanForecast(lat, lon))
+                OceanForecastState.Success(
+                    oceanForecastRepository.getOceanForecast(lat, lon), // TODO: Dette bør jo gjøres i ett kall, ikke flere
+                    oceanForecastRepository.getOceanForecastRightNow(lat, lon)
+                )
             } catch (e: IOException) {
                 OceanForecastState.Error
             } catch (e: ResponseException) {

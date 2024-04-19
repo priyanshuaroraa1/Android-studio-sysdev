@@ -3,6 +3,7 @@ package no.uio.ifi.in2000.martirhe.appsolution.ui.screens.home
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -19,11 +20,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Maximize
 import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -42,6 +46,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -58,10 +63,13 @@ import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.martirhe.appsolution.R
 import no.uio.ifi.in2000.martirhe.appsolution.data.local.database.Swimspot
 import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.ForecastNextHour
-import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.LocationForecast
+import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.ForecastNextWeek
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.WarningIconColor
+import no.uio.ifi.in2000.martirhe.appsolution.model.oceanforecast.OceanForecastRightNow
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.HomeSearchBar
+import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.MediumHeader
+import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.SmallHeader
 import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
 
 
@@ -86,9 +94,7 @@ fun HomeScreen(
         mapStyleOptions = MapStyleOptions(mapStyleString)
     )
 
-    // Obtain a coroutine scope tied to the lifecycle of this composable
     val coroutineScope = rememberCoroutineScope()
-
     val scaffoldState = rememberBottomSheetScaffoldState()
 
     BottomSheetScaffold(
@@ -138,7 +144,7 @@ fun HomeScreen(
         },
         sheetPeekHeight = homeState.bottomSheetPosition.heightDp,
 
-        ) { innerPadding ->
+        ) {
 
         Box(
             modifier = Modifier
@@ -212,6 +218,11 @@ fun HomeScreen(
             }
         }
     }
+    if (homeState.showMetAlertDialog) {
+        MetAlertDialog(
+            homeViewModel,
+        )
+    }
 }
 
 
@@ -253,7 +264,9 @@ fun BottomSheetSwimspotContent(
 
                                     MetAlertCard(
                                         simpleMetAlertList = simpleMetAlertList,
+                                        onClick = { homeViewModel.updateShowMetAlertDialog(true) },
                                     )
+                                    homeViewModel.updateMetAlertDialogList(simpleMetAlertList)
                                 }
 
                                 is MetAlertUiState.Loading -> {
@@ -266,14 +279,29 @@ fun BottomSheetSwimspotContent(
                             }
                         }
 
-                        homeViewModel.locationForecastUiState.let { state ->
-                            when (state) {
+                        homeViewModel.locationForecastUiState.let { locationForecastUiState ->
+                            when (locationForecastUiState) {
                                 is LocationForecastUiState.Success -> {
-//                                    WeatherForecastCard(state.forecastNextHour)
-                                    WeatherForecastCard(
-                                        state.forecastNextHour,
-                                        state.locationForecast
-                                    )
+
+                                    homeViewModel.oceanForecastUiState.let { oceanForecastState ->
+                                        when (oceanForecastState) {
+                                            is OceanForecastState.Success -> {
+                                                WeatherNextHourCard(
+                                                    locationForecastUiState.forecastNextHour,
+                                                    oceanForecastState.oceanForecastRightNow
+                                                )
+                                            }
+
+                                            else -> {
+                                                WeatherNextHourCard(
+                                                    locationForecastUiState.forecastNextHour,
+                                                )
+                                            }
+                                        }
+
+                                    }
+
+
                                 }
 
                                 is LocationForecastUiState.Loading -> {
@@ -285,80 +313,57 @@ fun BottomSheetSwimspotContent(
                                 }
                             }
                         }
-
-
-                        // TODO: Værmelding
-
-
-                        SmallHeader(text = "Neste 7 dager")
-
                     }
                 }
                 item {
 
 
-                    LazyRow() {
-                        item() {
-                            Card(
-                                modifier = Modifier
-//                                    .width(500.dp)
-//                                    .height(100.dp)
-                                    .padding(horizontal = outerEdgePaddingValues),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                                ),
-                            ) {
+                    homeViewModel.locationForecastUiState.let { locationForecastState ->
+                        when (locationForecastState) {
+                            is LocationForecastUiState.Success -> {
 
-                                Row(
-                                    modifier = Modifier
-                                        .padding(horizontal = 16.dp)
-                                ) {
-
-                                    for (i in 1..7) {
-
-                                        Column(
-                                            horizontalAlignment = Alignment.CenterHorizontally
-                                        ) {
-
-                                            Spacer(
-                                                modifier = Modifier
-                                                    .height(dimensionResource(id = R.dimen.padding_medium))
+                                homeViewModel.oceanForecastUiState.let { oceanForecastState ->
+                                    when (oceanForecastState) {
+                                        is OceanForecastState.Success -> {
+                                            WeatherNextWeekCard(
+                                                outerEdgePaddingValues = outerEdgePaddingValues,
+                                                forecastNextWeek = locationForecastState.forecastNextWeek,
+                                                oceanForecastRightNow = oceanForecastState.oceanForecastRightNow,
                                             )
-                                            Text(
-                                                text = "Ukedag",
-                                                style = MaterialTheme.typography.bodySmall,
-                                                color = MaterialTheme.colorScheme.onPrimaryContainer
-                                            )
-                                            WeatherIcon("fair_day", smallerSize = true)
-                                            LargeAndSmallText(
-                                                largeText = "19° ",
-                                                smallText = "i lufta",
-                                                smallerSize = true,
-                                            )
-                                            LargeAndSmallText(
-                                                largeText = "12° ",
-                                                smallText = "i vannet",
-                                                smallerSize = true,
-                                            )
-                                            Spacer(
-                                                modifier = Modifier
-                                                    .height(dimensionResource(id = R.dimen.padding_medium))
-                                            )
-
-
                                         }
-                                        if (i < 7) {
-                                            Spacer(
-                                                modifier = Modifier
-                                                    .width(40.dp)
+
+                                        else -> {
+                                            WeatherNextWeekCard(
+                                                outerEdgePaddingValues = outerEdgePaddingValues,
+                                                forecastNextWeek = locationForecastState.forecastNextWeek,
+                                                oceanForecastRightNow = null,
                                             )
                                         }
                                     }
+                                }
 
+
+
+
+
+                            }
+
+                            is LocationForecastUiState.Loading -> {
+                                Row {
+                                    Spacer(modifier = Modifier.width(outerEdgePaddingValues))
+                                    Text(text = "Loading")
+                                }
+                            }
+
+                            is LocationForecastUiState.Error -> {
+                                Row {
+                                    Spacer(modifier = Modifier.width(outerEdgePaddingValues))
+                                    Text(text = "Error")
                                 }
                             }
                         }
                     }
+
 
                     Spacer(
                         modifier = Modifier
@@ -373,14 +378,82 @@ fun BottomSheetSwimspotContent(
 
 
 @Composable
-fun WeatherForecastCard(
+fun WeatherNextWeekCard(
+    outerEdgePaddingValues: Dp,
+    forecastNextWeek: ForecastNextWeek,
+    oceanForecastRightNow: OceanForecastRightNow?
+) {
+
+    Row {
+        Spacer(modifier = Modifier.width(outerEdgePaddingValues))
+        SmallHeader(text = "Neste 7 dager")
+    }
+    LazyRow() {
+        item() {
+            Card(
+                modifier = Modifier
+                    .padding(horizontal = outerEdgePaddingValues),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                ),
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = dimensionResource(id = R.dimen.padding_large))
+                ) {
+
+                    forecastNextWeek.weekList.forEach { forecastWeekday ->
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Spacer(
+                                modifier = Modifier
+                                    .height(dimensionResource(id = R.dimen.padding_medium))
+                            )
+                            Text(
+                                text = forecastWeekday.getWeekdayString(),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                            WeatherIcon(forecastWeekday.symbolCode, smallerSize = true)
+                            LargeAndSmallText(
+                                largeText = forecastWeekday.getTemperatureString() + "° ",
+                                smallText = "i lufta",
+                                smallerSize = true,
+                            )
+                            if (oceanForecastRightNow != null) {
+                                LargeAndSmallText(
+                                    largeText = oceanForecastRightNow.getWaterTemperatureString() + "° ",
+                                    smallText = "i vannet",
+                                    smallerSize = true,
+                                )
+                            }
+                            Spacer(
+                                modifier = Modifier
+                                    .height(dimensionResource(id = R.dimen.padding_medium))
+                            )
+                        }
+                        Spacer(
+                            modifier = Modifier
+                                .width(40.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+
+@Composable
+fun WeatherNextHourCard(
     forecastNextHour: ForecastNextHour,
-    locationForecast: LocationForecast
+    oceanForecastRightNow: OceanForecastRightNow? = null,
 ) {
     SmallHeader(
         text = "Den neste timen",
     )
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -388,28 +461,27 @@ fun WeatherForecastCard(
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
-//        Log.i("Symbol code", locationForecast.properties.timeseries[0].data.instant.details.air_temperature.toString())
-        Log.i(
-            "Symbol code",
-            locationForecast.properties.timeseries[0].data.instant.details.air_temperature.toString()
-        )
-
         forecastNextHour.symbolCode?.let { WeatherIcon(it) }
         Spacer(modifier = Modifier.weight(0.5f))
-
         Column(horizontalAlignment = Alignment.Start) {
             LargeAndSmallText(
                 largeText = "${forecastNextHour.getTemperatureString()}° ",
                 smallText = "i lufta",
             )
-            LargeAndSmallText(
-                largeText = "11° ",
-                smallText = "i vannet",
-            )
+            if (oceanForecastRightNow != null) {
+                LargeAndSmallText(
+                    largeText = oceanForecastRightNow.getWaterTemperatureString() + "° ",
+                    smallText = "i vannet",
+                )
+            } else {
+                LargeAndSmallText(
+                    largeText = "N/A ",
+                    smallText = "i vannet",
+                )
+            }
         }
         Spacer(modifier = Modifier.weight(1.5f))
     }
-
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -442,10 +514,9 @@ fun WeatherForecastCard(
                 LargeAndSmallText(
                     largeText = forecastNextHour.getWindSpeedString(),
                     smallText = "m/s",
-                    image = getWindDirectionPainterResource(forecastNextHour.getWindDirectionString()),
+                    image = getFromDirectionPainterResource(forecastNextHour.getWindDirectionString()),
                     imageDescription = "Wind from " + forecastNextHour.getWindDirectionString(),
                 )
-                Log.i("Winddir", forecastNextHour.getWindDirectionString())
                 Text(
                     text = "Vind",
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -456,12 +527,20 @@ fun WeatherForecastCard(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                LargeAndSmallText(
-                    largeText = "40",
-                    smallText = "cm",
-                    image = painterResource(id = R.drawable.north),
-                    imageDescription = "Wind from " + forecastNextHour.getWindDirectionString(),
-                )
+                if (oceanForecastRightNow != null) {
+                    LargeAndSmallText(
+                        largeText = oceanForecastRightNow.getWaveHeightString(),
+                        smallText = "cm",
+                        image = getFromDirectionPainterResource(oceanForecastRightNow.getWaveDirectionString()),
+                        imageDescription = "Waves from " + oceanForecastRightNow.getWaveDirectionString(),
+                    )
+                } else {
+                    LargeAndSmallText(
+                        largeText = "",
+                        smallText = "N/A",
+                    )
+                }
+
                 Text(
                     text = "Bølger",
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -474,7 +553,8 @@ fun WeatherForecastCard(
 
 @Composable
 fun MetAlertCard(
-    simpleMetAlertList: List<SimpleMetAlert>
+    simpleMetAlertList: List<SimpleMetAlert>,
+    onClick: () -> Unit,
 ) {
     val numberOfAlerts = simpleMetAlertList.size
     val warningIconColor = SimpleMetAlert.mostSevereColor(simpleMetAlertList)
@@ -488,6 +568,7 @@ fun MetAlertCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = dimensionResource(id = R.dimen.padding_medium))
+            .clickable(onClick = onClick)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -495,11 +576,6 @@ fun MetAlertCard(
                 .padding(vertical = dimensionResource(id = R.dimen.padding_medium))
                 .padding(start = dimensionResource(id = R.dimen.padding_medium))
         ) {
-//            Icon(
-//                imageVector = Icons.Default.WarningAmber,
-//                contentDescription = "Warning",
-//                tint = alertColor,
-//            )
             WarningIcon(
                 warningIconColor,
                 warningIconDescription.toString()
@@ -524,21 +600,102 @@ fun MetAlertCard(
 }
 
 @Composable
-fun SmallHeader(
-    text: String,
-    color: Color = MaterialTheme.colorScheme.onPrimaryContainer,
-) {
-    Text(
-        text = text,
-        color = color,
-        style = MaterialTheme.typography.bodyLarge,
-        modifier = Modifier
-            .padding(
-                top = dimensionResource(id = R.dimen.padding_large),
-                bottom = dimensionResource(id = R.dimen.padding_small)
+fun MetAlertDialog(
+    homeViewModel: HomeViewModel,
+    ) {
+    val homeState = homeViewModel.homeState.collectAsState().value
+
+    Dialog(
+        onDismissRequest = { homeViewModel.updateShowMetAlertDialog(false) },
+    ) {
+        Card(
+            modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.padding_medium))
+                .fillMaxWidth()
+                .fillMaxHeight(0.4f),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                
             )
-    )
+        ) {
+            
+            Column(
+                modifier = Modifier
+                    .padding(dimensionResource(id = R.dimen.padding_medium)),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                val headerString = if (homeState.selectedSwimspot?.spotName != "Plassert pin") {
+                    "Farevarsler for ${homeState.selectedSwimspot?.spotName}"
+                } else {
+                    "Farevarsler for plassert pin"
+                }
+                MediumHeader(
+                    text = headerString,
+                    paddingTop = 0.dp
+                )
+                Spacer(
+                    modifier = Modifier
+                        .height(dimensionResource(id = R.dimen.padding_small)))
+
+                
+                LazyColumn(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    homeState.metAlertDialogList
+                        .sortedByDescending { it.getAwarenesLevelInt() }
+                        .takeIf { it.isNotEmpty() }
+                        ?.let { sortedList ->
+                            itemsIndexed(sortedList) { index, simpleMetAlert ->
+
+                                if (index > 0) {
+                                    Spacer(modifier = Modifier
+                                        .height(dimensionResource(id = R.dimen.padding_medium)))
+                                }
+                                
+                                Column {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        WarningIcon(
+                                            warningIconColor = simpleMetAlert.getAwarenessLevelColor(),
+                                            warningIconDescription = simpleMetAlert.getAwarenessLevelDescription()
+                                        )
+                                        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding_small)))
+                                        SmallHeader(
+                                            text = simpleMetAlert.eventAwarenessName + ": " + simpleMetAlert.area,
+                                            paddingTop = 0.dp,
+                                            paddingBottom = 0.dp
+                                        )
+
+                                    }
+                                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_small)))
+                                    Text(text = simpleMetAlert.description)
+                                }
+                            }
+                        }
+                        ?: item {
+                            Text(text = "Det er ingen aktive farevarsler nå.")
+                        }
+                }
+
+                Button(
+                    onClick = { homeViewModel.updateShowMetAlertDialog(false) },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                ) {
+                    Text(text = "Lukk")
+                }
+            }
+        }
+    }
 }
+
+
 
 @Preview(showBackground = true)
 @Composable
@@ -565,13 +722,7 @@ fun LargeAndSmallText(
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (image != null) {
-//            Icon(
-//                imageVector = icon,
-//                tint = color,
-//                contentDescription = iconDescription,
-//                modifier = Modifier
-//                    .padding(bottom = 2.dp),
-//            )
+
             Image(
                 painter = image,
                 contentDescription = imageDescription,
@@ -585,12 +736,12 @@ fun LargeAndSmallText(
             if (smallerSize) MaterialTheme.typography.bodySmall else MaterialTheme.typography.bodyLarge
         Text(
             text = largeText,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            color = color,
             style = largeStyle,
         )
         Text(
             text = smallText,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            color = color,
             style = smallStyle,
             modifier = Modifier
                 .padding(bottom = if (smallerSize) 0.dp else 3.dp)
@@ -600,8 +751,8 @@ fun LargeAndSmallText(
 
 
 @Composable
-fun WarningIcon( // TODO: Make colors an enum, not string?
-    warningIconColor: WarningIconColor = WarningIconColor.GREEN,
+fun WarningIcon(
+    warningIconColor: WarningIconColor,
     warningIconDescription: String,
 ) {
     val imageResource = when (warningIconColor) {
@@ -633,104 +784,6 @@ fun WeatherIcon(
 }
 
 
-//    // This box limits the size of the content
-//    Box(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .height(280.dp)
-//    ) {
-//
-//        LazyColumn(
-//            modifier = Modifier
-//                .padding(horizontal = 16.dp)
-//        ) {
-//
-//            item {
-//
-//                if (homeState.selectedSwimspot == null) {
-//                    Text(
-//                        text = "Utforsk badeplasser",
-//                        fontSize = 18.sp
-//                    )
-//                } else {
-//
-//                    Text(
-//                        text = homeState.selectedSwimspot.spotName,
-//                        fontSize = 18.sp
-//                    )
-//
-//                    homeViewModel.metAlertUiState.let { state ->
-//                        when (state) {
-//                            is MetAlertUiState.Success -> {
-//
-//                                val koordinater = homeState.selectedSwimspot!!.getLatLng()
-//
-//                                FarevarselCard(simpleMetAlertList = state.simpleMetAlertList.filter {
-//                                    it.isRelevantForCoordinate(koordinater)
-//                                })
-//                            }
-//
-//                            is MetAlertUiState.Loading -> {
-//                                Text(text = "Loading")
-//                                Log.i("TestAlerts", "Loading")
-//                            }
-//
-//                            is MetAlertUiState.Error -> {
-//                                Text(text = "Error")
-//                                Log.i("TestAlerts", "Error")
-//                            }
-//                        }
-//                    }
-//
-//                    homeViewModel.locationForecastUiState.let { state ->
-//                        when (state) {
-//                            is LocationForecastUiState.Success -> {
-//
-//                                WeatherCard(
-//                                    temperature = state.locationForecast.properties.timeseries[0].data.instant.details.air_temperature,
-//                                    windFromDirection = state.locationForecast.properties.timeseries[0].data.instant.details.windFromDirection,
-//                                    windSpeed = state.locationForecast.properties.timeseries[0].data.instant.details.wind_speed
-//                                )
-//                            }
-//
-//                            is LocationForecastUiState.Loading -> {
-//                                Text(text = "Loading")
-//                            }
-//
-//                            is LocationForecastUiState.Error -> {
-//                                Text(text = "Error")
-//                            }
-//                        }
-//                    }
-//
-//                    homeViewModel.oceanForecastUiState.let { state ->
-//                        when (state) {
-//                            is OceanForecastState.Success -> {
-//                                WaterCard(
-//                                    temperature = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_water_temperature,
-//                                    waveHeight = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_surface_wave_height,
-//                                    waveToDirection = state.oceanForecast.properties.timeseries[0].data.instant.details.sea_water_to_direction
-//                                )
-//                            }
-//
-//                            is OceanForecastState.Loading -> {
-//                                Text(text = "Loading")
-//                            }
-//
-//                            is OceanForecastState.Error -> {
-//                                Text(text = "Error")
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-
-
-
-
 @Composable
 fun loadMapStyleFromAssets(): String {
     val context = LocalContext.current
@@ -743,7 +796,7 @@ fun loadMapStyleFromAssets(): String {
 }
 
 @Composable
-fun getWindDirectionPainterResource(windDirection: String): Painter {
+fun getFromDirectionPainterResource(windDirection: String): Painter {
     val resourceId = when (windDirection) {
         "north" -> R.drawable.north
         "north_northeast" -> R.drawable.north_northeast
@@ -761,7 +814,7 @@ fun getWindDirectionPainterResource(windDirection: String): Painter {
         "west_northwest" -> R.drawable.west_northwest
         "northwest" -> R.drawable.northwest
         "north_northwest" -> R.drawable.north_northwest
-        else -> R.drawable.north // Handle unexpected cases
+        else -> R.drawable.north
     }
     return painterResource(id = resourceId)
 }

@@ -1,7 +1,6 @@
 package no.uio.ifi.in2000.martirhe.appsolution.model.metalert
 
 import android.util.Log
-import androidx.compose.ui.graphics.Color
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.PolyUtil
 
@@ -12,6 +11,7 @@ data class SimpleMetAlert(
     val awarenessType: String,
     val consequences: String,
     val description: String,
+    val eventAwarenessName: String,
 )  {
 
     fun isRelevantForCoordinate(latLng: LatLng): Boolean {
@@ -56,7 +56,15 @@ data class SimpleMetAlert(
             "red" -> WarningIconColor.RED
             else -> WarningIconColor.GREEN
         }
-    } // TODO: Denne må returnere strenger
+    }
+    fun getAwarenessLevelDescription(): String {
+        return when (getAwarenessLevelColor()) {
+            WarningIconColor.RED -> "Rødt farevarsel"
+            WarningIconColor.ORANGE -> "Oransje farevarsel"
+            WarningIconColor.YELLOW -> "Gult farevarsel"
+            WarningIconColor.GREEN -> "Grønt farevarsel"
+        }
+    }
 
     companion object {
         fun mostSevereColor(simpleMetAlertList: List<SimpleMetAlert>): WarningIconColor {
