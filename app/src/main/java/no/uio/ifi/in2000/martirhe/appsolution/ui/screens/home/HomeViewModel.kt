@@ -76,7 +76,8 @@ class HomeViewModel @Inject constructor(
                 accessibility = null,
                 locationstring = null,
                 original = false,
-                favourited = false
+                favourited = false,
+                url = null,
             )
 
             updateCustomSwimspot(customSwimspot)

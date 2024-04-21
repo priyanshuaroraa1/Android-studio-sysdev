@@ -17,7 +17,7 @@ data class HomeState(
     val customSwimspot: Swimspot? = null,
     val bottomSheetPosition: BottomSheetPosition = BottomSheetPosition.Showing,
     val defaultCameraPosition: CameraPosition = CameraPosition.fromLatLngZoom(
-        LatLng(59.911491,10.757933), 5f),
+        LatLng(59.911491,10.757933), 11f), // 5f to show most of country, 11f for Oslo
 
     // For searchbar
     val searchBarText: String = "",

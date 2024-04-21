@@ -26,7 +26,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Maximize
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -36,13 +35,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -53,8 +52,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
@@ -278,7 +275,7 @@ fun BottomSheetSwimspotContent(
             .fillMaxWidth()
             .fillMaxHeight(0.6f)
     ) {
-        LazyColumn() {
+        LazyColumn {
 
             if (homeState.selectedSwimspot != null) {
                 item {
@@ -351,6 +348,17 @@ fun BottomSheetSwimspotContent(
                         }
                     }
                 }
+
+                item {
+                    if (homeState.selectedSwimspot.url != null) {
+                        SwimspotImage(
+                            swimspot = homeState.selectedSwimspot
+                        )
+                    }
+
+
+                }
+
                 item {
 
 
@@ -410,6 +418,21 @@ fun BottomSheetSwimspotContent(
 
 
 @Composable
+fun SwimspotImage(
+    swimspot: Swimspot,
+) {
+    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_large)))
+    AsyncImage(
+        model = swimspot.url,
+        contentDescription = "Bilde av " + swimspot.spotName,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(160.dp),
+        contentScale = ContentScale.Crop,
+        )
+}
+
+@Composable
 fun WeatherNextWeekCard(
     outerEdgePaddingValues: Dp,
     forecastNextWeek: ForecastNextWeek,
@@ -420,8 +443,8 @@ fun WeatherNextWeekCard(
         Spacer(modifier = Modifier.width(outerEdgePaddingValues))
         SmallHeader(text = "Neste 7 dager")
     }
-    LazyRow() {
-        item() {
+    LazyRow {
+        item {
             Card(
                 modifier = Modifier.padding(horizontal = outerEdgePaddingValues),
                 colors = CardDefaults.cardColors(

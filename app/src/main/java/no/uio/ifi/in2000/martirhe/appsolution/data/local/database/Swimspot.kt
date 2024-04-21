@@ -21,6 +21,7 @@ data class Swimspot(
     val locationstring: String?,
     val original: Boolean?,
     val favourited: Boolean?,
+    val url: String?,
 ) {
     fun getLatLng(): LatLng {
         return LatLng(lat, lon)
