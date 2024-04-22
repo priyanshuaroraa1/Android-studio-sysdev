@@ -28,7 +28,7 @@ data class Swimspot(
     }
 
     fun getMarkerIcon(metAlertUiState: MetAlertUiState): BitmapDescriptor {
-        var markerIcon = BitmapDescriptorFactory.fromResource(R.drawable.pin_normal_38)
+        val markerIcon: BitmapDescriptor
 
         when (metAlertUiState) {
             is MetAlertUiState.Success -> {
@@ -50,6 +50,17 @@ data class Swimspot(
             else -> {markerIcon = BitmapDescriptorFactory.fromResource(R.drawable.pin_normal_38)}
         }
         return markerIcon
+    }
+
+    fun getAccecibilityStrings(): List<String> {
+        val stringMap = mapOf(
+            "wheelchairAccessibleParking" to "HC-parkering",
+            "wheelchairAccessibleEntrance" to "Rullestolvennlig inngang",
+            "wheelchairAccessibleRestroom" to "HC-toalett"
+        )
+
+        // Check if accessibility is not null, split the string by ";", and translate each feature
+        return accessibility?.split(";")?.mapNotNull { stringMap[it] } ?: emptyList()
     }
 
 }

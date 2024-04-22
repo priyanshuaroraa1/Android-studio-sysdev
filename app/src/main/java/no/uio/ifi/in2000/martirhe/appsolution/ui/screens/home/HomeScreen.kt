@@ -24,6 +24,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Info
@@ -247,6 +248,9 @@ fun HomeScreen(
     if (homeState.showWeatherInfoDialog) {
         WeatherInfoDialog(homeViewModel = homeViewModel)
     }
+    if (homeState.showAccessibilityInfoDialog) {
+        AccessibilityInfoDialog(homeViewModel)
+    }
 }
 
 @Composable
@@ -361,13 +365,9 @@ fun BottomSheetSwimspotContent(
                             swimspot = homeState.selectedSwimspot
                         )
                     }
-
-
                 }
 
                 item {
-
-
                     homeViewModel.locationForecastUiState.let { locationForecastState ->
                         when (locationForecastState) {
                             is LocationForecastUiState.Success -> {
@@ -410,12 +410,78 @@ fun BottomSheetSwimspotContent(
                             }
                         }
                     }
+                }
 
-
+                item {
+                    if (homeState.selectedSwimspot.accessibility != null) {
+                        AccessibilityOptionsCard(
+                            accessibilityStringList = homeState.selectedSwimspot.getAccecibilityStrings(),
+                            homeViewModel = homeViewModel,
+                            outerEdgePaddingValues = outerEdgePaddingValues)
+                    }
+                }
+                item {
                     Spacer(
                         modifier = Modifier.height(dimensionResource(id = R.dimen.padding_large))
                     )
+                }
+            }
+        }
+    }
+}
 
+@Composable
+fun AccessibilityOptionsCard(
+    accessibilityStringList: List<String>,
+    homeViewModel: HomeViewModel,
+    outerEdgePaddingValues: Dp,
+) {
+    Column(
+        modifier = Modifier.padding(horizontal = outerEdgePaddingValues)
+
+    ) {
+        SmallHeader(text = stringResource(id = R.string.accessability_options_header))
+        Card(
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+            ) {
+
+                IconButton(
+                    onClick = { homeViewModel.updateShowAccessibilityInfoDialog(true) },
+                    modifier = Modifier.align(Alignment.TopEnd)
+                    ) {
+                    Icon(imageVector = Icons.Outlined.Info, contentDescription = "Mer informasjon")
+                }
+
+                Column(
+                    modifier = Modifier
+                        .padding(all = dimensionResource(id = R.dimen.padding_medium))
+                ) {
+                    accessibilityStringList.forEachIndexed() { index, string ->
+                        if (index != 0) {
+                            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_small)))
+                        }
+                        Row {
+                            Icon(
+                                imageVector = Icons.Default.Check,
+                                contentDescription = "Punkt $index",
+                                modifier = Modifier
+                                    .padding(end = dimensionResource(id = R.dimen.padding_small)))
+                            Text(text = string)
+
+                        }
+
+                    }
                 }
             }
         }
@@ -792,6 +858,61 @@ fun WeatherInfoDialog(
 
                 Button(
                     onClick = { homeViewModel.updateShowWeatherInfoDialog(false) },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(text = "Lukk")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun AccessibilityInfoDialog(
+    homeViewModel: HomeViewModel
+) {
+    Dialog(
+        onDismissRequest = { homeViewModel.updateShowAccessibilityInfoDialog(false) },
+    ) {
+        Card(
+            modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.padding_medium))
+                .fillMaxWidth()
+                .fillMaxHeight(0.4f), colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+
+                )
+        ) {
+
+            Column(
+                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
+                horizontalAlignment = Alignment.Start
+            ) {
+
+                MediumHeader(
+                    text = stringResource(id = R.string.accessability_options_header),
+                    paddingTop = 0.dp,
+                )
+                Spacer(
+                    modifier = Modifier.height(dimensionResource(id = R.dimen.padding_small))
+                )
+
+
+                LazyColumn(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    item {
+                        Text(text = stringResource(id = R.string.accessability_options_dialog_body))
+                    }
+                }
+
+                Button(
+                    onClick = { homeViewModel.updateShowAccessibilityInfoDialog(false) },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary,

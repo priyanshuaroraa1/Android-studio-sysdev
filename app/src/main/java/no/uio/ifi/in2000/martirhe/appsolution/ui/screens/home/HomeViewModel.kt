@@ -122,6 +122,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun updateShowAccessibilityInfoDialog(showAccessibilityInfoDialog: Boolean) {
+        _homeState.update { homeState ->
+            homeState.copy(showAccessibilityInfoDialog = showAccessibilityInfoDialog)
+        }
+    }
+
     fun updateMetAlertDialogList(metAlertDialogList: List<SimpleMetAlert>) {
         _homeState.update { homeState ->
             homeState.copy(metAlertDialogList = metAlertDialogList)
