@@ -1,20 +1,14 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.screens.onboarding
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -23,15 +17,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.martirhe.appsolution.R
+import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun OnboardingScreen(navController: NavController) {
+
     MaterialTheme(
         colorScheme = lightColorScheme(
             primary = Color(0xFF7DCCE9),
@@ -41,9 +35,14 @@ fun OnboardingScreen(navController: NavController) {
         )
     ){
         var currentPage by remember { mutableStateOf(0) }
-        val totalPages = 5
-        val coroutineScope = rememberCoroutineScope()
-        val snackbarHostState = remember { SnackbarHostState() }
+        val totalPages = 4
+
+        val (mainTitle, subTitle, bodyText) = when (currentPage) {
+            0 -> Triple(stringResource(id = R.string.pageone_maintitle), stringResource(id = R.string.pageone_subtitle), stringResource(id = R.string.pageone_bodytext))
+            1 -> Triple(stringResource(id = R.string.pagetwo_maintitle), stringResource(id = R.string.pagetwo_subtitle), stringResource(id = R.string.pagetwo_bodytext))
+            2 -> Triple(stringResource(id = R.string.pagethree_maintitle), stringResource(id = R.string.pagethree_subtitle), stringResource(id = R.string.pagethree_bodytext))
+            else -> Triple(stringResource(id = R.string.pagefour_maintitle), stringResource(id = R.string.pagefour_subtitle), stringResource(id = R.string.pagefour_bodytext))
+        }
 
         Scaffold(
             containerColor = MaterialTheme.colorScheme.primary,
@@ -57,36 +56,13 @@ fun OnboardingScreen(navController: NavController) {
                         if (currentPage < totalPages - 1) {
                             currentPage++
                         } else {
-                            navController.navigate("locationRequest")
+                            navController.navigate(Routes.LOCATION_SCREEN)
                         }
                     }
                 )
             }
         ) {
-            if (currentPage < 4) {
-                val (mainTitle, subTitle, bodyText) = when (currentPage) {
-                    0 -> Triple(stringResource(id = R.string.pageone_maintitle), stringResource(id = R.string.pageone_subtitle), stringResource(id = R.string.pageone_bodytext))
-                    1 -> Triple(stringResource(id = R.string.pagetwo_maintitle), stringResource(id = R.string.pagetwo_subtitle), stringResource(id = R.string.pagetwo_bodytext))
-                    2 -> Triple(stringResource(id = R.string.pagethree_maintitle), stringResource(id = R.string.pagethree_subtitle), stringResource(id = R.string.pagethree_bodytext))
-                    else -> Triple(stringResource(id = R.string.pagefour_maintitle), stringResource(id = R.string.pagefour_subtitle), stringResource(id = R.string.pagefour_bodytext))
-                }
-                OnboardingContent(mainTitle, subTitle, bodyText, currentPage, totalPages)
-            } else {
-                LocationPermissionRequest(
-                    onAccept = { navController.navigate("NyAbout(navController)") },
-                    onDecline = {
-                        coroutineScope.launch {
-                            if (snackbarHostState.showSnackbar(
-                                    "We strongly recommend activating location services, since the watering schedule and recommendations depend on your local weather. You can still use the app without it, but you will not get any tips or recommendations.",
-                                    actionLabel = "Continue",
-                                ) == SnackbarResult.ActionPerformed
-                            ) {
-                                navController.navigate("page-3")
-                            }
-                        }
-                    },
-                )
-            }
+            OnboardingContent(mainTitle, subTitle, bodyText, currentPage, totalPages)
         }
     }
 }
@@ -109,19 +85,13 @@ fun OnboardingContent(mainTitle: String, subTitle: String, bodyText: String, cur
         Spacer(modifier = Modifier.height(16.dp))
         Text(mainTitle,
             style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, fontFamily = FontFamily(Font(R.font.font1)))
-        Spacer(modifier = Modifier
-            .height(16.dp)
-            .size(36.dp))
+        Spacer(modifier = Modifier.height(16.dp).size(36.dp))
         Text(subTitle,
             style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.secondary, textAlign = TextAlign.Center, fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier
-            .height(16.dp)
-            .size(34.dp))
+        Spacer(modifier = Modifier.height(16.dp).size(34.dp))
         Text(bodyText,
             style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary, textAlign = TextAlign.Center)
-        Spacer(modifier = Modifier
-            .height(16.dp)
-            .size(32.dp))
+        Spacer(modifier = Modifier.height(16.dp).size(32.dp))
         PageIndicator(currentPage, totalPages)
     }
 }
@@ -182,75 +152,10 @@ fun OnboardingBottomBar(
     }
 }
 
-@Composable
-fun LocationPermissionRequest(
-    onAccept: () -> Unit,
-    onDecline: () -> Unit,
-) {
-    val context = LocalContext.current
-
-    val locationPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions(),
-    ) { permissions ->
-        when {
-            permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-                onAccept()
-            }
-
-            else -> {
-                onDecline()
-            }
-        }
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(
-            "We need your location permission",
-            style = MaterialTheme.typography.headlineMedium,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onPrimary
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            "To provide a personalized experience, please allow us to access your location.",
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onPrimary
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-        Button(
-            onClick = {
-                if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    locationPermissionLauncher.launch(
-                        arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
-                    )
-                } else {
-                    onAccept()
-                }
-            },
-            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
-        ) {
-            Text("Allow location access", color = MaterialTheme.colorScheme.onPrimary)
-        }
-        TextButton(
-            onClick = onDecline,
-            colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onPrimary)
-        ) {
-            Text("Decline", color = MaterialTheme.colorScheme.onPrimary)
-        }
-    }
-}
-
 @Preview
 @Composable
 fun OnboardingScreenPreview() {
     val navController = rememberNavController()
     OnboardingScreen(navController = navController)
 }
-
 

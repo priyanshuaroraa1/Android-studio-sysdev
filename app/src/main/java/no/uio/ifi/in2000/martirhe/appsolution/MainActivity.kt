@@ -12,45 +12,31 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import no.uio.ifi.in2000.martirhe.appsolution.ui.location.LocationScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.navbar.BottomNavBar
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.about.AboutScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.home.HomeScreen
+import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.onboarding.OnboardingScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.theme.AppSolutionTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AppSolutionTheme {
                 val navController = rememberNavController()
-                Scaffold(
-                    bottomBar = {
-                        BottomNavBar(navController = navController)
+                NavHost(navController = navController, startDestination = Routes.ONBOARDING_SCREEN) {
+                    composable(Routes.ONBOARDING_SCREEN) {
+                        OnboardingScreen(navController)
                     }
-                ) { innerPadding ->
-                    NavHost(
-                        navController = navController,
-                        startDestination = Routes.HOME_SCREEN,
-                        modifier = Modifier.padding(innerPadding)
-                    ) {
-                        composable(Routes.HOME_SCREEN) {
-                            HomeScreen(
-                                onNavigate = {
-                                    navController.navigate(it.route)
-                                }
-                            )
-                        }
-                       composable(Routes.ABOUT_US_SCREEN) {
-                            AboutScreen(navController, onNavigate = {
-                                navController.navigate(it.route)
-                            })
-                        }
+                    composable(Routes.LOCATION_SCREEN) {
+                        LocationScreen()
                     }
                 }
             }
         }
     }
 }
+
