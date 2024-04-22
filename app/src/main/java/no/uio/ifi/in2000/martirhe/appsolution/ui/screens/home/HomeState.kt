@@ -7,8 +7,6 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import no.uio.ifi.in2000.martirhe.appsolution.data.local.database.Swimspot
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
-import java.time.Instant
-import java.time.ZonedDateTime
 
 data class HomeState(
     val allSwimspots: List<Swimspot> = emptyList(),
@@ -27,6 +25,9 @@ data class HomeState(
     // For MetAlertDialog
     val showMetAlertDialog: Boolean = false,
     val metAlertDialogList: List<SimpleMetAlert> = emptyList(),
+
+    // For WeatherInfoDialog
+    val showWeatherInfoDialog: Boolean = false,
 )
 
 

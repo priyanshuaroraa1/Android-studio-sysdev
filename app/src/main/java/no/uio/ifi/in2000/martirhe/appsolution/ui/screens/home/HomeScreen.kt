@@ -26,6 +26,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -45,6 +46,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -83,7 +85,8 @@ import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
 @OptIn(ExperimentalMaterial3Api::class, MapsComposeExperimentalApi::class)
 @Composable
 fun HomeScreen(
-    onNavigate: (UiEvent.Navigate) -> Unit, homeViewModel: HomeViewModel = hiltViewModel()
+    onNavigate: (UiEvent.Navigate) -> Unit,
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val homeState = homeViewModel.homeState.collectAsState().value
     val metAlertUiState = homeViewModel.metAlertUiState.collectAsState().value
@@ -239,9 +242,10 @@ fun HomeScreen(
         }
     }
     if (homeState.showMetAlertDialog) {
-        MetAlertDialog(
-            homeViewModel,
-        )
+        MetAlertDialog(homeViewModel = homeViewModel)
+    }
+    if (homeState.showWeatherInfoDialog) {
+        WeatherInfoDialog(homeViewModel = homeViewModel)
     }
 }
 
@@ -320,15 +324,17 @@ fun BottomSheetSwimspotContent(
                                         when (oceanForecastState) {
                                             is OceanForecastState.Success -> {
                                                 WeatherNextHourCard(
-                                                    locationForecastUiState.forecastNextHour,
-                                                    oceanForecastState.oceanForecastRightNow
+                                                    forecastNextHour =  locationForecastUiState.forecastNextHour,
+                                                    oceanForecastRightNow =  oceanForecastState.oceanForecastRightNow,
+                                                    homeViewModel = homeViewModel,
                                                 )
                                             }
 
                                             else -> {
                                                 WeatherNextHourCard(
                                                     locationForecastUiState.forecastNextHour,
-                                                )
+                                                    homeViewModel = homeViewModel,
+                                                    )
                                             }
                                         }
 
@@ -429,7 +435,7 @@ fun SwimspotImage(
             .fillMaxWidth()
             .height(160.dp),
         contentScale = ContentScale.Crop,
-        )
+    )
 }
 
 @Composable
@@ -500,13 +506,33 @@ fun WeatherNextWeekCard(
 fun WeatherNextHourCard(
     forecastNextHour: ForecastNextHour,
     oceanForecastRightNow: OceanForecastRightNow? = null,
+    homeViewModel: HomeViewModel
 ) {
-    SmallHeader(
-        text = "Den neste timen",
-    )
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding_medium))
+        modifier = Modifier
+            .padding(top = dimensionResource(id = R.dimen.padding_medium))
+    ) {
+        SmallHeader(
+            text = "Den neste timen",
+            paddingBottom = 0.dp,
+            paddingTop = 0.dp
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        IconButton(
+            onClick = { homeViewModel.updateShowWeatherInfoDialog(true) }
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Info,
+                contentDescription = "Mer informasjon",
+                tint = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        }
+    }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_medium))
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
@@ -517,17 +543,15 @@ fun WeatherNextHourCard(
                 largeText = "${forecastNextHour.getTemperatureString()}° ",
                 smallText = "i lufta",
             )
-            if (oceanForecastRightNow != null) {
+
+            if (oceanForecastRightNow != null && oceanForecastRightNow.isSaltWater) {
                 LargeAndSmallText(
                     largeText = oceanForecastRightNow.getWaterTemperatureString() + "° ",
                     smallText = "i vannet",
                 )
-            } else {
-                LargeAndSmallText(
-                    largeText = "N/A ",
-                    smallText = "i vannet",
-                )
             }
+
+
         }
         Spacer(modifier = Modifier.weight(1.5f))
     }
@@ -571,28 +595,22 @@ fun WeatherNextHourCard(
                 )
 
             }
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                if (oceanForecastRightNow != null) {
+            if (oceanForecastRightNow != null && oceanForecastRightNow.isSaltWater) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     LargeAndSmallText(
                         largeText = oceanForecastRightNow.getWaveHeightString(),
                         smallText = "cm",
                         image = getFromDirectionPainterResource(oceanForecastRightNow.getWaveDirectionString()),
                         imageDescription = "Waves from " + oceanForecastRightNow.getWaveDirectionString(),
                     )
-                } else {
-                    LargeAndSmallText(
-                        largeText = "",
-                        smallText = "N/A",
+                    Text(
+                        text = "Bølger",
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
-
-                Text(
-                    text = "Bølger",
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
             }
         }
     }
@@ -732,6 +750,60 @@ fun MetAlertDialog(
     }
 }
 
+@Composable
+fun WeatherInfoDialog(
+    homeViewModel: HomeViewModel
+) {
+    Dialog(
+        onDismissRequest = { homeViewModel.updateShowMetAlertDialog(false) },
+    ) {
+        Card(
+            modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.padding_medium))
+                .fillMaxWidth()
+                .fillMaxHeight(0.4f), colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+
+                )
+        ) {
+
+            Column(
+                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
+                horizontalAlignment = Alignment.Start
+            ) {
+
+                MediumHeader(
+                    text = stringResource(id = R.string.weather_info_dialog_header),
+                    paddingTop = 0.dp,
+                )
+                Spacer(
+                    modifier = Modifier.height(dimensionResource(id = R.dimen.padding_small))
+                )
+
+
+                LazyColumn(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    item { 
+                        Text(text = stringResource(id = R.string.weather_info_dialog_bodytext))
+                    }
+                }
+
+                Button(
+                    onClick = { homeViewModel.updateShowWeatherInfoDialog(false) },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(text = "Lukk")
+                }
+            }
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
