@@ -116,6 +116,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun updateShowWeatherInfoDialog(showWeatherInfoDialog: Boolean) {
+        _homeState.update { homeState ->
+            homeState.copy(showWeatherInfoDialog = showWeatherInfoDialog)
+        }
+    }
+
     fun updateMetAlertDialogList(metAlertDialogList: List<SimpleMetAlert>) {
         _homeState.update { homeState ->
             homeState.copy(metAlertDialogList = metAlertDialogList)
@@ -136,7 +142,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onSearchBarSearch() {
-        // TODO: Implementere denne
+        // Todo: Implementere denne
     }
 
     fun updateSearchbarText(searchBarText: String) {
@@ -177,15 +183,17 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             oceanForecastUiState = OceanForecastState.Loading
             oceanForecastUiState = try {
+                val oceanForecast = oceanForecastRepository.getOceanForecast(lat, lon)
                 OceanForecastState.Success(
-                    oceanForecastRepository.getOceanForecast(lat, lon), // TODO: Dette bør jo gjøres i ett kall, ikke flere
-                    oceanForecastRepository.getOceanForecastRightNow(lat, lon)
+                    oceanForecastRepository.getOceanForecastRightNow(oceanForecast, lat, lon)
                 )
             } catch (e: IOException) {
                 OceanForecastState.Error
             } catch (e: ResponseException) {
                 OceanForecastState.Error
             } catch (e: UnresolvedAddressException) {
+                OceanForecastState.Error
+            } catch (e: Exception) {
                 OceanForecastState.Error
             } catch (e: Error) {
                 OceanForecastState.Error
