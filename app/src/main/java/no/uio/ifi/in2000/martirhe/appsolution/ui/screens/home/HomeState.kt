@@ -22,12 +22,11 @@ data class HomeState(
     val searchBarActive: Boolean = false,
     val searchBarHistory: List<String> = emptyList(),
 
-    // For MetAlertDialog
+    // For Dialog windows
     val showMetAlertDialog: Boolean = false,
     val metAlertDialogList: List<SimpleMetAlert> = emptyList(),
-
-    // For WeatherInfoDialog
     val showWeatherInfoDialog: Boolean = false,
+    val showAccessibilityInfoDialog: Boolean = false,
 )
 
 
