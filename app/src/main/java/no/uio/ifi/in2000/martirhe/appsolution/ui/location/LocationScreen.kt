@@ -14,14 +14,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun LocationScreen() {
+fun LocationScreen(navController: NavController) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -77,7 +79,13 @@ fun LocationScreen() {
             Spacer(Modifier.height(8.dp))
             Button(onClick = {
                 coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Location permission declined. Features limited.")
+                    if (snackbarHostState.showSnackbar(
+                            "We strongly recommend activating location services.",
+                            actionLabel = "Continue",
+                        ) == SnackbarResult.ActionPerformed
+                    ) {
+                        navController.navigate(Routes.ONBOARDING_SCREEN)
+                    }
                 }
             }) {
                 Text("Decline")

@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
                         OnboardingScreen(navController)
                     }
                     composable(Routes.LOCATION_SCREEN) {
-                        LocationScreen()
+                        LocationScreen(navController)
                     }
                 }
             }
