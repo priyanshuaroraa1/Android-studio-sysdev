@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -56,16 +57,25 @@ fun LocationScreen(navController: NavController) {
                 coroutineScope.launch {
                     try {
                         val location = fusedLocationClient.lastLocation.await()
-                        lastKnownLocation = location
-                        snackbarHostState.showSnackbar("Godkjent.")
-                        //implementer at posisjonen printes ut, altså longtitude og latitude
+                        if (location != null) {
+                            // Oppdaterer lastKnownLocation etter å sjekket null-verdi
+                            lastKnownLocation = location
+                            // Viser posisjon
+                            snackbarHostState.showSnackbar("Godkjent - Latitude: ${location.latitude}, Longitude: ${location.longitude}")
+                            navController.navigate(Routes.HOME_SCREEN)
+                        } else {
+                            // Vis man ikke finner posisjon
+                            lastKnownLocation = null
+                            snackbarHostState.showSnackbar("Posisjon ikke funnet.")
+                        }
                     } catch (e: Exception) {
-                        snackbarHostState.showSnackbar("Error obtaining location.")
+                        // Exception handling
+                        snackbarHostState.showSnackbar("Feil med å finne posisjon: ${e.localizedMessage}")
                     }
                 }
             } else {
                 coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Permission denied. Unable to use location services.")
+                    snackbarHostState.showSnackbar("Permission denied.")
                 }
             }
         }
@@ -82,28 +92,29 @@ fun LocationScreen(navController: NavController) {
                     .fillMaxSize()
                     .padding(16.dp)
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.plasklogo1),
-                    contentDescription = "Main Illustration",
-                    modifier = Modifier.size(300.dp)
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    "mainTitle",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.secondary,
-                    fontWeight = FontWeight.Bold,
+                    "Plask \n Wants to know your location",
+                    style = MaterialTheme.typography.headlineLarge.copy(
+                        fontSize = 38.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.secondary
+                    ),
                     textAlign = TextAlign.Center,
                     fontFamily = FontFamily(
                         Font(R.font.font1)
                     )
                 )
-                Spacer(modifier = Modifier
-                    .height(16.dp)
-                    .size(36.dp))
+
+                Image(
+                    painter = painterResource(id = R.drawable.fair_day),
+                    contentDescription = "Main Illustration",
+                    modifier = Modifier.size(250.dp)
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
                 Text(
-                    "subTitle",
+                    "Vi trenger psosijon fordi ... Vi trenger psosijon fordi ... Vi trenger psosijon fordi ... Vi trenger psosijon fordi ... Vi trenger psosijon fordi ... Vi trenger psosijon fordi ... Vi trenger psosijon fordi ...",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.secondary,
                     textAlign = TextAlign.Center,
@@ -111,17 +122,9 @@ fun LocationScreen(navController: NavController) {
                 )
                 Spacer(modifier = Modifier
                     .height(16.dp)
-                    .size(34.dp))
-                Text(
-                    "bodyText",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.secondary,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier
-                    .height(16.dp)
                     .size(32.dp))
 
+                //Knapper
                 Button(onClick = {
                     if (ContextCompat.checkSelfPermission(
                             context,
@@ -140,10 +143,14 @@ fun LocationScreen(navController: NavController) {
                     } else {
                         locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                     }
-                }) {
+                },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+                    shape = MaterialTheme.shapes.medium) {
                     Text("Accept")
                 }
+
                 Spacer(Modifier.height(8.dp))
+
                 Button(onClick = {
                     coroutineScope.launch {
                         if (snackbarHostState.showSnackbar(
@@ -151,10 +158,12 @@ fun LocationScreen(navController: NavController) {
                                 actionLabel = "Go ahead anyways",
                             ) == SnackbarResult.ActionPerformed
                         ) {
-                            navController.navigate(Routes.ONBOARDING_SCREEN)
+                            navController.navigate(Routes.HOME_SCREEN)
                         }
                     }
-                }) {
+                },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+                    shape = MaterialTheme.shapes.medium) {
                     Text("Decline")
                 }
             }

@@ -37,6 +37,11 @@ class MainActivity : ComponentActivity() {
                     composable(Routes.LOCATION_SCREEN) {
                         LocationScreen(navController)
                     }
+                    composable(Routes.HOME_SCREEN) {
+                        HomeScreen(onNavigate = {
+                            navController.navigate(it.route)
+                        })
+                    }
                 }
             }
         }
