@@ -33,15 +33,34 @@ fun OnboardingScreen(navController: NavController) {
             tertiary = Color(0xFFF2EDEC),
             onPrimary = Color.White,
         )
-    ){
+    ) {
         var currentPage by remember { mutableStateOf(0) }
         val totalPages = 4
 
         val (mainTitle, subTitle, bodyText) = when (currentPage) {
-            0 -> Triple(stringResource(id = R.string.pageone_maintitle), stringResource(id = R.string.pageone_subtitle), stringResource(id = R.string.pageone_bodytext))
-            1 -> Triple(stringResource(id = R.string.pagetwo_maintitle), stringResource(id = R.string.pagetwo_subtitle), stringResource(id = R.string.pagetwo_bodytext))
-            2 -> Triple(stringResource(id = R.string.pagethree_maintitle), stringResource(id = R.string.pagethree_subtitle), stringResource(id = R.string.pagethree_bodytext))
-            else -> Triple(stringResource(id = R.string.pagefour_maintitle), stringResource(id = R.string.pagefour_subtitle), stringResource(id = R.string.pagefour_bodytext))
+            0 -> Triple(
+                stringResource(id = R.string.pageone_maintitle),
+                stringResource(id = R.string.pageone_subtitle),
+                stringResource(id = R.string.pageone_bodytext)
+            )
+
+            1 -> Triple(
+                stringResource(id = R.string.pagetwo_maintitle),
+                stringResource(id = R.string.pagetwo_subtitle),
+                stringResource(id = R.string.pagetwo_bodytext)
+            )
+
+            2 -> Triple(
+                stringResource(id = R.string.pagethree_maintitle),
+                stringResource(id = R.string.pagethree_subtitle),
+                stringResource(id = R.string.pagethree_bodytext)
+            )
+
+            else -> Triple(
+                stringResource(id = R.string.pagefour_maintitle),
+                stringResource(id = R.string.pagefour_subtitle),
+                stringResource(id = R.string.pagefour_bodytext)
+            )
         }
 
         Scaffold(
@@ -68,7 +87,13 @@ fun OnboardingScreen(navController: NavController) {
 }
 
 @Composable
-fun OnboardingContent(mainTitle: String, subTitle: String, bodyText: String, currentPage: Int, totalPages: Int) {
+fun OnboardingContent(
+    mainTitle: String,
+    subTitle: String,
+    bodyText: String,
+    currentPage: Int,
+    totalPages: Int
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -83,15 +108,36 @@ fun OnboardingContent(mainTitle: String, subTitle: String, bodyText: String, cur
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-        Text(mainTitle,
-            style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, fontFamily = FontFamily(Font(R.font.font1)))
-        Spacer(modifier = Modifier.height(16.dp).size(36.dp))
-        Text(subTitle,
-            style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.secondary, textAlign = TextAlign.Center, fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(16.dp).size(34.dp))
-        Text(bodyText,
-            style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary, textAlign = TextAlign.Center)
-        Spacer(modifier = Modifier.height(16.dp).size(32.dp))
+        Text(
+            mainTitle,
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.secondary,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            fontFamily = FontFamily(Font(R.font.font1))
+        )
+        Spacer(modifier = Modifier
+            .height(16.dp)
+            .size(36.dp))
+        Text(
+            subTitle,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.secondary,
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier
+            .height(16.dp)
+            .size(34.dp))
+        Text(
+            bodyText,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.secondary,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier
+            .height(16.dp)
+            .size(32.dp))
         PageIndicator(currentPage, totalPages)
     }
 }
@@ -108,7 +154,9 @@ fun PageIndicator(currentPage: Int, totalPages: Int) {
                     .padding(horizontal = 4.dp)
                     .size(width = if (index == currentPage) 20.dp else 12.dp, height = 8.dp)
                     .background(
-                        color = if (index == currentPage) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                        color = if (index == currentPage) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onSurface.copy(
+                            alpha = 0.5f
+                        ),
                         shape = MaterialTheme.shapes.small
                     )
             )
@@ -135,7 +183,10 @@ fun OnboardingBottomBar(
                 onClick = onSkipClicked,
                 colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.secondary)
             ) {
-                Text(stringResource(id = R.string.onboarding_skip), color = MaterialTheme.colorScheme.secondary)
+                Text(
+                    stringResource(id = R.string.onboarding_skip),
+                    color = MaterialTheme.colorScheme.secondary
+                )
             }
         }
 
@@ -145,7 +196,9 @@ fun OnboardingBottomBar(
             shape = MaterialTheme.shapes.medium
         ) {
             Text(
-                text = if (currentPage < totalPages - 1) stringResource(id = R.string.onboarding_next) else stringResource(id = R.string.onboarding_done),
+                text = if (currentPage < totalPages - 1) stringResource(id = R.string.onboarding_next) else stringResource(
+                    id = R.string.onboarding_done
+                ),
                 color = MaterialTheme.colorScheme.onSecondary
             )
         }

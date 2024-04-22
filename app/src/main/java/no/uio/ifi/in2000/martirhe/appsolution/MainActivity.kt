@@ -27,7 +27,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             AppSolutionTheme {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = Routes.ONBOARDING_SCREEN) {
+                NavHost(
+                    navController = navController,
+                    startDestination = Routes.ONBOARDING_SCREEN
+                ) {
                     composable(Routes.ONBOARDING_SCREEN) {
                         OnboardingScreen(navController)
                     }
