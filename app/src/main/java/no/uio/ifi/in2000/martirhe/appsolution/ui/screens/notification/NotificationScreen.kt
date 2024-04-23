@@ -2,10 +2,11 @@ package no.uio.ifi.in2000.martirhe.appsolution.ui.screens.notification
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
-import android.location.Location
+import android.os.Build
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -15,21 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import no.uio.ifi.in2000.martirhe.appsolution.R
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun NotificationScreen(navController: NavController) {
@@ -38,18 +34,23 @@ fun NotificationScreen(navController: NavController) {
     val snackbarHostState = remember { SnackbarHostState() }
     val notificationPermissionGranted = remember { mutableStateOf(false) }
 
+    val TAG = "NotificationScreen"
+
     // Define the permission launcher
     val notificationPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
+        Log.d(TAG, "Permission request result: $isGranted")
         if (isGranted) {
             notificationPermissionGranted.value = true
             coroutineScope.launch {
+                Log.d(TAG, "Notification permission granted")
                 snackbarHostState.showSnackbar("Notification permission granted.")
-                navController.navigate("homeScreen") // Assuming "homeScreen" is your destination after permissions
+                navController.navigate(Routes.HOME_SCREEN) // Assuming "homeScreen" is your destination after permissions
             }
         } else {
             coroutineScope.launch {
+                Log.d(TAG, "Notification permission denied")
                 snackbarHostState.showSnackbar("Notification permission denied.")
             }
         }
@@ -103,6 +104,7 @@ fun NotificationScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(onClick = {
+                    Log.d(TAG, "Requesting POST_NOTIFICATIONS permission")
                     notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
@@ -114,6 +116,7 @@ fun NotificationScreen(navController: NavController) {
 
                 Button(onClick = {
                     coroutineScope.launch {
+                        Log.d(TAG, "Decline button clicked")
                         snackbarHostState.showSnackbar("You can enable notification permissions in settings.")
                     }
                 },
