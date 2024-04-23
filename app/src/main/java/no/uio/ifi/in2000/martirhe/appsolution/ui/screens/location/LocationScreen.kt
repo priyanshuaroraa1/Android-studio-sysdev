@@ -8,13 +8,16 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -61,6 +64,7 @@ fun LocationScreen(navController: NavController) {
                             // Oppdaterer lastKnownLocation etter å sjekket null-verdi
                             lastKnownLocation = location
                             // Viser posisjon
+                            snackbarHostState.showSnackbar("Posisjonen din er godkjent!")
                             snackbarHostState.showSnackbar("Godkjent - Latitude: ${location.latitude}, Longitude: ${location.longitude}")
                             navController.navigate(Routes.NOTIFICATION_SCREEN)
                         } else {
@@ -75,7 +79,7 @@ fun LocationScreen(navController: NavController) {
                 }
             } else {
                 coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Permission denied.")
+                    snackbarHostState.showSnackbar("Tillatelse avslått.")
                 }
             }
         }
@@ -93,9 +97,9 @@ fun LocationScreen(navController: NavController) {
                     .padding(16.dp)
             ) {
                 Text(
-                    "Plask \n Wants to know your location",
+                    stringResource(id = R.string.location_screen_label),
                     style = MaterialTheme.typography.headlineLarge.copy(
-                        fontSize = 38.sp,
+                        fontSize = 36.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.secondary
                     ),
@@ -105,23 +109,27 @@ fun LocationScreen(navController: NavController) {
                     )
                 )
 
+                Spacer(modifier = Modifier.height(32.dp))
+
                 Image(
-                    painter = painterResource(id = R.drawable.fair_day),
+                    painter = painterResource(id = R.drawable.location),
                     contentDescription = "Main Illustration",
-                    modifier = Modifier.size(250.dp)
+                    modifier = Modifier
+                        .size(250.dp)
+                        .clip(CircleShape)
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(32.dp))
 
                 Text(
-                    "Vi trenger psosijon fordi ... Vi trenger psosijon fordi ... Vi trenger psosijon fordi ... Vi trenger psosijon fordi ... Vi trenger psosijon fordi ... Vi trenger psosijon fordi ... Vi trenger psosijon fordi ...",
+                    stringResource(id = R.string.location_screen_subtext),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.secondary,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier
-                    .height(16.dp)
+                    .height(32.dp)
                     .size(32.dp))
 
                 //Knapper
@@ -146,7 +154,7 @@ fun LocationScreen(navController: NavController) {
                 },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                     shape = MaterialTheme.shapes.medium) {
-                    Text("Accept")
+                    Text(stringResource(id = R.string.location_screen_accept))
                 }
 
                 Spacer(Modifier.height(8.dp))
@@ -164,7 +172,7 @@ fun LocationScreen(navController: NavController) {
                 },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                     shape = MaterialTheme.shapes.medium) {
-                    Text("Decline")
+                    Text(stringResource(id = R.string.location_screen_decline))
                 }
             }
         }

@@ -39,6 +39,18 @@
     <string name="onboarding_next">Next</string>
     <string name="onboarding_done">Done</string>
 
+    //Location Screen
+    <string name="location_screen_label">Plask \n Wants to know your location</string>
+    <string name="location_screen_subtext">Vi trenger din posisjon fordi … Vi trenger din posisjon fordi … Vi trenger din posisjon fordi … Vi trenger din posisjon fordi … Vi trenger din posisjon fordi … Vi trenger din posisjon fordi … Vi trenger din posisjon fordi …</string>
+    <string name="location_screen_accept">Accept</string>
+    <string name="location_screen_decline">Decline</string>
+
+    //Location Screen
+    <string name="notification_screen_label">Notification Permission</string>
+    <string name="notification_screen_subtext">We need permission to send you notifications for alerts and updates.</string>
+    <string name="notification_screen_accept">Accept</string>
+    <string name="notification_screen_decline">Decline</string>
+
     // WeatherInfoDialog
     <string name="weather_info_dialog_header">Værdata</string>
     <string name="weather_info_dialog_bodytext">Lurer du på hvorfor det av og til mangler vanntemperatur, bølgehøyde og -retning? Disse dataene er på nåværende tidspunkt kun tilgjengelig for plasser ved sjøen, og i Norge.</string>
