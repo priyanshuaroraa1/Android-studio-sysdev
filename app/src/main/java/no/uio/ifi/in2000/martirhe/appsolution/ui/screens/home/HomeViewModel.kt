@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.client.plugins.ResponseException
 import kotlinx.coroutines.Dispatchers
@@ -65,37 +66,33 @@ class HomeViewModel @Inject constructor(
     fun onMapBackroundClick(
         latLng: LatLng,
     ) {
+        val customSwimspot = Swimspot(
+            id = null,
+            googleId = null,
+            spotName = "Plassert pin",
+            lat = latLng.latitude,
+            lon = latLng.longitude,
+            accessibility = null,
+            locationstring = null,
+            original = false,
+            favourited = false,
+            url = null,
+        )
 
-        if (homeState.value.customSwimspot == null) {
-            val customSwimspot = Swimspot(
-                id = null,
-                googleId = null,
-                spotName = "Plassert pin",
-                lat = latLng.latitude,
-                lon = latLng.longitude,
-                accessibility = null,
-                locationstring = null,
-                original = false,
-                favourited = false,
-                url = null,
-            )
+        updateCustomSwimspot(customSwimspot)
+        updateSelectedSwimspot(customSwimspot)
+        updateBottomSheetPosition(true)
+        loadLocationForecast(customSwimspot.lat, customSwimspot.lon)
+        loadOceanForecast(customSwimspot.lat, customSwimspot.lon)
+//        loadFarevarsler()
 
-            updateCustomSwimspot(customSwimspot)
-            updateSelectedSwimspot(customSwimspot)
-            updateBottomSheetPosition(true)
-            loadLocationForecast(customSwimspot.lat, customSwimspot.lon)
-            loadOceanForecast(customSwimspot.lat, customSwimspot.lon)
-            loadFarevarsler()
+    }
 
-
-        } else {
-            updateCustomSwimspot(null)
-            updateBottomSheetPosition(false)
-
+    fun updateCustomMarker(marker: Marker?) {
+        homeState.value.customMarker?.remove()
+        _homeState.update { homeState ->
+            homeState.copy(customMarker = marker)
         }
-
-
-        // TODO: Implementere
     }
 
     fun updateSelectedSwimspot(swimspot: Swimspot) {

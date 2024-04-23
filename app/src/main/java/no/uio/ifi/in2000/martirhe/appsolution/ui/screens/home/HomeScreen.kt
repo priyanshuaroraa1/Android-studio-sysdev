@@ -37,6 +37,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -55,6 +56,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
@@ -125,13 +127,23 @@ fun HomeScreen(
 
 
                 if (homeState.selectedSwimspot != null) {
-                    Text(
-                        text = homeState.selectedSwimspot.spotName,
-                        style = MaterialTheme.typography.headlineMedium,
+                    Row(
                         modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .padding(top = dimensionResource(id = R.dimen.padding_medium))
-                    )
+                            .align(Alignment.BottomStart),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = homeState.selectedSwimspot.spotName,
+                            style = MaterialTheme.typography.headlineMedium,
+                            modifier = Modifier
+                                .padding(top = dimensionResource(id = R.dimen.padding_medium))
+                        )
+//                        FavouriteIcon(swimspot = homeState.selectedSwimspot)
+                        IconButton(onClick = { /*TODO*/ }) {
+                            FavouriteIcon(swimspot = homeState.selectedSwimspot)
+                        }
+                        
+                    }
                 }
                 Box(modifier = Modifier.align(Alignment.TopCenter)) {
                     DragHandle()
@@ -173,8 +185,7 @@ fun HomeScreen(
                 }, properties = mapProperties
             ) {
                 MapEffect(
-//                    key1 = homeState.customSwimspot
-                    key1 = metAlertUiState
+                    key1 = metAlertUiState,
                 ) { map ->
 
                     map.setOnMarkerClickListener { marker ->
@@ -224,19 +235,21 @@ fun HomeScreen(
                             }
                         }
                     }
-
-
-
+                }
+                MapEffect(key1 = homeState.customSwimspot) { map ->
                     if (homeState.customSwimspot != null) {
-                        val marker = map.addMarker(
-                            MarkerOptions().position(
-                                LatLng(
-                                    homeState.customSwimspot.lat,
-                                    homeState.customSwimspot.lon,
+                        val newMarker = map.addMarker(
+                            MarkerOptions()
+                                .position(
+                                    LatLng(
+                                        homeState.customSwimspot.lat,
+                                        homeState.customSwimspot.lon,
+                                    )
                                 )
-                            )
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_blue_38))
                         )
-                        marker?.tag = homeState.customSwimspot
+                        newMarker?.tag = homeState.customSwimspot
+                        homeViewModel.updateCustomMarker(newMarker)
                     }
                 }
             }
@@ -975,6 +988,21 @@ fun LargeAndSmallText(
             modifier = Modifier.padding(bottom = if (smallerSize) 0.dp else 3.dp)
         )
     }
+}
+
+@Composable
+fun FavouriteIcon(
+    swimspot: Swimspot
+) {
+    val imageResource = when (swimspot.favourited) {
+        true -> painterResource(id = R.drawable.star_yellow)
+        else -> painterResource(id = R.drawable.star_white)
+    }
+    val description = when (swimspot.favourited) {
+        true -> "Favoritt"
+        else -> "Ikke favoritt"
+    }
+    Image(painter = imageResource, contentDescription = description)
 }
 
 
