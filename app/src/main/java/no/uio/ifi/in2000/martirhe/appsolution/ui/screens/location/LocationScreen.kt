@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.martirhe.appsolution.ui.location
+package no.uio.ifi.in2000.martirhe.appsolution.ui.screens.location
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -62,7 +62,7 @@ fun LocationScreen(navController: NavController) {
                             lastKnownLocation = location
                             // Viser posisjon
                             snackbarHostState.showSnackbar("Godkjent - Latitude: ${location.latitude}, Longitude: ${location.longitude}")
-                            navController.navigate(Routes.HOME_SCREEN)
+                            navController.navigate(Routes.NOTIFICATION_SCREEN)
                         } else {
                             // Vis man ikke finner posisjon
                             lastKnownLocation = null
@@ -158,7 +158,7 @@ fun LocationScreen(navController: NavController) {
                                 actionLabel = "Go ahead anyways",
                             ) == SnackbarResult.ActionPerformed
                         ) {
-                            navController.navigate(Routes.HOME_SCREEN)
+                            navController.navigate(Routes.NOTIFICATION_SCREEN)
                         }
                     }
                 },

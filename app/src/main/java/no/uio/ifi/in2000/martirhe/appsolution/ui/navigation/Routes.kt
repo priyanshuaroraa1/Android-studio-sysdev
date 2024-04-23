@@ -5,4 +5,5 @@ object Routes {
     const val ABOUT_US_SCREEN = "about_us_screen"
     const val ONBOARDING_SCREEN = "onboarding_screen"
     const val LOCATION_SCREEN = "location_screen"
+    const val NOTIFICATION_SCREEN = "notification_screen"
 }
