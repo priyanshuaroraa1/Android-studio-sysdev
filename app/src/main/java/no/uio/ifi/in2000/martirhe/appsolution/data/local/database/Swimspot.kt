@@ -20,7 +20,7 @@ data class Swimspot(
     val accessibility: String?,
     val locationstring: String?,
     val original: Boolean?,
-    val favourited: Boolean?,
+    var favourited: Boolean?,
     val url: String?,
 ) {
     fun getLatLng(): LatLng {
@@ -67,6 +67,10 @@ data class Swimspot(
 
         // Check if accessibility is not null, split the string by ";", and translate each feature
         return accessibility?.split(";")?.mapNotNull { stringMap[it] } ?: emptyList()
+    }
+
+    fun updateFavourite(favourite: Boolean) {
+        favourited = favourite
     }
 
 }

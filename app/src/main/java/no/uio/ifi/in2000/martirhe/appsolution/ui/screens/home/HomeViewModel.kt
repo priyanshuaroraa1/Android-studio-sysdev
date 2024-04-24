@@ -1,12 +1,15 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.screens.home
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.client.plugins.ResponseException
 import kotlinx.coroutines.Dispatchers
@@ -15,6 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import no.uio.ifi.in2000.martirhe.appsolution.data.local.database.Swimspot
 import no.uio.ifi.in2000.martirhe.appsolution.data.local.database.SwimspotRepository
 import no.uio.ifi.in2000.martirhe.appsolution.data.remote.locationforecast.LocationForecastRepositoryInterface
@@ -94,6 +98,191 @@ class HomeViewModel @Inject constructor(
             homeState.copy(customMarker = marker)
         }
     }
+
+    fun onFavouriteClick(
+        swimspot: Swimspot
+    ) {
+        Log.i("GOT HERE", swimspot.favourited.toString() + ", " + swimspot.original.toString())
+        when (swimspot.favourited to swimspot.original) {
+            false to true -> makeSwimspotFavourite(swimspot)
+            true to true -> makeSwimspotNotFavourite(swimspot)
+            false to false -> makeCustomSwimspotFavourite(swimspot)
+            true to false -> makeCustomSwimspotNotFavourite(swimspot)
+        }
+    }
+
+    fun makeSwimspotFavourite(
+        swimspot: Swimspot,
+    ) {
+        viewModelScope.launch {
+            // Remove marker
+            removeMarker(swimspot)
+
+            // Update database
+            swimspot.updateFavourite(!swimspot.favourited!!)
+            swimspotRepository.upsertSwimspot(swimspot)
+
+            // Add marker
+            addMarker(swimspot)
+        }
+    }
+
+    fun makeSwimspotNotFavourite(
+        swimspot: Swimspot,
+    ) {
+        viewModelScope.launch {
+            // Remove marker
+            removeMarker(swimspot)
+
+            // Update database
+            swimspot.updateFavourite(!swimspot.favourited!!)
+            swimspotRepository.upsertSwimspot(swimspot)
+
+            // Add marker
+            addMarker(swimspot)
+        }
+    }
+
+    fun makeCustomSwimspotFavourite(
+        swimspot: Swimspot,
+    ) {
+        viewModelScope.launch {
+            // Add to database and get new object with id
+            swimspot.updateFavourite(!swimspot.favourited!!)
+            swimspotRepository.upsertSwimspot(swimspot)
+
+            val swimspotWithId = swimspotRepository.getLastAddedSwimspot()
+            Log.i("I got here jjaa", swimspotWithId.id.toString())
+
+            // Delete custom marker
+            _homeState.update { homeState ->
+                homeState.copy(customSwimspot = null)
+            }
+            Log.i("I got here jjaa", swimspotWithId.id.toString())
+            homeState.value.customMarker?.remove()
+
+            // Add marker
+            _homeState.update { homeState ->
+                homeState.copy(selectedSwimspot = swimspotWithId)
+            }
+            addMarker(swimspotWithId)
+        }
+    }
+
+    fun makeCustomSwimspotNotFavourite(
+        swimspot: Swimspot,
+    ) {
+        viewModelScope.launch {
+            // Remove marker
+            removeMarker(swimspot)
+
+            // Delete from database
+            swimspotRepository.deleteSwimspot(swimspot)
+
+            swimspot.updateFavourite(!swimspot.favourited!!)
+
+        }
+    }
+
+
+    fun createAllMarkers(
+        map: GoogleMap,
+    ) {
+        _homeState.update { homeState ->
+            homeState.copy(map = map)
+        }
+        homeState.value.allSwimspots.forEach {
+            addMarker(it)
+        }
+    }
+
+    fun removeMarker(swimspot: Swimspot) {
+        viewModelScope.launch {
+            // Makeing sure adding/removing Markers happens on the Main thread
+            withContext(Dispatchers.Main) {
+                homeState.value.allMarkers[swimspot.id]?.remove()
+                val updatedMarkers = homeState.value.allMarkers.filter {
+                    it.key != swimspot.id
+                }
+                _homeState.update { homeState ->
+                    homeState.copy(allMarkers = updatedMarkers)
+                }
+            }
+        }
+
+    }
+
+    fun addMarker(
+        swimspot: Swimspot,
+        map: GoogleMap? = homeState.value.map,
+    ) {
+        viewModelScope.launch {
+
+            // Makeing sure adding/removing Markers happens on the Main thread
+            withContext(Dispatchers.Main) {
+
+                if (map != null) {
+                    val icon = swimspot.getMarkerIcon(metAlertUiState.value)
+                    val newMarker = map.addMarker(
+                        MarkerOptions()
+                            .position(swimspot.getLatLng())
+                            .icon(icon)
+                    )
+
+                    newMarker?.tag = swimspot
+
+                    _homeState.update { homeState ->
+                        val updatedMarkers = homeState.allMarkers.toMutableMap()
+                        updatedMarkers[swimspot.id]?.remove()
+                        updatedMarkers[swimspot.id!!] = newMarker
+                        homeState.copy(
+                            allMarkers = updatedMarkers,
+                            map = map
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+//    fun updateMarker(
+//        swimspot: Swimspot,
+//        metAlertUiState: MetAlertUiState
+//    ) {
+//        viewModelScope.launch {
+//            val marker = homeState.value.allMarkers[swimspot.id]
+//            val map = homeState.value.map
+//            if (marker != null) {
+//                marker.remove()
+//                _homeState.update { homeState ->
+//                    val updatedMarkers = homeState.allMarkers.toMutableMap()
+//                    updatedMarkers.remove(swimspot.id)
+//                    homeState.copy(
+//                        allMarkers = updatedMarkers,
+//                        map = map
+//                    )
+//                }
+//                Log.i("Old marker removed:", swimspot.id.toString())
+//                val icon = swimspot.getMarkerIcon(metAlertUiState)
+//                val newMarker = map?.addMarker(
+//                    MarkerOptions()
+//                        .position(swimspot.getLatLng())
+//                        .icon(icon)
+//                )
+//                if (newMarker != null) {
+//                    newMarker.tag = swimspot
+//                }
+//                _homeState.update { homeState ->
+//                    val updatedMarkers = homeState.allMarkers.toMutableMap()
+//                    updatedMarkers[swimspot.id ?: 0] = marker
+//                    homeState.copy(
+//                        allMarkers = updatedMarkers,
+//                        map = map
+//                    )
+//                }
+//            }
+//        }
+//    }
 
     fun updateSelectedSwimspot(swimspot: Swimspot) {
         _homeState.update { homeState ->
