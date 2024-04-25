@@ -25,6 +25,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.data.remote.locationforecast.Locat
 import no.uio.ifi.in2000.martirhe.appsolution.data.remote.oceanforecast.OceanForecastRepositoryInterface
 import no.uio.ifi.in2000.martirhe.appsolution.data.remote.metalert.MetAlertRepositoryInterface
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
+import no.uio.ifi.in2000.martirhe.appsolution.util.PreferencesManager
 import java.io.IOException
 import java.nio.channels.UnresolvedAddressException
 import javax.inject.Inject
@@ -35,6 +36,7 @@ class HomeViewModel @Inject constructor(
     private val oceanForecastRepository: OceanForecastRepositoryInterface,
     private val metAlertRepository: MetAlertRepositoryInterface,
     private val swimspotRepository: SwimspotRepository,
+    private val preferencesManager: PreferencesManager
 ) : ViewModel() {
 
     var locationForecastUiState: LocationForecastUiState by mutableStateOf(LocationForecastUiState.Loading)
@@ -56,6 +58,7 @@ class HomeViewModel @Inject constructor(
             }
         }
         loadFarevarsler()
+        preferencesManager.isOnboardingShown = true
     }
 
     fun onSwimspotPinClick(swimspot: Swimspot) {

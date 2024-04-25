@@ -8,4 +8,6 @@ interface SwimspotRepository {
     suspend fun getSwimspotById(swimspotId: Int): Swimspot
     suspend fun getLastAddedSwimspot(): Swimspot
     suspend fun deleteSwimspot(swimspot: Swimspot)
+
+    suspend fun getAllFavorites(): List<Swimspot>
 }

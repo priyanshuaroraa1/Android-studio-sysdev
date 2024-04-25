@@ -61,6 +61,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapEffect
 import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.rememberCameraPositionState
 import io.ktor.utils.io.errors.IOException
@@ -96,7 +97,21 @@ fun HomeScreen(
     // TODO: Flytte dette til homeState?
     val mapStyleString = loadMapStyleFromAssets()
     val mapProperties = MapProperties(
-        isMyLocationEnabled = false, mapStyleOptions = MapStyleOptions(mapStyleString)
+        isMyLocationEnabled = false,
+        mapStyleOptions = MapStyleOptions(mapStyleString),
+        isBuildingEnabled = false,
+    )
+    val mapUiSettings = MapUiSettings(
+        compassEnabled = false,
+        indoorLevelPickerEnabled = false,
+        mapToolbarEnabled = false,
+        myLocationButtonEnabled = false,
+        rotationGesturesEnabled = false,
+        scrollGesturesEnabled = true,
+        scrollGesturesEnabledDuringRotateOrZoom = true,
+        tiltGesturesEnabled = false,
+        zoomControlsEnabled = false,
+        zoomGesturesEnabled = true,
     )
 
     val coroutineScope = rememberCoroutineScope()
@@ -215,7 +230,10 @@ fun HomeScreen(
             HomeSearchBar(homeViewModel = homeViewModel)
 
             GoogleMap(
-                modifier = Modifier, cameraPositionState = cameraPositionState, onMapClick = {
+                modifier = Modifier,
+                cameraPositionState = cameraPositionState,
+                uiSettings = mapUiSettings,
+                onMapClick = {
                     homeViewModel.onMapBackroundClick(it)
                     coroutineScope.launch {
                         scaffoldState.bottomSheetState.expand()

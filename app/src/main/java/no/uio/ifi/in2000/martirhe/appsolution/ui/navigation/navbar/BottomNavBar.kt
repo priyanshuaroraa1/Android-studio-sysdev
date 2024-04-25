@@ -35,21 +35,23 @@ sealed class BottomNavItem(
             Routes.ABOUT_US_SCREEN
         )
 
-    object List :
+    object Favorites :
         BottomNavItem(
-            "List",
+            "Favorites",
             Icons.Default.Checklist,
-            Routes.HOME_SCREEN
+            Routes.FAVORITES_SCREEN
         )
 }
 
 
 
 @Composable
-fun BottomNavBar(navController: androidx.navigation.NavController) {
+fun BottomNavBar(
+    navController: androidx.navigation.NavController
+) {
 
     val items = listOf(
-//        BottomNavItem.List,
+        BottomNavItem.Favorites,
         BottomNavItem.Home,
         BottomNavItem.AboutUs,
     )
