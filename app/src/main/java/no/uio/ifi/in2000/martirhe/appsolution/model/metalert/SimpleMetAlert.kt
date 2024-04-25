@@ -1,6 +1,5 @@
 package no.uio.ifi.in2000.martirhe.appsolution.model.metalert
 
-import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.PolyUtil
 
@@ -15,7 +14,6 @@ data class SimpleMetAlert(
 )  {
 
     fun isRelevantForCoordinate(latLng: LatLng): Boolean {
-        Log.i("Function called:", "isRelevantForCoordinate")
         for (collection in multiPolygon) {
             for (polygon in collection) {
                 val polygonPath: MutableList<LatLng> = mutableListOf()

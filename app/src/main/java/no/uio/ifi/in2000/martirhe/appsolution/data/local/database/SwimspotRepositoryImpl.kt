@@ -11,4 +11,19 @@ class SwimspotRepositoryImpl @Inject constructor(
     override suspend fun getAllSwimspots(): Flow<List<Swimspot>> {
         return swimspotDao.getAllSwimspots()
     }
+
+    override suspend fun upsertSwimspot(swimspot: Swimspot) {
+        swimspotDao.upsertSwimspot(swimspot)
+    }
+
+    override suspend fun getSwimspotById(swimspotId: Int): Swimspot {
+        return swimspotDao.getSwimspotById(swimspotId)
+    }
+    override suspend fun getLastAddedSwimspot(): Swimspot {
+        return swimspotDao.getLastAddedSwimspot()
+    }
+
+    override suspend fun deleteSwimspot(swimspot: Swimspot) {
+        return swimspotDao.deleteSwimspot(swimspot)
+    }
 }
