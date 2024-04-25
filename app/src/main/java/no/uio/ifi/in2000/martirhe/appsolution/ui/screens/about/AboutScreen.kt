@@ -101,19 +101,6 @@ fun AboutScreen(navController: NavController, onNavigate: (UiEvent.Navigate) -> 
                     .padding(0.dp)
                     .padding(horizontal = 16.dp)
             ) {
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.plasklogo1),
-                        contentDescription = "App Logo",
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        contentScale = ContentScale.Fit,
-                    )
-                }
-
                 Text(
                     stringResource(id = R.string.about_screen_title),
                     color = MaterialTheme.colorScheme.primary,
@@ -127,6 +114,18 @@ fun AboutScreen(navController: NavController, onNavigate: (UiEvent.Navigate) -> 
                     modifier = Modifier
                         .fillMaxWidth()
                 )
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.plasklogo1),
+                        contentDescription = "App Logo",
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        contentScale = ContentScale.Fit,
+                    )
+                }
 
                 Text(
                     stringResource(id = R.string.about_screen_description),
@@ -352,4 +351,3 @@ fun Ansatte(name: String, drawableId: Int) {
         Text(name, color = MaterialTheme.colorScheme.primary)
     }
 }
-

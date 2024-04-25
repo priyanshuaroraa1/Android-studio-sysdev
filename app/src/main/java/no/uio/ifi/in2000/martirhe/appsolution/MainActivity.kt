@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.navbar.BottomNavBar
+import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.about.AboutScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.home.HomeScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.location.LocationScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.notification.NotificationScreen
@@ -53,6 +54,11 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.HOME_SCREEN) {
                             HomeScreen(onNavigate = {
+                                navController.navigate(it.route)
+                            })
+                        }
+                        composable(Routes.ABOUT_US_SCREEN) {
+                            AboutScreen(navController, onNavigate = {
                                 navController.navigate(it.route)
                             })
                         }
