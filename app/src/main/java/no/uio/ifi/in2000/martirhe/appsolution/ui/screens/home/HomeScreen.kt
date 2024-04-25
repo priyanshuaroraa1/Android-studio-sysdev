@@ -26,7 +26,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
@@ -55,6 +54,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
@@ -64,11 +64,7 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.rememberCameraPositionState
 import io.ktor.utils.io.errors.IOException
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import no.uio.ifi.in2000.martirhe.appsolution.R
 import no.uio.ifi.in2000.martirhe.appsolution.data.local.database.Swimspot
 import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.ForecastNextHour
@@ -120,46 +116,101 @@ fun HomeScreen(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .fillMaxWidth()
-
             ) {
 
 
                 if (homeState.selectedSwimspot != null) {
-                    Text(
-                        text = homeState.selectedSwimspot.spotName,
-                        style = MaterialTheme.typography.headlineMedium,
+                    Row(
                         modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .padding(top = dimensionResource(id = R.dimen.padding_medium))
-                    )
+                            .align(Alignment.BottomStart),
+                        verticalAlignment = Alignment.Top
+                    ) {
+
+                        Row(
+                            modifier = Modifier
+                                .weight(1f) // Give Text a weight of 1
+                        ) {
+
+                            Text(
+                                text = homeState.selectedSwimspot.spotName,
+                                style = MaterialTheme.typography.headlineMedium,
+                                modifier = Modifier
+                                    .padding(
+                                        top = dimensionResource(id = R.dimen.padding_medium),
+//                                    bottom = 3.dp
+                                    )
+                                    .weight(1f) // Give Text a weight of 1,
+                                    .clickable {
+                                        coroutineScope.launch{
+                                            val currentZoom = cameraPositionState.position.zoom
+                                            val zoomIncrement = 1
+                                            cameraPositionState.animate(
+                                                update = CameraUpdateFactory.newLatLngZoom(
+                                                    homeState.selectedSwimspot.getLatLng(),
+                                                    currentZoom + zoomIncrement),
+//                                        update = CameraUpdateFactory.newLatLngZoom(
+//                                            homeState.selectedSwimspot.getLatLng(),
+//                                            11.5f),
+                                                durationMs = 250
+                                            )
+                                        }
+                                    }
+                            )
+
+//                            IconButton(
+//                                onClick = {
+//                                    coroutineScope.launch{
+//                                        val currentZoom = cameraPositionState.position.zoom
+//                                        val zoomIncrement = 1
+//                                        cameraPositionState.animate(
+//                                            update = CameraUpdateFactory.newLatLngZoom(
+//                                                homeState.selectedSwimspot.getLatLng(),
+//                                                currentZoom + zoomIncrement),
+////                                        update = CameraUpdateFactory.newLatLngZoom(
+////                                            homeState.selectedSwimspot.getLatLng(),
+////                                            11.5f),
+//                                            durationMs = 250
+//                                        )
+//                                    }
+//                                },
+//                                modifier = Modifier
+//                                    .padding(top = dimensionResource(id = R.dimen.padding_small)),
+//                            ) {
+//                                Icon(
+//                                    imageVector = Icons.Default.Adjust,
+//                                    contentDescription = "Sentrer kart",
+//
+//                                    tint = MaterialTheme.colorScheme.onPrimaryContainer)
+//
+//                            }
+                        }
+
+
+                        IconButton(
+                            onClick = {
+                                homeViewModel.onFavouriteClick(homeState.selectedSwimspot)
+                                      },
+                            modifier = Modifier
+                                .padding(dimensionResource(id = R.dimen.padding_small))
+                        ) {
+                            FavouriteIcon(
+                                homeState = homeState)
+                        }
+                    }
                 }
                 Box(modifier = Modifier.align(Alignment.TopCenter)) {
                     DragHandle()
                 }
-
-                IconButton(
-                    onClick = {
-                        coroutineScope.launch {
-                            scaffoldState.bottomSheetState.partialExpand()
-                        }
-                    }, modifier = Modifier.align(Alignment.TopEnd)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = "Close",
-                        tint = MaterialTheme.colorScheme.primaryContainer
-                    )
-                }
-
             }
-
         },
         sheetPeekHeight = homeState.bottomSheetPosition.heightDp,
 
         ) {
 
         Box(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
         ) {
             HomeSearchBar(homeViewModel = homeViewModel)
 
@@ -173,8 +224,10 @@ fun HomeScreen(
                 }, properties = mapProperties
             ) {
                 MapEffect(
-//                    key1 = homeState.customSwimspot
-                    key1 = metAlertUiState
+                    key1 = metAlertUiState,
+                    key2 = homeState.allSwimspots,
+//                    key3 = homeState.allMarkers,
+
                 ) { map ->
 
                     map.setOnMarkerClickListener { marker ->
@@ -200,43 +253,25 @@ fun HomeScreen(
                         true // Return true to indicate that the click event has been handled
                     }
 
-
                     coroutineScope.launch {
-                        val markersWithSwimspots = withContext(Dispatchers.Default) {
-                            // Generate pairs of MarkerOptions and Swimspots
-                            homeState.allSwimspots.map { swimspot ->
-                                async {
-                                    val icon = swimspot.getMarkerIcon(metAlertUiState)
-                                    val options = MarkerOptions()
-                                        .position(swimspot.getLatLng())
-                                        .icon(icon)
-                                    options to swimspot  // Return a pair of options and swimspot
-                                }
-                            }.awaitAll()
-                        }
-
-                        withContext(Dispatchers.Main) {
-                            // Add markers to the map with tags
-                            markersWithSwimspots.forEach { (options, swimspot) ->
-                                map.addMarker(options)?.apply {
-                                    tag = swimspot  // Set the swimspot as the tag for the marker
-                                }
-                            }
-                        }
+                        homeViewModel.createAllMarkers(
+                            map = map)
                     }
-
-
-
+                }
+                MapEffect(key1 = homeState.customSwimspot) { map ->
                     if (homeState.customSwimspot != null) {
-                        val marker = map.addMarker(
-                            MarkerOptions().position(
-                                LatLng(
-                                    homeState.customSwimspot.lat,
-                                    homeState.customSwimspot.lon,
+                        val newMarker = map.addMarker(
+                            MarkerOptions()
+                                .position(
+                                    LatLng(
+                                        homeState.customSwimspot.lat,
+                                        homeState.customSwimspot.lon,
+                                    )
                                 )
-                            )
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_blue_38))
                         )
-                        marker?.tag = homeState.customSwimspot
+                        newMarker?.tag = homeState.customSwimspot
+                        homeViewModel.updateCustomMarker(newMarker)
                     }
                 }
             }
@@ -328,8 +363,8 @@ fun BottomSheetSwimspotContent(
                                         when (oceanForecastState) {
                                             is OceanForecastState.Success -> {
                                                 WeatherNextHourCard(
-                                                    forecastNextHour =  locationForecastUiState.forecastNextHour,
-                                                    oceanForecastRightNow =  oceanForecastState.oceanForecastRightNow,
+                                                    forecastNextHour = locationForecastUiState.forecastNextHour,
+                                                    oceanForecastRightNow = oceanForecastState.oceanForecastRightNow,
                                                     homeViewModel = homeViewModel,
                                                 )
                                             }
@@ -338,7 +373,7 @@ fun BottomSheetSwimspotContent(
                                                 WeatherNextHourCard(
                                                     locationForecastUiState.forecastNextHour,
                                                     homeViewModel = homeViewModel,
-                                                    )
+                                                )
                                             }
                                         }
 
@@ -417,7 +452,8 @@ fun BottomSheetSwimspotContent(
                         AccessibilityOptionsCard(
                             accessibilityStringList = homeState.selectedSwimspot.getAccecibilityStrings(),
                             homeViewModel = homeViewModel,
-                            outerEdgePaddingValues = outerEdgePaddingValues)
+                            outerEdgePaddingValues = outerEdgePaddingValues
+                        )
                     }
                 }
                 item {
@@ -459,7 +495,7 @@ fun AccessibilityOptionsCard(
                 IconButton(
                     onClick = { homeViewModel.updateShowAccessibilityInfoDialog(true) },
                     modifier = Modifier.align(Alignment.TopEnd)
-                    ) {
+                ) {
                     Icon(imageVector = Icons.Outlined.Info, contentDescription = "Mer informasjon")
                 }
 
@@ -476,7 +512,8 @@ fun AccessibilityOptionsCard(
                                 imageVector = Icons.Default.Check,
                                 contentDescription = "Punkt $index",
                                 modifier = Modifier
-                                    .padding(end = dimensionResource(id = R.dimen.padding_small)))
+                                    .padding(end = dimensionResource(id = R.dimen.padding_small))
+                            )
                             Text(text = string)
 
                         }
@@ -851,7 +888,7 @@ fun WeatherInfoDialog(
                 LazyColumn(
                     modifier = Modifier.weight(1f)
                 ) {
-                    item { 
+                    item {
                         Text(text = stringResource(id = R.string.weather_info_dialog_bodytext))
                     }
                 }
@@ -975,6 +1012,21 @@ fun LargeAndSmallText(
             modifier = Modifier.padding(bottom = if (smallerSize) 0.dp else 3.dp)
         )
     }
+}
+
+@Composable
+fun FavouriteIcon(
+    homeState: HomeState
+) {
+    val imageResource = when (homeState.selectedSwimspot?.favourited) {
+        true -> painterResource(id = R.drawable.star_yellow)
+        else -> painterResource(id = R.drawable.star_white)
+    }
+    val description = when (homeState.selectedSwimspot?.favourited) {
+        true -> "Favoritt"
+        else -> "Ikke favoritt"
+    }
+    Image(painter = imageResource, contentDescription = description)
 }
 
 

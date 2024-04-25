@@ -20,7 +20,7 @@ data class Swimspot(
     val accessibility: String?,
     val locationstring: String?,
     val original: Boolean?,
-    val favourited: Boolean?,
+    var favourited: Boolean?,
     val url: String?,
 ) {
     fun getLatLng(): LatLng {
@@ -37,17 +37,23 @@ data class Swimspot(
                         it.isRelevantForCoordinate(getLatLng())
                     }
                 )
-                markerIcon = when (alertColor) {
-                    WarningIconColor.YELLOW -> BitmapDescriptorFactory.fromResource(R.drawable.pin_yellow_38)
-                    WarningIconColor.ORANGE -> BitmapDescriptorFactory.fromResource(R.drawable.pin_orange_38)
-                    WarningIconColor.RED -> BitmapDescriptorFactory.fromResource(R.drawable.pin_red_38)
+                markerIcon = when (alertColor to favourited) {
+                    WarningIconColor.YELLOW to true -> BitmapDescriptorFactory.fromResource(R.drawable.pin_yellow_star_38)
+                    WarningIconColor.YELLOW to false -> BitmapDescriptorFactory.fromResource(R.drawable.pin_yellow_38)
+                    WarningIconColor.ORANGE to true -> BitmapDescriptorFactory.fromResource(R.drawable.pin_orange_star_38)
+                    WarningIconColor.ORANGE to false -> BitmapDescriptorFactory.fromResource(R.drawable.pin_orange_38)
+                    WarningIconColor.RED to true -> BitmapDescriptorFactory.fromResource(R.drawable.pin_red_star_38)
+                    WarningIconColor.RED to false -> BitmapDescriptorFactory.fromResource(R.drawable.pin_red_38)
+                    WarningIconColor.GREEN to true -> BitmapDescriptorFactory.fromResource(R.drawable.pin_blue_star_38)
+                    WarningIconColor.GREEN to false -> BitmapDescriptorFactory.fromResource(R.drawable.pin_blue_38)
                     else -> {
-                        BitmapDescriptorFactory.fromResource(R.drawable.pin_normal_38)
-                    }                    }
+                            BitmapDescriptorFactory.fromResource(R.drawable.pin_blue_38)
+                        }
+                    }
 
                 }
 
-            else -> {markerIcon = BitmapDescriptorFactory.fromResource(R.drawable.pin_normal_38)}
+            else -> {markerIcon = BitmapDescriptorFactory.fromResource(R.drawable.pin_blue_38)}
         }
         return markerIcon
     }
@@ -61,6 +67,10 @@ data class Swimspot(
 
         // Check if accessibility is not null, split the string by ";", and translate each feature
         return accessibility?.split(";")?.mapNotNull { stringMap[it] } ?: emptyList()
+    }
+
+    fun updateFavourite(favourite: Boolean) {
+        favourited = favourite
     }
 
 }

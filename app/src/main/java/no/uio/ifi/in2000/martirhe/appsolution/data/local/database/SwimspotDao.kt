@@ -18,4 +18,9 @@ interface SwimspotDao {
     @Delete
     suspend fun deleteSwimspot(swimspot: Swimspot)
 
+    @Query("SELECT * FROM Swimspot WHERE Swimspot.id == :swimspotId")
+    suspend fun getSwimspotById(swimspotId: Int): Swimspot
+
+    @Query("SELECT * FROM Swimspot ORDER BY Swimspot.id DESC LIMIT 1")
+    suspend fun getLastAddedSwimspot(): Swimspot
 }
