@@ -10,22 +10,22 @@
     <string name="about_screen_team">Dette er vårt team! Her skal det stå generelt om våre team medlemmer.</string>
     <string name="about_screen_teaminfo">Plask is a revolutionary app that enhances your daily water intake tracking with features like customized hydration goals, reminder notifications, and a user-friendly interface. Whether you\'re a fitness enthusiast or just looking to maintain your health, Plask provides the tools you need to stay hydrated!\n\nPlask is a revolutionary app that enhances your daily water intake tracking with features like customized hydration goals, reminder notifications, and a user-friendly interface. Whether you\'re a fitness enthusiast or just looking to maintain your health, Plask provides the tools you need to stay hydrated!\n\nPlask is a revolutionary app that enhances your daily water intake tracking with features like customized hydration goals, reminder notifications, and a user-friendly interface. Whether you\'re a fitness enthusiast or just looking to maintain your health, Plask provides the tools you need to stay hydrated!</string>
     <string name="about_screen_mail">info@plask.no</string>
-    <string name="about_screen_phone">977 27 150</string>
+    <string name="about_screen_phone">477 10 410</string>
     <string name="about_screen_license">Her skal det stå litt om lisenser og API vi har brukt. Legger til random tekst.\n\nCopyright © [year] [fullname]\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</string>
     <string name="about_screen_apibutton">Lenke til API og lisenser</string>
 
     //Onboarding
     <string name="pageone_maintitle">Velkommen til Plask</string>
-    <string name="pageone_subtitle">Ditt vindu til Norges badesteder</string>
-    <string name="pageone_bodytext">Oppdag og utforsk de beste badestedene rundt om i landet</string>
+    <string name="pageone_subtitle">Den ultimate badeguiden for dine badeeventyr i Norge</string>
+    <string name="pageone_bodytext">Utforsk hundrevis av badeplasser og oppdag alt fra vanntemperaturer til vannkvalitet og aktuelle farevarsler</string>
 
-    <string name="pagetwo_maintitle">Utforsk Vannkvalitet</string>
-    <string name="pagetwo_subtitle">Informasjon ved fingertuppene</string>
-    <string name="pagetwo_bodytext">Få oppdatert informasjon om vannkvalitet og værforhold ved dine favorittbadesteder</string>
+    <string name="pagetwo_maintitle">Oppdag Badeplasser</string>
+    <string name="pagetwo_subtitle">Plask er din ultimate følgesvenn når du skal finne den perfekte badeplassen for dine behov</string>
+    <string name="pagetwo_bodytext">Utforsk steder i nærheten, sjekk vannkvaliteten og vær alltid oppdatert på eventuelle advarsler før du tar et forfriskende dykk</string>
 
-    <string name="pagethree_maintitle">Favorittsteder</string>
-    <string name="pagethree_subtitle">Lagre og Organiser</string>
-    <string name="pagethree_bodytext">Marker dine favorittbadesteder for rask tilgang og personlig oppdateringer</string>
+    <string name="pagethree_maintitle">Legg til Favoritter</string>
+    <string name="pagethree_subtitle">Gjør Plask til din personlige badeassistent ved å legge til favorittbadeplassene dine</string>
+    <string name="pagethree_bodytext">Med ett enkelt trykk kan du få tilgang til dine mest elskede steder og enkelt sjekke relevant informasjon om stedet før du tar et plask fra brygga</string>
 
     <string name="pagefour_maintitle">Finn Ditt Perfekte Badested</string>
     <string name="pagefour_subtitle">Søk og Oppdag</string>
@@ -40,16 +40,16 @@
     <string name="onboarding_done">Done</string>
 
     //Location Screen
-    <string name="location_screen_label">Plask \n Wants to know your location</string>
-    <string name="location_screen_subtext">Vi trenger din posisjon fordi … Vi trenger din posisjon fordi … Vi trenger din posisjon fordi … Vi trenger din posisjon fordi … Vi trenger din posisjon fordi … Vi trenger din posisjon fordi … Vi trenger din posisjon fordi …</string>
-    <string name="location_screen_accept">Accept</string>
-    <string name="location_screen_decline">Decline</string>
+    <string name="location_screen_label">Plask \n Ønsker å bruke posisjonen din</string>
+    <string name="location_screen_subtext">Plask trenger tilgang til din lokasjon for å kunne vise deg nærliggende badeplasser og gi deg nøyaktige vær- og badevilkår. Vi forstår viktigheten av personvern og forsikrer deg om at din lokasjonsdata kun vil bli brukt internt i appen og ikke vil deles med tredjeparter.</string>
+    <string name="location_screen_accept">Godta</string>
+    <string name="location_screen_decline">Avvis</string>
 
     //Location Screen
-    <string name="notification_screen_label">Notification Permission</string>
-    <string name="notification_screen_subtext">We need permission to send you notifications for alerts and updates.</string>
-    <string name="notification_screen_accept">Accept</string>
-    <string name="notification_screen_decline">Decline</string>
+    <string name="notification_screen_label">Plask \n Ønsker å sende deg varslinger</string>
+    <string name="notification_screen_subtext">Vi trenger tillatelse til å sende deg varsler angående oppdateringen og varsler ved dine favoritt badesteder.</string>
+    <string name="notification_screen_accept">Godta</string>
+    <string name="notification_screen_decline">Avvis</string>
 
     // WeatherInfoDialog
     <string name="weather_info_dialog_header">Værdata</string>

@@ -85,9 +85,25 @@ fun LocationScreen(navController: NavController) {
         }
 
         Scaffold(
-            containerColor = MaterialTheme.colorScheme.primary,
+            containerColor = MaterialTheme.colorScheme.onPrimary,
             contentColor = MaterialTheme.colorScheme.tertiary,
+            topBar = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.Top
+                ) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Image(
+                        painter = painterResource(id = R.drawable.pin),
+                        contentDescription = "Plask logo",
+                        modifier = Modifier
+                            .size(70.dp)
+                            .padding(12.dp)
+                    )
+                }
+            },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -99,14 +115,11 @@ fun LocationScreen(navController: NavController) {
                 Text(
                     stringResource(id = R.string.location_screen_label),
                     style = MaterialTheme.typography.headlineLarge.copy(
-                        fontSize = 36.sp,
-                        fontWeight = FontWeight.Bold,
+                        fontSize = 26.sp,
+                        fontWeight = FontWeight.ExtraBold,
                         color = MaterialTheme.colorScheme.secondary
                     ),
                     textAlign = TextAlign.Center,
-                    fontFamily = FontFamily(
-                        Font(R.font.font1)
-                    )
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -170,8 +183,8 @@ fun LocationScreen(navController: NavController) {
                         }
                     }
                 },
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
-                    shape = MaterialTheme.shapes.medium) {
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.secondary),)
+                {
                     Text(stringResource(id = R.string.location_screen_decline))
                 }
             }

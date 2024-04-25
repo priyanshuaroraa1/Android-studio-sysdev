@@ -73,8 +73,8 @@ fun NotificationScreen(navController: NavController) {
             )
         ) {
             Scaffold(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
+                containerColor = MaterialTheme.colorScheme.onPrimary,
+                contentColor = MaterialTheme.colorScheme.tertiary,
                 snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
             ) {
                 Column(
@@ -136,10 +136,9 @@ fun NotificationScreen(navController: NavController) {
                                 snackbarHostState.showSnackbar("You can enable notification permissions in settings.")
                             }
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
-                        shape = MaterialTheme.shapes.medium
-                    ) {
-                        Text(stringResource(id = R.string.notification_screen_decline))
+                        colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.secondary),)
+                    {
+                        Text(stringResource(id = R.string.location_screen_decline))
                     }
                 }
             }
