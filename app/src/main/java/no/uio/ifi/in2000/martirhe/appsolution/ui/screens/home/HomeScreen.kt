@@ -93,7 +93,6 @@ fun HomeScreen(
         position = homeState.defaultCameraPosition
     }
 
-
     // TODO: Flytte dette til homeState?
     val mapStyleString = loadMapStyleFromAssets()
     val mapProperties = MapProperties(
