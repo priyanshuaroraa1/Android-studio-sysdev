@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -121,13 +122,11 @@ class HomeViewModel @Inject constructor(
             swimspotRepository.upsertSwimspot(swimspot)
 
             // Add marker
-            addMarker(swimspot)
+            val icon = swimspot.getMarkerIcon(metAlertUiState.value) // Assuming this doesn't need to be on the main thread
+            val latLng = swimspot.getLatLng()
+            val markerData = MarkerData(latLng, icon, swimspot)
+            addMarker(markerData)
         }
-    }
-
-    fun updateMarker(swimspot: Swimspot) {
-        val marker = homeState.value.allMarkers[swimspot.id]
-
     }
 
     fun makeSwimspotNotFavourite(
@@ -142,7 +141,10 @@ class HomeViewModel @Inject constructor(
             swimspotRepository.upsertSwimspot(swimspot)
 
             // Add marker
-            addMarker(swimspot)
+            val icon = swimspot.getMarkerIcon(metAlertUiState.value) // Assuming this doesn't need to be on the main thread
+            val latLng = swimspot.getLatLng()
+            val markerData = MarkerData(latLng, icon, swimspot)
+            addMarker(markerData)
         }
     }
 
@@ -168,7 +170,10 @@ class HomeViewModel @Inject constructor(
             _homeState.update { homeState ->
                 homeState.copy(selectedSwimspot = swimspotWithId)
             }
-            addMarker(swimspotWithId)
+            val icon = swimspot.getMarkerIcon(metAlertUiState.value) // Assuming this doesn't need to be on the main thread
+            val latLng = swimspot.getLatLng()
+            val markerData = MarkerData(latLng, icon, swimspot)
+            addMarker(markerData)
         }
     }
 
@@ -187,17 +192,106 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun createAllMarkers(map: GoogleMap) {
+        Log.i("Function call", "createAllMarkers")
 
-    fun createAllMarkers(
-        map: GoogleMap,
-    ) {
         _homeState.update { homeState ->
             homeState.copy(map = map)
         }
-        homeState.value.allSwimspots.forEach {
-            addMarker(it)
+
+        homeState.value.allSwimspots.forEach { swimspot ->
+            viewModelScope.launch(Dispatchers.Default) {
+                val icon = swimspot.getMarkerIcon(metAlertUiState.value) // Assuming this doesn't need to be on the main thread
+                val latLng = swimspot.getLatLng()
+                val markerData = MarkerData(latLng, icon, swimspot)
+
+                // Switch to the Main thread to update the UI
+                withContext(Dispatchers.Main) {
+                    addMarker(markerData, map)
+                }
+            }
         }
     }
+
+    data class MarkerData(
+        val latLng: LatLng,
+        val icon: BitmapDescriptor,
+        val swimspot: Swimspot
+    )
+
+    fun addMarker(markerData: MarkerData, map: GoogleMap? = homeState.value.map) {
+        map?.let { googleMap ->
+            viewModelScope.launch(Dispatchers.Main) {
+                val newMarker = googleMap.addMarker(
+                    MarkerOptions()
+                        .position(markerData.latLng)
+                        .icon(markerData.icon)
+                )
+
+                newMarker?.tag = markerData.swimspot
+
+                _homeState.update { homeState ->
+                    val updatedMarkers = homeState.allMarkers.toMutableMap()
+                    updatedMarkers[markerData.swimspot.id]?.remove()
+                    updatedMarkers[markerData.swimspot.id!!] = newMarker
+                    homeState.copy(
+                        allMarkers = updatedMarkers,
+                        map = map
+                    )
+                }
+            }
+        }
+    }
+
+//    fun createAllMarkers(
+//        map: GoogleMap,
+//    ) {
+//        Log.i("Function call", "createAllMarkers")
+//
+//
+//
+//        _homeState.update { homeState ->
+//            homeState.copy(map = map)
+//        }
+//
+//
+//        homeState.value.allSwimspots.forEach {
+//            viewModelScope.launch(Dispatchers.Default) {
+//
+//                addMarker(it)
+//            }
+//        }
+//    }
+//
+//    fun addMarker(
+//        swimspot: Swimspot,
+//        map: GoogleMap? = homeState.value.map,
+//    ) {
+//        viewModelScope.launch(Dispatchers.Main) {
+//
+//
+//            if (map != null) {
+//                val icon = swimspot.getMarkerIcon(metAlertUiState.value)
+//                val newMarker = map.addMarker(
+//                    MarkerOptions()
+//                        .position(swimspot.getLatLng())
+//                        .icon(icon)
+//                )
+//
+//                newMarker?.tag = swimspot
+//
+//                _homeState.update { homeState ->
+//                    val updatedMarkers = homeState.allMarkers.toMutableMap()
+//                    updatedMarkers[swimspot.id]?.remove()
+//                    updatedMarkers[swimspot.id!!] = newMarker
+//                    homeState.copy(
+//                        allMarkers = updatedMarkers,
+//                        map = map
+//                    )
+//                }
+//            }
+//        }
+//    }
 
     fun removeMarker(swimspot: Swimspot) {
         viewModelScope.launch(Dispatchers.Main) {
@@ -212,36 +306,6 @@ class HomeViewModel @Inject constructor(
             }
         }
 
-    }
-
-    fun addMarker(
-        swimspot: Swimspot,
-        map: GoogleMap? = homeState.value.map,
-    ) {
-        viewModelScope.launch(Dispatchers.Main) {
-
-
-            if (map != null) {
-                val icon = swimspot.getMarkerIcon(metAlertUiState.value)
-                val newMarker = map.addMarker(
-                    MarkerOptions()
-                        .position(swimspot.getLatLng())
-                        .icon(icon)
-                )
-
-                newMarker?.tag = swimspot
-
-                _homeState.update { homeState ->
-                    val updatedMarkers = homeState.allMarkers.toMutableMap()
-                    updatedMarkers[swimspot.id]?.remove()
-                    updatedMarkers[swimspot.id!!] = newMarker
-                    homeState.copy(
-                        allMarkers = updatedMarkers,
-                        map = map
-                    )
-                }
-            }
-        }
     }
 
     fun updateSelectedSwimspot(swimspot: Swimspot) {

@@ -2,13 +2,12 @@ package no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.navbar
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
@@ -16,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -46,7 +44,7 @@ sealed class BottomNavItem(
     object Favorites :
         BottomNavItem(
             "Favorites",
-            Icons.Default.Checklist,
+            Icons.Default.Star,
             Routes.FAVORITES_SCREEN
         )
 }
@@ -94,19 +92,28 @@ fun BottomNavBar(
                     ),
                     selected = currentRoute == item.route,
                     onClick = {
+                        // Check if the target route is the home screen
+                        if (item.route == Routes.HOME_SCREEN) {
+                            // Pop everything off the navigation stack until we get to the home screen
+                            navController.popBackStack(navController.graph.findStartDestination().id, inclusive = false)
+                        } else {
+                            // When navigating to a screen other than the home screen
+                            // Check if we're not already on that screen
+                            if (currentRoute != item.route) {
+                                navController.navigate(item.route) {
+                                    // Restore state when reselecting a previously selected item
+                                    restoreState = true
 
-                        if (currentRoute != item.route) {  // Only navigate if not already on the home screen
-                            navController.navigate(item.route) {
-                                // Clear back stack up to the home destination, but keep the home as the root
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
+                                    // Avoid multiple copies of the same destination
+                                    launchSingleTop = true
+
+                                    // Only pop up to the home destination if it's not the home screen
+                                    // This is to preserve the home screen's state and avoid recreating it
+                                    popUpTo(Routes.HOME_SCREEN) {
+                                        // Keep the home screen as the root and do not pop it
+                                        saveState = true
+                                    }
                                 }
-
-                                // Avoid multiple copies of the same destination
-                                launchSingleTop = true
-
-                                // Restore state when reselecting a previously selected item
-                                restoreState = true
                             }
                         }
                     }

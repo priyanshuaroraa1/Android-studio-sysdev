@@ -66,12 +66,12 @@ class MainActivity : ComponentActivity() {
                             NotificationScreen(navController)
                         }
                         composable(Routes.HOME_SCREEN) {
-                            HomeScreen(onNavigate = {
-                                navController.navigate(it.route)
-                            })
+                            HomeScreen()
                         }
                         composable(Routes.FAVORITES_SCREEN) {
-                            FavoritesScreen()
+                            FavoritesScreen(
+                                navController = navController
+                            )
                         }
                         composable(Routes.ABOUT_US_SCREEN) {
                             AboutScreen(navController = navController)

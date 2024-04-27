@@ -65,6 +65,7 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.rememberCameraPositionState
 import io.ktor.utils.io.errors.IOException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.martirhe.appsolution.R
 import no.uio.ifi.in2000.martirhe.appsolution.data.local.database.Swimspot
@@ -83,15 +84,19 @@ import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
 @OptIn(ExperimentalMaterial3Api::class, MapsComposeExperimentalApi::class)
 @Composable
 fun HomeScreen(
-    onNavigate: (UiEvent.Navigate) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val homeState = homeViewModel.homeState.collectAsState().value
-    val metAlertUiState = homeViewModel.metAlertUiState.collectAsState().value
+//    val metAlertUiState = homeViewModel.metAlertUiState.collectAsState().value
 
     val cameraPositionState = rememberCameraPositionState {
         position = homeState.defaultCameraPosition
     }
+//    val cameraPositionState = rememberSaveable(saver = CameraPositionState.Saver) {
+//        rememberCameraPositionState {
+//            position = homeState.defaultCameraPosition
+//        }
+//    }
 
     // TODO: Flytte dette til homeState?
     val mapStyleString = loadMapStyleFromAssets()
@@ -115,6 +120,8 @@ fun HomeScreen(
 
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
+
+
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
@@ -155,50 +162,20 @@ fun HomeScreen(
                                     )
                                     .weight(1f) // Give Text a weight of 1,
                                     .clickable {
-                                        coroutineScope.launch{
+                                        coroutineScope.launch {
                                             val currentZoom = cameraPositionState.position.zoom
                                             val zoomIncrement = 1
                                             cameraPositionState.animate(
                                                 update = CameraUpdateFactory.newLatLngZoom(
                                                     homeState.selectedSwimspot.getLatLng(),
-                                                    currentZoom + zoomIncrement),
-//                                        update = CameraUpdateFactory.newLatLngZoom(
-//                                            homeState.selectedSwimspot.getLatLng(),
-//                                            11.5f),
+                                                    currentZoom + zoomIncrement
+                                                ),
                                                 durationMs = 250
                                             )
                                         }
                                     }
                             )
-
-//                            IconButton(
-//                                onClick = {
-//                                    coroutineScope.launch{
-//                                        val currentZoom = cameraPositionState.position.zoom
-//                                        val zoomIncrement = 1
-//                                        cameraPositionState.animate(
-//                                            update = CameraUpdateFactory.newLatLngZoom(
-//                                                homeState.selectedSwimspot.getLatLng(),
-//                                                currentZoom + zoomIncrement),
-////                                        update = CameraUpdateFactory.newLatLngZoom(
-////                                            homeState.selectedSwimspot.getLatLng(),
-////                                            11.5f),
-//                                            durationMs = 250
-//                                        )
-//                                    }
-//                                },
-//                                modifier = Modifier
-//                                    .padding(top = dimensionResource(id = R.dimen.padding_small)),
-//                            ) {
-//                                Icon(
-//                                    imageVector = Icons.Default.Adjust,
-//                                    contentDescription = "Sentrer kart",
-//
-//                                    tint = MaterialTheme.colorScheme.onPrimaryContainer)
-//
-//                            }
                         }
-
 
                         IconButton(
                             onClick = {
@@ -238,15 +215,14 @@ fun HomeScreen(
                         scaffoldState.bottomSheetState.expand()
                         Log.i("Sheet", "expand")
                     }
-                }, properties = mapProperties
+                },
+                properties = mapProperties,
+                onMapLoaded = {
+
+                }
             ) {
-                MapEffect(
-                    key1 = metAlertUiState,
-                    key2 = homeState.allSwimspots,
-//                    key3 = homeState.allMarkers,
-
-                ) { map ->
-
+                MapEffect() {map ->
+                    Log.i("Map effect called", "Map effect 1 called")
                     map.setOnMarkerClickListener { marker ->
                         // Dette skjer når en Marker blir klikket på:
                         val swimspot = marker.tag as? Swimspot // Cast the tag to your data type
@@ -269,13 +245,22 @@ fun HomeScreen(
 
                         true // Return true to indicate that the click event has been handled
                     }
+                }
+                MapEffect(
+//                    key1 = metAlertUiState,
+//                    key2 = homeState.allSwimspots, // TODO: Usikker på om jeg trenger denne
+                ) { map ->
 
-                    coroutineScope.launch {
-                        homeViewModel.createAllMarkers(
-                            map = map)
+                    map.setOnMapLoadedCallback {
+                        coroutineScope.launch(Dispatchers.Default) {
+                            homeViewModel.createAllMarkers(map)
+
+                        }
                     }
                 }
                 MapEffect(key1 = homeState.customSwimspot) { map ->
+                    Log.i("Map effect called", "Map effect 3 called")
+
                     if (homeState.customSwimspot != null) {
                         val newMarker = map.addMarker(
                             MarkerOptions()
