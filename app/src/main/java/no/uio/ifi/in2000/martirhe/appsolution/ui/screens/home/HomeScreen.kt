@@ -77,7 +77,6 @@ import no.uio.ifi.in2000.martirhe.appsolution.model.oceanforecast.OceanForecastR
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.HomeSearchBar
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.MediumHeader
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.SmallHeader
-import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
 
 
 @SuppressLint("PotentialBehaviorOverride")
@@ -92,11 +91,8 @@ fun HomeScreen(
     val cameraPositionState = rememberCameraPositionState {
         position = homeState.defaultCameraPosition
     }
-//    val cameraPositionState = rememberSaveable(saver = CameraPositionState.Saver) {
-//        rememberCameraPositionState {
-//            position = homeState.defaultCameraPosition
-//        }
-//    }
+    homeViewModel.updateCameraPositionState(cameraPositionState)
+
 
     // TODO: Flytte dette til homeState?
     val mapStyleString = loadMapStyleFromAssets()
@@ -120,8 +116,7 @@ fun HomeScreen(
 
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
-
-
+    homeViewModel.updateBottomSheetState(scaffoldState.bottomSheetState)
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
@@ -180,12 +175,13 @@ fun HomeScreen(
                         IconButton(
                             onClick = {
                                 homeViewModel.onFavouriteClick(homeState.selectedSwimspot)
-                                      },
+                            },
                             modifier = Modifier
                                 .padding(dimensionResource(id = R.dimen.padding_small))
                         ) {
                             FavouriteIcon(
-                                homeState = homeState)
+                                homeState = homeState
+                            )
                         }
                     }
                 }
@@ -203,7 +199,7 @@ fun HomeScreen(
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
-            HomeSearchBar(homeViewModel = homeViewModel)
+//            HomeSearchBar(homeViewModel = homeViewModel)
 
             GoogleMap(
                 modifier = Modifier,
@@ -221,7 +217,7 @@ fun HomeScreen(
 
                 }
             ) {
-                MapEffect() {map ->
+                MapEffect() { map ->
                     Log.i("Map effect called", "Map effect 1 called")
                     map.setOnMarkerClickListener { marker ->
                         // Dette skjer når en Marker blir klikket på:
@@ -277,6 +273,20 @@ fun HomeScreen(
                     }
                 }
             }
+
+            HomeSearchBar(
+                homeViewModel = homeViewModel,
+                onQueryChange = { homeViewModel.updateSearchbarText(it) },
+                onSearch = {
+                    homeViewModel.onSearchBarSearch(it, coroutineScope)
+                },
+                onActiveChange = {
+                    homeViewModel.updateSearchbarActive(it)
+                    if (it) {
+                        homeViewModel.retractBottomSheet(coroutineScope)
+                    }
+                }
+            )
         }
     }
     if (homeState.showMetAlertDialog) {
@@ -1029,6 +1039,19 @@ fun FavouriteIcon(
         else -> "Ikke favoritt"
     }
     Image(painter = imageResource, contentDescription = description)
+}
+
+@Composable
+fun SwimspotPinIcon(
+    painter: Painter = painterResource(id = R.drawable.pin),
+    description: String = "Plask logo"
+) {
+    Image(
+        painter = painter,
+        contentDescription = description,
+        modifier = Modifier
+            .height(32.dp),
+    )
 }
 
 

@@ -1,18 +1,23 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.screens.home
 
 import android.util.Log
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.maps.android.compose.CameraPositionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.client.plugins.ResponseException
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,6 +36,7 @@ import java.io.IOException
 import java.nio.channels.UnresolvedAddressException
 import javax.inject.Inject
 
+@OptIn(ExperimentalMaterial3Api::class)
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val locationForecastRepository: LocationForecastRepositoryInterface,
@@ -98,6 +104,44 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun updateCameraPositionState(cameraPositionState: CameraPositionState) {
+        _homeState.update { homeState ->
+            homeState.copy(cameraPositionState = cameraPositionState)
+        }
+    }
+
+    fun updateBottomSheetState(bottomSheetState: SheetState) {
+        _homeState.update { homeState ->
+            homeState.copy(bottomSheetState = bottomSheetState)
+        }
+    }
+
+    fun expandBottomSheet(coroutineScope: CoroutineScope) {
+        coroutineScope.launch {
+            if (homeState.value.bottomSheetPosition == BottomSheetPosition.Hidden) {
+                updateBottomSheetPosition(true)
+            }
+            homeState.value.bottomSheetState?.expand()
+        }
+    }
+
+    fun retractBottomSheet(coroutineScope: CoroutineScope) {
+        coroutineScope.launch {
+            homeState.value.bottomSheetState?.partialExpand()
+        }
+    }
+
+    fun moveCamera(latLng: LatLng) {
+        viewModelScope.launch {
+            homeState.value.cameraPositionState?.animate(
+                update = CameraUpdateFactory.newLatLng(
+                    latLng,
+                ),
+                durationMs = 250
+            )
+        }
+    }
+
     fun onFavouriteClick(
         swimspot: Swimspot
     ) {
@@ -122,7 +166,8 @@ class HomeViewModel @Inject constructor(
             swimspotRepository.upsertSwimspot(swimspot)
 
             // Add marker
-            val icon = swimspot.getMarkerIcon(metAlertUiState.value) // Assuming this doesn't need to be on the main thread
+            val icon =
+                swimspot.getMarkerIcon(metAlertUiState.value) // Assuming this doesn't need to be on the main thread
             val latLng = swimspot.getLatLng()
             val markerData = MarkerData(latLng, icon, swimspot)
             addMarker(markerData)
@@ -141,7 +186,8 @@ class HomeViewModel @Inject constructor(
             swimspotRepository.upsertSwimspot(swimspot)
 
             // Add marker
-            val icon = swimspot.getMarkerIcon(metAlertUiState.value) // Assuming this doesn't need to be on the main thread
+            val icon =
+                swimspot.getMarkerIcon(metAlertUiState.value) // Assuming this doesn't need to be on the main thread
             val latLng = swimspot.getLatLng()
             val markerData = MarkerData(latLng, icon, swimspot)
             addMarker(markerData)
@@ -170,7 +216,8 @@ class HomeViewModel @Inject constructor(
             _homeState.update { homeState ->
                 homeState.copy(selectedSwimspot = swimspotWithId)
             }
-            val icon = swimspot.getMarkerIcon(metAlertUiState.value) // Assuming this doesn't need to be on the main thread
+            val icon =
+                swimspot.getMarkerIcon(metAlertUiState.value) // Assuming this doesn't need to be on the main thread
             val latLng = swimspot.getLatLng()
             val markerData = MarkerData(latLng, icon, swimspot)
             addMarker(markerData)
@@ -201,7 +248,8 @@ class HomeViewModel @Inject constructor(
 
         homeState.value.allSwimspots.forEach { swimspot ->
             viewModelScope.launch(Dispatchers.Default) {
-                val icon = swimspot.getMarkerIcon(metAlertUiState.value) // Assuming this doesn't need to be on the main thread
+                val icon =
+                    swimspot.getMarkerIcon(metAlertUiState.value) // Assuming this doesn't need to be on the main thread
                 val latLng = swimspot.getLatLng()
                 val markerData = MarkerData(latLng, icon, swimspot)
 
@@ -308,6 +356,18 @@ class HomeViewModel @Inject constructor(
 
     }
 
+    fun getSearchBarResults(queryString: String): List<Swimspot> {
+        val searchInLocationString: Boolean = (queryString.length > 1)
+        val resultList = homeState.value.allSwimspots.filter { swimspot ->
+            swimspot.getQuerySearchString(searchInLocationString).contains(queryString, true)
+        }.sortedBy { swimspot ->
+            val searchString = swimspot.getQuerySearchString(searchInLocationString)
+            searchString.indexOf(queryString, ignoreCase = true).takeIf { it >= 0 } ?: Int.MAX_VALUE
+        }
+        // TODO: Sortere på avstand til bruker?
+        return resultList.take(10)
+    }
+
     fun updateSelectedSwimspot(swimspot: Swimspot) {
         _homeState.update { homeState ->
             homeState.copy(selectedSwimspot = swimspot)
@@ -344,7 +404,6 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    // TODO: Change name/remove yeah
     fun updateBottomSheetPosition(makeVisible: Boolean) {
         val bottomSheetPosition: BottomSheetPosition
         bottomSheetPosition = if (makeVisible) {
@@ -357,8 +416,49 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun onSearchBarSearch() {
-        // Todo: Implementere denne
+    fun onSearchBarSearch(
+        searchQuery: String,
+        coroutineScope: CoroutineScope
+    ) {
+        updateSearchbarActive(false)
+        val resultList = getSearchBarResults(searchQuery)
+        if (searchQuery != "") {
+            if (resultList.isNotEmpty()) {
+                onSearchBarSelectSwimspot(
+                    swimspot = resultList[0],
+                    coroutineScope = coroutineScope,
+                )
+                saveToSearchHistory(searchQuery)
+            }
+        } else {
+            // TODO: Hva hvis ingen søk passer?
+        }
+        updateSearchbarText("")
+    }
+
+    fun getSearchHistory(): List<String> {
+        return preferencesManager.getSearchHistory()
+    }
+
+    fun saveToSearchHistory(searchQuery: String) {
+        preferencesManager.addToSearchHistory(searchQuery.replace(";", ""))
+    }
+
+    fun onSearchHistoryClick(
+        searchString: String,
+    ) {
+        updateSearchbarText(searchString)
+    }
+
+    fun onSearchBarSelectSwimspot(
+        swimspot: Swimspot,
+        coroutineScope: CoroutineScope
+    ) {
+        updateSearchbarText("")
+        updateSearchbarActive(false)
+        updateSelectedSwimspot(swimspot)
+        moveCamera(swimspot.getLatLng())
+        expandBottomSheet(coroutineScope = coroutineScope)
     }
 
     fun updateSearchbarText(searchBarText: String) {
@@ -367,7 +467,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun updateSearchbarActive(searchBarActive: Boolean) {
+    fun updateSearchbarActive(
+        searchBarActive: Boolean
+    ) {
         _homeState.update { homeState ->
             homeState.copy(searchBarActive = searchBarActive)
         }
