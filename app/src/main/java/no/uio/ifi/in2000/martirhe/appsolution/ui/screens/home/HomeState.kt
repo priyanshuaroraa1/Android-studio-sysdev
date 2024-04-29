@@ -1,16 +1,19 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.screens.home
 
 import android.location.Location
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+import com.google.maps.android.compose.CameraPositionState
 import no.uio.ifi.in2000.martirhe.appsolution.data.local.database.Swimspot
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
 
-data class HomeState(
+data class HomeState @OptIn(ExperimentalMaterial3Api::class) constructor(
     val allSwimspots: List<Swimspot> = emptyList(),
     val allMarkers: Map<Int, Marker?> = emptyMap(),
     val map: GoogleMap? = null,
@@ -21,6 +24,8 @@ data class HomeState(
     val bottomSheetPosition: BottomSheetPosition = BottomSheetPosition.Hidden,
     val defaultCameraPosition: CameraPosition = CameraPosition.fromLatLngZoom(
         LatLng(59.911491,10.757933), 11f), // 5f to show most of Norway, 11f for Oslo
+    val cameraPositionState: CameraPositionState? = null,
+    val bottomSheetState: SheetState? = null,
 
     // For searchbar
     val searchBarText: String = "",

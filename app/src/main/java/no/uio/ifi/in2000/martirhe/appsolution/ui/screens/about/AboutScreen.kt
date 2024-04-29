@@ -61,7 +61,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AboutScreen(navController: NavController, onNavigate: (UiEvent.Navigate) -> Unit) {
+fun AboutScreen(navController: NavController) {
 
     val context = LocalContext.current
     val interactionSource = remember { MutableInteractionSource() }

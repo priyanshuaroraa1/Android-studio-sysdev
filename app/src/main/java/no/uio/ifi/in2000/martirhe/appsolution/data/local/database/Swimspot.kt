@@ -73,4 +73,10 @@ data class Swimspot(
         favourited = favourite
     }
 
+    fun getQuerySearchString(fullString: Boolean = true): String {
+        return if (fullString) {
+            "$spotName $locationstring"
+        } else spotName
+    }
+
 }

@@ -23,4 +23,7 @@ interface SwimspotDao {
 
     @Query("SELECT * FROM Swimspot ORDER BY Swimspot.id DESC LIMIT 1")
     suspend fun getLastAddedSwimspot(): Swimspot
+
+    @Query("SELECT * FROM Swimspot WHERE Swimspot.favourited == 1")
+    suspend fun getAllFavorites(): List<Swimspot>
 }

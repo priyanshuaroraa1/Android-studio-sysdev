@@ -26,4 +26,8 @@ class SwimspotRepositoryImpl @Inject constructor(
     override suspend fun deleteSwimspot(swimspot: Swimspot) {
         return swimspotDao.deleteSwimspot(swimspot)
     }
+
+    override suspend fun getAllFavorites(): List<Swimspot> {
+        return swimspotDao.getAllFavorites()
+    }
 }

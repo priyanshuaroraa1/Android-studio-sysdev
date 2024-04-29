@@ -1,5 +1,6 @@
 package no.uio.ifi.in2000.martirhe.appsolution
 
+import FavoritesScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,21 +15,30 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.navbar.BottomNavBar
+import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.about.AboutScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.home.HomeScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.location.LocationScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.notification.NotificationScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.onboarding.OnboardingScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.theme.AppSolutionTheme
+import no.uio.ifi.in2000.martirhe.appsolution.util.PreferencesManager
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject lateinit var preferencesManager: PreferencesManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             AppSolutionTheme {
                 val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
+                val startDestination = if (preferencesManager.isOnboardingShown) Routes.HOME_SCREEN else Routes.ONBOARDING_SCREEN
+
 
                 Scaffold(
                     bottomBar = {
@@ -39,11 +49,15 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = Routes.ONBOARDING_SCREEN,
-                        modifier = Modifier.padding(innerPadding)
+                        startDestination = startDestination,
+                        modifier = Modifier.padding(innerPadding),
+
                     ) {
                         composable(Routes.ONBOARDING_SCREEN) {
-                            OnboardingScreen(navController)
+
+                            OnboardingScreen(
+                                navController,
+                                )
                         }
                         composable(Routes.LOCATION_SCREEN) {
                             LocationScreen(navController)
@@ -52,9 +66,15 @@ class MainActivity : ComponentActivity() {
                             NotificationScreen(navController)
                         }
                         composable(Routes.HOME_SCREEN) {
-                            HomeScreen(onNavigate = {
-                                navController.navigate(it.route)
-                            })
+                            HomeScreen()
+                        }
+                        composable(Routes.FAVORITES_SCREEN) {
+                            FavoritesScreen(
+                                navController = navController
+                            )
+                        }
+                        composable(Routes.ABOUT_US_SCREEN) {
+                            AboutScreen(navController = navController)
                         }
                     }
                 }
