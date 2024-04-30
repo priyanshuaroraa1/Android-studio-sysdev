@@ -1,5 +1,6 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.screens.about
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
@@ -60,6 +61,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.R
 import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AboutScreen(navController: NavController) {
 
@@ -103,30 +105,18 @@ fun AboutScreen(navController: NavController) {
             ) {
 
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth(),
+                    //horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.plasklogo1),
                         contentDescription = "App Logo",
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .size(250.dp),
                         contentScale = ContentScale.Fit,
                     )
                 }
-
-                Text(
-                    stringResource(id = R.string.about_screen_title),
-                    color = MaterialTheme.colorScheme.primary,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontSize = 35.sp,
-                        lineHeight = 28.sp,
-                        fontFamily = FontFamily(Font(R.font.font1)),
-                        fontWeight = FontWeight.Bold
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
 
                 Text(
                     stringResource(id = R.string.about_screen_description),
@@ -135,8 +125,7 @@ fun AboutScreen(navController: NavController) {
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontSize = 25.sp,
                         lineHeight = 28.sp,
-                        fontFamily = FontFamily(Font(R.font.font1)),
-                        //fontWeight = FontWeight.Bold
+                        fontFamily = FontFamily(Font(R.font.font))
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -147,7 +136,7 @@ fun AboutScreen(navController: NavController) {
                 Text(
                     stringResource(id = R.string.about_screen_info),
                     color = MaterialTheme.colorScheme.secondary,
-                    textAlign = TextAlign.Start,
+                    textAlign = TextAlign.Center,
                     lineHeight = 23.sp,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(horizontal = 8.dp)
@@ -227,6 +216,7 @@ fun AboutScreen(navController: NavController) {
                                 Text(
                                     stringResource(id = R.string.about_screen_teaminfo),
                                     color = MaterialTheme.colorScheme.secondary,
+                                    textAlign = TextAlign.Center,
                                     style = MaterialTheme.typography.bodyMedium.copy(
                                         lineHeight = 23.sp,
                                     ),
@@ -237,7 +227,7 @@ fun AboutScreen(navController: NavController) {
                         Spacer(modifier = Modifier.height(16.dp))
 
                         Card(
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary),
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Column(
@@ -304,7 +294,7 @@ fun AboutScreen(navController: NavController) {
                     }
                 }
 
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(18.dp))
 
                 Text(
                     stringResource(id = R.string.about_screen_license),
@@ -321,7 +311,7 @@ fun AboutScreen(navController: NavController) {
                 Button(
                     onClick = {
                         val intent = Intent(Intent.ACTION_VIEW).apply {
-                            data = Uri.parse("https://www.vg.no")
+                            data = Uri.parse("https://in2000.met.no/2024/4-havvarsel.html")
                         }
                         context.startActivity(intent)
                     },
@@ -349,7 +339,7 @@ fun Ansatte(name: String, drawableId: Int) {
                 .size(55.dp)
                 .clip(CircleShape)
         )
-        Text(name, color = MaterialTheme.colorScheme.primary)
+        Text(name, color = MaterialTheme.colorScheme.tertiary)
     }
 }
 

@@ -54,10 +54,7 @@ class MainActivity : ComponentActivity() {
 
                     ) {
                         composable(Routes.ONBOARDING_SCREEN) {
-
-                            OnboardingScreen(
-                                navController,
-                                )
+                            OnboardingScreen(navController,)
                         }
                         composable(Routes.LOCATION_SCREEN) {
                             LocationScreen(navController)

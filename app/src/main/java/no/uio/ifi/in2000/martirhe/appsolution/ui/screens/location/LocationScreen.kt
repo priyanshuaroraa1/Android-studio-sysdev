@@ -49,8 +49,7 @@ fun LocationScreen(navController: NavController) {
         val snackbarHostState = remember { SnackbarHostState() }
         var locationPermissionGranted by remember { mutableStateOf(false) }
         var lastKnownLocation: Location? by remember { mutableStateOf(null) }
-        val fusedLocationClient: FusedLocationProviderClient =
-            LocationServices.getFusedLocationProviderClient(context)
+        val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
 
         val locationPermissionLauncher = rememberLauncherForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -61,25 +60,24 @@ fun LocationScreen(navController: NavController) {
                     try {
                         val location = fusedLocationClient.lastLocation.await()
                         if (location != null) {
-                            // Oppdaterer lastKnownLocation etter å sjekket null-verdi
                             lastKnownLocation = location
-                            // Viser posisjon
-                            snackbarHostState.showSnackbar("Posisjonen din er godkjent!")
-                            snackbarHostState.showSnackbar("Godkjent - Latitude: ${location.latitude}, Longitude: ${location.longitude}")
+                            snackbarHostState.showSnackbar("Takk for at du deler posisjonen din", duration = SnackbarDuration.Short)
+                            //snackbarHostState.showSnackbar("Godkjent - Latitude: ${location.latitude}, Longitude: ${location.longitude}")
                             navController.navigate(Routes.NOTIFICATION_SCREEN)
                         } else {
-                            // Vis man ikke finner posisjon
                             lastKnownLocation = null
-                            snackbarHostState.showSnackbar("Posisjon ikke funnet.")
+                            snackbarHostState.showSnackbar("Posisjon din ble dessverre ikke funnet.", duration = SnackbarDuration.Short)
+                            navController.navigate(Routes.NOTIFICATION_SCREEN)
                         }
                     } catch (e: Exception) {
-                        // Exception handling
-                        snackbarHostState.showSnackbar("Feil med å finne posisjon: ${e.localizedMessage}")
+                        snackbarHostState.showSnackbar("Feil med å finne posisjonen din: ${e.localizedMessage}", duration = SnackbarDuration.Short)
+                        navController.navigate(Routes.NOTIFICATION_SCREEN)
                     }
                 }
             } else {
                 coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Tillatelse avslått.")
+                    snackbarHostState.showSnackbar("Tillatelse avslått.", duration = SnackbarDuration.Short)
+                    navController.navigate(Routes.NOTIFICATION_SCREEN)
                 }
             }
         }
@@ -117,7 +115,8 @@ fun LocationScreen(navController: NavController) {
                     style = MaterialTheme.typography.headlineLarge.copy(
                         fontSize = 26.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.secondary
+                        color = MaterialTheme.colorScheme.secondary,
+                        fontFamily = FontFamily(Font(R.font.font))
                     ),
                     textAlign = TextAlign.Center,
                 )
@@ -175,8 +174,8 @@ fun LocationScreen(navController: NavController) {
                 Button(onClick = {
                     coroutineScope.launch {
                         if (snackbarHostState.showSnackbar(
-                                "We strongly recommend activating location services.",
-                                actionLabel = "Go ahead anyways",
+                                "Vi anbefaler å aktivere lokasjonstjenester.",
+                                actionLabel = "Gå videre uansett",
                             ) == SnackbarResult.ActionPerformed
                         ) {
                             navController.navigate(Routes.NOTIFICATION_SCREEN)

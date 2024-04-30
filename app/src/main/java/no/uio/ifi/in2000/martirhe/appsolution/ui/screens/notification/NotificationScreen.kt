@@ -30,7 +30,6 @@ import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.martirhe.appsolution.R
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun NotificationScreen(navController: NavController) {
@@ -47,19 +46,19 @@ fun NotificationScreen(navController: NavController) {
         val snackbarHostState = remember { SnackbarHostState() }
         val notificationPermissionGranted = remember { mutableStateOf(false) }
 
-        // Define the permission launcher
         val notificationPermissionLauncher = rememberLauncherForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
                 notificationPermissionGranted.value = true
                 coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Notification permission granted.")
-                    navController.navigate(Routes.HOME_SCREEN) // Assuming "homeScreen" is your destination after permissions
+                    snackbarHostState.showSnackbar("Notification permission granted.", duration = SnackbarDuration.Short)
+                    navController.navigate(Routes.HOME_SCREEN)
                 }
             } else {
                 coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Notification permission denied.")
+                    snackbarHostState.showSnackbar("Notification permission denied.", duration = SnackbarDuration.Short)
+                    navController.navigate(Routes.HOME_SCREEN)
                 }
             }
         }
@@ -92,9 +91,7 @@ fun NotificationScreen(navController: NavController) {
                             color = MaterialTheme.colorScheme.secondary
                         ),
                         textAlign = TextAlign.Center,
-                        fontFamily = FontFamily(
-                            Font(R.font.font1)
-                        )
+                        fontFamily = FontFamily(Font(R.font.font))
                     )
 
                     Spacer(modifier = Modifier.height(32.dp))
