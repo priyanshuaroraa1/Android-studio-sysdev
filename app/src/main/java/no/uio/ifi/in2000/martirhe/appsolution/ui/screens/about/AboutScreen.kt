@@ -1,5 +1,6 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.screens.about
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
@@ -57,9 +58,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import no.uio.ifi.in2000.martirhe.appsolution.R
-import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AboutScreen(navController: NavController) {
 

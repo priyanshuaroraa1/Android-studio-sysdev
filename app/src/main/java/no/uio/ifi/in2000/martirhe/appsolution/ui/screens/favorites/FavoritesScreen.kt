@@ -26,11 +26,11 @@ import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.WarningIconColor
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.LargeHeader
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.MediumHeader
+import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.WarningIcon
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
 
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.home.HomeViewModel
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.home.MetAlertUiState
-import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.home.WarningIcon
 
 
 @Composable

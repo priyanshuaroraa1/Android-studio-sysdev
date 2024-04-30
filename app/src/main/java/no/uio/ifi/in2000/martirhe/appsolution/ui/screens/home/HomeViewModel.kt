@@ -145,7 +145,6 @@ class HomeViewModel @Inject constructor(
     fun onFavouriteClick(
         swimspot: Swimspot
     ) {
-        Log.i("GOT HERE", swimspot.favourited.toString() + ", " + swimspot.original.toString())
         when (swimspot.favourited to swimspot.original) {
             false to true -> makeSwimspotFavourite(swimspot)
             true to true -> makeSwimspotNotFavourite(swimspot)
@@ -353,7 +352,6 @@ class HomeViewModel @Inject constructor(
 
             }
         }
-
     }
 
     fun getSearchBarResults(queryString: String): List<Swimspot> {
@@ -456,7 +454,7 @@ class HomeViewModel @Inject constructor(
     ) {
         updateSearchbarText("")
         updateSearchbarActive(false)
-        updateSelectedSwimspot(swimspot)
+        onSwimspotPinClick(swimspot)
         moveCamera(swimspot.getLatLng())
         expandBottomSheet(coroutineScope = coroutineScope)
     }
@@ -474,7 +472,6 @@ class HomeViewModel @Inject constructor(
             homeState.copy(searchBarActive = searchBarActive)
         }
     }
-
 
     fun loadLocationForecast(lat: Double, lon: Double) {
         viewModelScope.launch(Dispatchers.IO) {
