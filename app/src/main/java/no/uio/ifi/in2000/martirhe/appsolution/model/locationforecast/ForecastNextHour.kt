@@ -14,43 +14,37 @@ data class ForecastNextHour(
     val windFromDirection: Double,
     val windSpeed: Double,
 ) {
-    fun getTemperatureString(): String {
-        return if (airTemperature == null) {
-            "N/A"
-        } else {
-            airTemperature.roundToInt().toString()
-        }
-    }
+    fun getTemperatureString(): String =
+        airTemperature?.roundToInt()?.toString() ?: "N/A"
 
-    fun getWindSpeedString(): String {
-        return if (windSpeed == null) {
-            "N/A"
-        } else {
-            windSpeed.roundToInt().toString()
-        }
-    }
+    fun getWindSpeedString(): String = windSpeed.roundToInt().toString()
 
     fun getWindDirectionString(): String {
-        return when {
-            windFromDirection < 0 -> "Invalid direction"
-            windFromDirection >= 348.75 || windFromDirection < 11.25 -> "north"
-            windFromDirection >= 11.25 && windFromDirection < 33.75 -> "north_northeast"
-            windFromDirection >= 33.75 && windFromDirection < 56.25 -> "northeast"
-            windFromDirection >= 56.25 && windFromDirection < 78.75 -> "east_northeast"
-            windFromDirection >= 78.75 && windFromDirection < 101.25 -> "east"
-            windFromDirection >= 101.25 && windFromDirection < 123.75 -> "east_southeast"
-            windFromDirection >= 123.75 && windFromDirection < 146.25 -> "southeast"
-            windFromDirection >= 146.25 && windFromDirection < 168.75 -> "south_southeast"
-            windFromDirection >= 168.75 && windFromDirection < 191.25 -> "south"
-            windFromDirection >= 191.25 && windFromDirection < 213.75 -> "south_southwest"
-            windFromDirection >= 213.75 && windFromDirection < 236.25 -> "southwest"
-            windFromDirection >= 236.25 && windFromDirection < 258.75 -> "west_southwest"
-            windFromDirection >= 258.75 && windFromDirection < 281.25 -> "west"
-            windFromDirection >= 281.25 && windFromDirection < 303.75 -> "west_northwest"
-            windFromDirection >= 303.75 && windFromDirection < 326.25 -> "northwest"
-            windFromDirection >= 326.25 && windFromDirection < 348.75 -> "north_northwest"
-            else -> "Invalid direction"
+        if (windFromDirection < 0 || windFromDirection >= 360) {
+            return "Invalid direction"
         }
+
+        val directionRanges = mapOf(
+            348.75f..360.0f to "north",
+            0.0f..11.25f to "north",
+            11.25f..33.75f to "north_northeast",
+            33.75f..56.25f to "northeast",
+            56.25f..78.75f to "east_northeast",
+            78.75f..101.25f to "east",
+            101.25f..123.75f to "east_southeast",
+            123.75f..146.25f to "southeast",
+            146.25f..168.75f to "south_southeast",
+            168.75f..191.25f to "south",
+            191.25f..213.75f to "south_southwest",
+            213.75f..236.25f to "southwest",
+            236.25f..258.75f to "west_southwest",
+            258.75f..281.25f to "west",
+            281.25f..303.75f to "west_northwest",
+            303.75f..326.25f to "northwest",
+            326.25f..348.75f to "north_northwest"
+        )
+
+        return directionRanges.entries.firstOrNull { windFromDirection in it.key }?.value ?: "Invalid direction"
     }
 
 
