@@ -30,13 +30,9 @@
     <string name="pagefour_subtitle">Søk og Oppdag</string>
     <string name="pagefour_bodytext">Bruk vårt søkeverktøy for å finne badesteder basert på dine preferanser, fra vannkvalitet til værforhold</string>
 
-    <string name="location_maintitle">Vi trenger din posisjon</string>
-    <string name="location_subtitle">Din posisjon</string>
-    <string name="location_bodytext">Ja, Ja, Ja</string>
-
-    <string name="onboarding_skip">Skip</string>
-    <string name="onboarding_next">Next</string>
-    <string name="onboarding_done">Done</string>
+    <string name="onboarding_skip">Hopp over</string>
+    <string name="onboarding_next">Neste</string>
+    <string name="onboarding_done">Ferdig</string>
 
     //Location Screen
     <string name="location_screen_label">Plask ønsker å bruke posisjonen din</string>
@@ -49,6 +45,12 @@
     <string name="notification_screen_subtext">Vi trenger tillatelse til å sende deg varsler angående oppdateringen og varsler ved dine favoritt badesteder.</string>
     <string name="notification_screen_accept">Godta</string>
     <string name="notification_screen_decline">Avvis</string>
+
+    //WaterSafetyRulesScreen
+    <string name="watersafetyrulesscreen_topbar">Badevett</string>
+    <string name="watersafetyrulesscreen_label">Badevett Regler</string>
+    <string name="watersafetyrulesscreen_rules">1. Lær å svømme \n 2. Før du går uti, forsikre deg om at du kan komme opp igjen \n 3. Bad helst sammen med andre \n 4. Stup bare der det er dypt \n 5. Svøm langs land \n 6. Svøm ikke under brygge eller foran stupebrett \n 7. Dytt ikke andre ut i vannet og dukk aldri noen under vann \n 8. Hold deg på land hvis du føler deg kald eller uvel \n 9. Rop på hjelp bare hvis du er i fare – aldri ellers!</string>
+    <string name="watersafetyrulesscreen_readmore">Les mer om badevett regler her</string>
 
     // WeatherInfoDialog
     <string name="weather_info_dialog_header">Værdata</string>

@@ -1,6 +1,7 @@
 package no.uio.ifi.in2000.martirhe.appsolution
 
 import FavoritesScreen
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,6 +21,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.home.HomeScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.location.LocationScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.notification.NotificationScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.onboarding.OnboardingScreen
+import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.watersafetyrules.WaterSafetyRulesScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.theme.AppSolutionTheme
 import no.uio.ifi.in2000.martirhe.appsolution.util.PreferencesManager
 import javax.inject.Inject
@@ -29,6 +31,7 @@ class MainActivity : ComponentActivity() {
 
     @Inject lateinit var preferencesManager: PreferencesManager
 
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -46,7 +49,7 @@ class MainActivity : ComponentActivity() {
                             BottomNavBar(navController = navController)
                         }
                     }
-                ) { innerPadding ->
+                ) {/* innerPadding ->
                     NavHost(
                         navController = navController,
                         startDestination = startDestination,
@@ -66,14 +69,13 @@ class MainActivity : ComponentActivity() {
                             HomeScreen()
                         }
                         composable(Routes.FAVORITES_SCREEN) {
-                            FavoritesScreen(
-                                navController = navController
-                            )
+                            FavoritesScreen(navController = navController)
                         }
                         composable(Routes.ABOUT_US_SCREEN) {
                             AboutScreen(navController = navController)
                         }
-                    }
+                    }*/
+                    WaterSafetyRulesScreen(navController = navController)
                 }
             }
         }

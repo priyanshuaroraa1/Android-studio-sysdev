@@ -95,7 +95,7 @@ fun AboutScreen(navController: NavController) {
                 )
             },
             containerColor = MaterialTheme.colorScheme.tertiary
-        ) { innerPadding ->
+        ) {
             Column(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
@@ -105,7 +105,6 @@ fun AboutScreen(navController: NavController) {
             ) {
 
                 Column(
-                    //horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Image(
@@ -168,22 +167,22 @@ fun AboutScreen(navController: NavController) {
                         Spacer(Modifier.height(8.dp))
 
                         Row(modifier = Modifier
-                            .horizontalScroll(rememberScrollState())
                             .align(Alignment.CenterHorizontally)
                         ) {
-                            Ansatte("Priyanshu", R.drawable.priyanshu)
+                            TeamMembers("Priyanshu", R.drawable.priyanshu)
                             Spacer(modifier = Modifier.width(8.dp))
 
-                            Ansatte("Vetle", R.drawable.vetle)
+                            TeamMembers("Vetle", R.drawable.vetle)
                             Spacer(modifier = Modifier.width(8.dp))
 
-                            Ansatte("Bernd", R.drawable.bernd)
+                            TeamMembers("Bernd", R.drawable.bernd)
                             Spacer(modifier = Modifier.width(8.dp))
 
-                            Ansatte("Martine", R.drawable.martine)
+                            TeamMembers("Martine", R.drawable.martine)
                             Spacer(modifier = Modifier.width(8.dp))
 
-                            Ansatte("Sindre", R.drawable.sindre)
+                            TeamMembers("Sindre", R.drawable.sindre)
+                            Spacer(modifier = Modifier.width(8.dp))
                         }
 
                         Spacer(Modifier.height(16.dp))
@@ -330,11 +329,11 @@ fun AboutScreen(navController: NavController) {
     }
 }
 @Composable
-fun Ansatte(name: String, drawableId: Int) {
+fun TeamMembers(name: String, drawableId: Int) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Image(
             painter = painterResource(id = drawableId),
-            contentDescription = "Ansatte Image",
+            contentDescription = "Team ansatte bilder",
             modifier = Modifier
                 .size(55.dp)
                 .clip(CircleShape)

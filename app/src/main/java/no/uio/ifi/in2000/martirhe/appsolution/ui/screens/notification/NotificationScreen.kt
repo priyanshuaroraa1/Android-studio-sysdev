@@ -52,12 +52,12 @@ fun NotificationScreen(navController: NavController) {
             if (isGranted) {
                 notificationPermissionGranted.value = true
                 coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Notification permission granted.", duration = SnackbarDuration.Short)
+                    snackbarHostState.showSnackbar("Varslings tillatelse godkjent", duration = SnackbarDuration.Short)
                     navController.navigate(Routes.HOME_SCREEN)
                 }
             } else {
                 coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Notification permission denied.", duration = SnackbarDuration.Short)
+                    snackbarHostState.showSnackbar("Varslings tillatelse avvist", duration = SnackbarDuration.Short)
                     navController.navigate(Routes.HOME_SCREEN)
                 }
             }
@@ -130,7 +130,7 @@ fun NotificationScreen(navController: NavController) {
                     Button(
                         onClick = {
                             coroutineScope.launch {
-                                snackbarHostState.showSnackbar("You can enable notification permissions in settings.")
+                                snackbarHostState.showSnackbar("Du kan aktivere varslingstillatelser i innstillinger")
                             }
                         },
                         colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.secondary),)
