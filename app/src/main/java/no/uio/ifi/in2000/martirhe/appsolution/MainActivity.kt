@@ -95,7 +95,7 @@ class MainActivity : ComponentActivity() {
                         if (!isNetworkAvailable()) {
                             scope.launch {
                                 snackbarHostState.showSnackbar(
-                                    "Ingen internettforbindelse. Noen funksjoner vil ikke være tilgjengelige.",
+                                    "Ingen internettforbindelse. Noen funksjoner vil ikke være tilgjengelige",
                                     duration = SnackbarDuration.Long
                                 )
                             }
