@@ -244,13 +244,25 @@ fun HomeScreen(
                     }
                 }
                 MapEffect(
+                    key1 = homeState.selectSwimspotQueue
+                ) {map ->
+                    map.setOnMapLoadedCallback {
+                        if (homeState.selectSwimspotQueue != null) {
+                            homeViewModel.popFromSelectSwimspotQueue()
+                        }
+                    }
+                }
+                MapEffect(
 //                    key1 = metAlertUiState,
 //                    key2 = homeState.allSwimspots, // TODO: Usikker på om jeg trenger denne
                 ) { map ->
 
                     map.setOnMapLoadedCallback {
                         coroutineScope.launch(Dispatchers.Default) {
-                            homeViewModel.createAllMarkers(map)
+                            homeViewModel.createAllMarkers(
+                                map,
+                                cameraPositionState.position.target
+                                )
 
                         }
                     }

@@ -72,6 +72,7 @@ fun BottomNavBar(
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val currentDestination = navBackStackEntry?.destination
 
     Box(
         Modifier
@@ -100,30 +101,47 @@ fun BottomNavBar(
                     ),
                     selected = currentRoute == item.route,
                     onClick = {
-                        // Check if the target route is the home screen
-                        if (item.route == Routes.HOME_SCREEN) {
-                            // Pop everything off the navigation stack until we get to the home screen
-                            navController.popBackStack(navController.graph.findStartDestination().id, inclusive = false)
-                        } else {
-                            // When navigating to a screen other than the home screen
-                            // Check if we're not already on that screen
-                            if (currentRoute != item.route) {
-                                navController.navigate(item.route) {
-                                    // Restore state when reselecting a previously selected item
-                                    restoreState = true
 
-                                    // Avoid multiple copies of the same destination
-                                    launchSingleTop = true
-
-                                    // Only pop up to the home destination if it's not the home screen
-                                    // This is to preserve the home screen's state and avoid recreating it
-                                    popUpTo(Routes.HOME_SCREEN) {
-                                        // Keep the home screen as the root and do not pop it
-                                        saveState = true
-                                    }
-                                }
+                        navController.navigate(item.route) {
+                            // Pop up to the start destination of the graph to
+                            // avoid building up a large stack of destinations
+                            // on the back stack as users select items
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
                             }
+                            // Avoid multiple copies of the same destination when
+                            // reselecting the same item
+                            launchSingleTop = true
+                            // Restore state when reselecting a previously selected item
+                            restoreState = true
                         }
+
+
+//
+//                        // Check if the target route is the home screen
+//                        if (item.route == Routes.HOME_SCREEN) {
+//                            // Pop everything off the navigation stack until we get to the home screen
+//                            navController.popBackStack(navController.graph.findStartDestination().id, inclusive = false)
+//                        } else {
+//                            // When navigating to a screen other than the home screen
+//                            // Check if we're not already on that screen
+//                            if (currentRoute != item.route) {
+//                                navController.navigate(item.route) {
+//                                    // Restore state when reselecting a previously selected item
+//                                    restoreState = true
+//
+//                                    // Avoid multiple copies of the same destination
+//                                    launchSingleTop = true
+//
+//                                    // Only pop up to the home destination if it's not the home screen
+//                                    // This is to preserve the home screen's state and avoid recreating it
+//                                    popUpTo(Routes.HOME_SCREEN) {
+//                                        // Keep the home screen as the root and do not pop it
+//                                        saveState = true
+//                                    }
+//                                }
+//                            }
+//                        }
                     }
                 )
             }

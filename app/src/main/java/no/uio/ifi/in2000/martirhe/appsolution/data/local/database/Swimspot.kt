@@ -47,13 +47,13 @@ data class Swimspot(
                     WarningIconColor.GREEN to true -> BitmapDescriptorFactory.fromResource(R.drawable.pin_blue_star_38)
                     WarningIconColor.GREEN to false -> BitmapDescriptorFactory.fromResource(R.drawable.pin_blue_38)
                     else -> {
-                            BitmapDescriptorFactory.fromResource(R.drawable.pin_blue_38)
+                            BitmapDescriptorFactory.fromResource(R.drawable.pin_blue)
                         }
                     }
 
                 }
 
-            else -> {markerIcon = BitmapDescriptorFactory.fromResource(R.drawable.pin_blue_38)}
+            else -> {markerIcon = BitmapDescriptorFactory.fromResource(R.drawable.pin_blue)}
         }
         return markerIcon
     }
