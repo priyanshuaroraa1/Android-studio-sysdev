@@ -76,6 +76,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.WarningIconColor
 import no.uio.ifi.in2000.martirhe.appsolution.model.oceanforecast.OceanForecastRightNow
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.HomeSearchBar
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.MediumHeader
+import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.SkeletonLoadingCard
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.SmallHeader
 
 
@@ -340,7 +341,6 @@ fun BottomSheetSwimspotContent(
 
                     ) {
                         val metAlertStateNew = homeViewModel.metAlertUiState.collectAsState().value
-//                        val homeState = homeViewModel.homeState.collectAsState().value
 
                         metAlertStateNew.let { state ->
                             when (state) {
@@ -395,7 +395,9 @@ fun BottomSheetSwimspotContent(
                                 }
 
                                 is LocationForecastUiState.Loading -> {
-                                    Text(text = "Loading")
+                                    WeatherNextHourSkeletonLoading()
+
+
                                 }
 
                                 is LocationForecastUiState.Error -> {
@@ -443,10 +445,7 @@ fun BottomSheetSwimspotContent(
                             }
 
                             is LocationForecastUiState.Loading -> {
-                                Row {
-                                    Spacer(modifier = Modifier.width(outerEdgePaddingValues))
-                                    Text(text = "Loading")
-                                }
+                                WeatherNextWeekSkeletonLoading()
                             }
 
                             is LocationForecastUiState.Error -> {
@@ -560,6 +559,7 @@ fun WeatherNextWeekCard(
     oceanForecastRightNow: OceanForecastRightNow?
 ) {
 
+
     Row {
         Spacer(modifier = Modifier.width(outerEdgePaddingValues))
         SmallHeader(text = "Neste 7 dager")
@@ -594,7 +594,7 @@ fun WeatherNextWeekCard(
                                 smallText = "i lufta",
                                 smallerSize = true,
                             )
-                            if (oceanForecastRightNow != null) {
+                            if (oceanForecastRightNow != null && oceanForecastRightNow.isSaltWater) {
                                 LargeAndSmallText(
                                     largeText = oceanForecastRightNow.getWaterTemperatureString() + "° ",
                                     smallText = "i vannet",
@@ -616,6 +616,54 @@ fun WeatherNextWeekCard(
 
 }
 
+
+@Composable
+fun WeatherNextHourSkeletonLoading() {
+    Column(
+        Modifier.padding(vertical = dimensionResource(id = R.dimen.padding_medium))
+    ) {
+        Spacer(modifier = Modifier.height(8.dp))
+        SkeletonLoadingCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(32.dp)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        SkeletonLoadingCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(112.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+        SkeletonLoadingCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(84.dp)
+        )
+    }
+}
+
+@Composable
+fun WeatherNextWeekSkeletonLoading() {
+    Column(
+        Modifier.padding(all = dimensionResource(id = R.dimen.padding_medium))
+    ) {
+        Spacer(modifier = Modifier.height(8.dp))
+        SkeletonLoadingCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(32.dp)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        SkeletonLoadingCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(160.dp)
+        )
+    }
+}
 
 @Composable
 fun WeatherNextHourCard(

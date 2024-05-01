@@ -20,6 +20,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.home.HomeScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.location.LocationScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.notification.NotificationScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.onboarding.OnboardingScreen
+import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.profile.ProfileScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.theme.AppSolutionTheme
 import no.uio.ifi.in2000.martirhe.appsolution.util.PreferencesManager
 import javax.inject.Inject
@@ -27,7 +28,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject lateinit var preferencesManager: PreferencesManager
+    @Inject
+    lateinit var preferencesManager: PreferencesManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +39,8 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
-                val startDestination = if (preferencesManager.isOnboardingShown) Routes.HOME_SCREEN else Routes.ONBOARDING_SCREEN
+                val startDestination =
+                    if (preferencesManager.isOnboardingShown) Routes.HOME_SCREEN else Routes.ONBOARDING_SCREEN
 
 
                 Scaffold(
@@ -52,12 +55,12 @@ class MainActivity : ComponentActivity() {
                         startDestination = startDestination,
                         modifier = Modifier.padding(innerPadding),
 
-                    ) {
+                        ) {
                         composable(Routes.ONBOARDING_SCREEN) {
 
                             OnboardingScreen(
                                 navController,
-                                )
+                            )
                         }
                         composable(Routes.LOCATION_SCREEN) {
                             LocationScreen(navController)
@@ -76,9 +79,15 @@ class MainActivity : ComponentActivity() {
                         composable(Routes.ABOUT_US_SCREEN) {
                             AboutScreen(navController = navController)
                         }
+                        composable(Routes.PROFILE_SCREEN) {
+                            ProfileScreen(
+                                navController = navController
+                            )
+                        }
                     }
                 }
             }
         }
+
     }
 }

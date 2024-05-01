@@ -3,7 +3,7 @@ package no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.navbar
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,21 +29,29 @@ sealed class BottomNavItem(
 ) {
     object Home :
         BottomNavItem(
-            "Home",
+            "Hjem",
             Icons.Default.Home,
             Routes.HOME_SCREEN
         )
 
-    object AboutUs :
+//    object AboutUs :
+//        BottomNavItem(
+//            "About us",
+//            Icons.Default.Info,
+//            Routes.ABOUT_US_SCREEN
+//        )
+
+    object Profile :
         BottomNavItem(
-            "About us",
-            Icons.Default.Info,
-            Routes.ABOUT_US_SCREEN
+            "Profil",
+            Icons.Default.Person,
+            Routes.PROFILE_SCREEN
         )
+
 
     object Favorites :
         BottomNavItem(
-            "Favorites",
+            "Favoritter",
             Icons.Default.Star,
             Routes.FAVORITES_SCREEN
         )
@@ -59,7 +67,7 @@ fun BottomNavBar(
     val items = listOf(
         BottomNavItem.Favorites,
         BottomNavItem.Home,
-        BottomNavItem.AboutUs,
+        BottomNavItem.Profile,
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
