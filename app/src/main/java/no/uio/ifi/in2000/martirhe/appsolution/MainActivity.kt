@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
                             BottomNavBar(navController = navController)
                         }
                     }
-                ) {/* innerPadding ->
+                ) { innerPadding ->
                     NavHost(
                         navController = navController,
                         startDestination = startDestination,
@@ -74,8 +74,10 @@ class MainActivity : ComponentActivity() {
                         composable(Routes.ABOUT_US_SCREEN) {
                             AboutScreen(navController = navController)
                         }
-                    }*/
-                    WaterSafetyRulesScreen(navController = navController)
+                        composable(Routes.ABOUT_US_SCREEN) {
+                            WaterSafetyRulesScreen(navController = navController)
+                        }
+                    }
                 }
             }
         }
