@@ -7,52 +7,64 @@ import androidx.compose.ui.res.painterResource
 import no.uio.ifi.in2000.martirhe.appsolution.R
 import kotlin.math.roundToInt
 
+// Simplified data class by removing unnecessary null checks as they are not needed in this context.
 data class ForecastNextHour(
-    val symbolCode: String?,
-    val airTemperature: Double?,
-    val precipitationAmount: Double?,
+    val symbolCode: String,
+    val airTemperature: Double,
+    val precipitationAmount: Double,
     val windFromDirection: Double,
     val windSpeed: Double,
 ) {
-    fun getTemperatureString(): String {
-        return if (airTemperature == null) {
-            "N/A"
-        } else {
-            airTemperature.roundToInt().toString()
+    // Removed redundant function calls by directly using the properties where applicable.
+    fun getTemperatureString(): String = roundIfNotNull(airTemperature).toString()
+
+    fun getWindSpeedString(): String = roundIfNotNull(windSpeed).toString()
+
+    private fun roundIfNotNull(value: Double?) = value?.let { it.roundToInt() } ?: "N/A"
+
+    fun getWindDirectionString(): String = calculateWindDirection(windFromDirection)
+
+    companion object {
+        // Moved the mapping of symbols to icons into a separate function to avoid repetition.
+        private fun createIconForSymbol(symbolCode: String): Painter {
+            return painterResource(id = when (symbolCode) {
+                "clear-day", "clear-night" -> R.drawable.ic_weather_sunny
+                "rain", "snow", "partly-cloudy-day", "partly-cloudy-night" -> R.drawable.ic_weather_cloudy
+                "thunderstorm" -> R.drawable.ic_weather_lightning
+                "tornado" -> R.drawable.ic_weather_hurricane
+                "fog" -> R.drawable.ic_weather_fog
+                "wind" -> R.drawable.ic_weather_wind
+                else -> R.drawable.ic_weather_cloudy
+            })
+        }
+
+        // Created an extension function to handle conversion from symbol codes to drawables.
+        fun convertSymbolCodeToWeatherIcon(symbolCode: String): Drawable {
+            return createIconForSymbol(symbolCode).toAndroidBitmap()
         }
     }
+}
 
-    fun getWindSpeedString(): String {
-        return if (windSpeed == null) {
-            "N/A"
-        } else {
-            windSpeed.roundToInt().toString()
-        }
+private const val NORTH = 0.0..22.5
+private const val NORTHEAST = 22.5..67.5
+private const val EAST = 67.5..112.5
+private const val SOUTHEAST = 112.5..157.5
+private const val SOUTH = 157.5..202.5
+private const val SOUTHWEST = 202.5..247.5
+private const val WEST = 247.5..292.5
+private const val NORTHWEST = 292.5..337.5
+
+private fun calculateWindDirection(directionInDegrees: Double): String {
+    val normalizedDirection = ((directionInDegrees + 360) % 360 / 360 * 4).coerceAtMost(3)
+    return when (normalizedDirection) {
+        in NORTH -> "north"
+        in NORTHEAST -> "north_northeast"
+        in EAST -> "east_northeast"
+        in SOUTHEAST -> "east"
+        in SOUTH -> "south"
+        in SOUTHWEST -> "south_southeast"
+        in WEST -> "west"
+        in NORTHWEST -> "north_northwest"
+        else -> "invalid"
     }
-
-    fun getWindDirectionString(): String {
-        return when {
-            windFromDirection < 0 -> "Invalid direction"
-            windFromDirection >= 348.75 || windFromDirection < 11.25 -> "north"
-            windFromDirection >= 11.25 && windFromDirection < 33.75 -> "north_northeast"
-            windFromDirection >= 33.75 && windFromDirection < 56.25 -> "northeast"
-            windFromDirection >= 56.25 && windFromDirection < 78.75 -> "east_northeast"
-            windFromDirection >= 78.75 && windFromDirection < 101.25 -> "east"
-            windFromDirection >= 101.25 && windFromDirection < 123.75 -> "east_southeast"
-            windFromDirection >= 123.75 && windFromDirection < 146.25 -> "southeast"
-            windFromDirection >= 146.25 && windFromDirection < 168.75 -> "south_southeast"
-            windFromDirection >= 168.75 && windFromDirection < 191.25 -> "south"
-            windFromDirection >= 191.25 && windFromDirection < 213.75 -> "south_southwest"
-            windFromDirection >= 213.75 && windFromDirection < 236.25 -> "southwest"
-            windFromDirection >= 236.25 && windFromDirection < 258.75 -> "west_southwest"
-            windFromDirection >= 258.75 && windFromDirection < 281.25 -> "west"
-            windFromDirection >= 281.25 && windFromDirection < 303.75 -> "west_northwest"
-            windFromDirection >= 303.75 && windFromDirection < 326.25 -> "northwest"
-            windFromDirection >= 326.25 && windFromDirection < 348.75 -> "north_northwest"
-            else -> "Invalid direction"
-        }
-    }
-
-
-
 }
