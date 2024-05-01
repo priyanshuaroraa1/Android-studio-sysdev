@@ -16,11 +16,11 @@
     //Onboarding
     <string name="pageone_maintitle">Velkommen til Plask</string>
     <string name="pageone_subtitle">Den ultimate badeguiden for dine badeeventyr i Norge</string>
-    <string name="pageone_bodytext">Utforsk hundrevis av badeplasser og oppdag alt fra vanntemperaturer til vannkvalitet og aktuelle farevarsler</string>
+    <string name="pageone_bodytext">Utforsk hundrevis av badeplasser og oppdag alt fra vann og land temperaturer til aktuelle farevarsler</string>
 
     <string name="pagetwo_maintitle">Oppdag Badeplasser</string>
     <string name="pagetwo_subtitle">Plask er din ultimate følgesvenn når du skal finne den perfekte badeplassen for dine behov</string>
-    <string name="pagetwo_bodytext">Utforsk steder i nærheten, sjekk vannkvaliteten og vær alltid oppdatert på eventuelle advarsler før du tar et forfriskende dykk</string>
+    <string name="pagetwo_bodytext">Utforsk steder i nærheten, sjekk generell informasjon og vær alltid oppdatert på eventuelle advarsler før du tar et forfriskende dykk</string>
 
     <string name="pagethree_maintitle">Legg til Favoritter</string>
     <string name="pagethree_subtitle">Gjør Plask til din personlige badeassistent ved å legge til favorittbadeplassene dine</string>

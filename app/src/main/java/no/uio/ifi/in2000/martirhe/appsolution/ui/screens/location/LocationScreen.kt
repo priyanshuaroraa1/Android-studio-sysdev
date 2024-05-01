@@ -61,12 +61,10 @@ fun LocationScreen(navController: NavController) {
                         val location = fusedLocationClient.lastLocation.await()
                         if (location != null) {
                             lastKnownLocation = location
-                            snackbarHostState.showSnackbar("Takk for at du deler posisjonen din", duration = SnackbarDuration.Short)
                             //snackbarHostState.showSnackbar("Godkjent - Latitude: ${location.latitude}, Longitude: ${location.longitude}")
                             navController.navigate(Routes.NOTIFICATION_SCREEN)
                         } else {
                             lastKnownLocation = null
-                            snackbarHostState.showSnackbar("Posisjon din ble dessverre ikke funnet.", duration = SnackbarDuration.Short)
                             navController.navigate(Routes.NOTIFICATION_SCREEN)
                         }
                     } catch (e: Exception) {
