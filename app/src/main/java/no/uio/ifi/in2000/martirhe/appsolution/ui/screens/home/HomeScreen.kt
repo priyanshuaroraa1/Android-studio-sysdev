@@ -77,6 +77,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.model.oceanforecast.OceanForecastR
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.HomeSearchBar
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.MediumHeader
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.SmallHeader
+import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.notification.CreateNotification
 
 
 @SuppressLint("PotentialBehaviorOverride")
@@ -86,6 +87,8 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val homeState = homeViewModel.homeState.collectAsState().value
+    val context = LocalContext.current
+
 //    val metAlertUiState = homeViewModel.metAlertUiState.collectAsState().value
 
     val cameraPositionState = rememberCameraPositionState {
@@ -175,6 +178,8 @@ fun HomeScreen(
                         IconButton(
                             onClick = {
                                 homeViewModel.onFavouriteClick(homeState.selectedSwimspot)
+                                CreateNotification(context, "channel_01", "Favoritt lagt til!","Du har lagt ${homeState.selectedSwimspot.spotName} til favoritter!")
+
                             },
                             modifier = Modifier
                                 .padding(dimensionResource(id = R.dimen.padding_small))
