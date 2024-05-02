@@ -39,6 +39,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,8 +58,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import no.uio.ifi.in2000.martirhe.appsolution.R
+import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.location.LocationViewModel
 import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,6 +70,8 @@ import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
 fun AboutScreen(navController: NavController) {
 
     val context = LocalContext.current
+    val viewModel: LocationViewModel = viewModel()
+    val locationData by viewModel.locationData.observeAsState()
     val interactionSource = remember { MutableInteractionSource() }
 
     MaterialTheme(
@@ -142,6 +148,23 @@ fun AboutScreen(navController: NavController) {
                 )
 
                 Spacer(Modifier.height(16.dp))
+
+                // Displaying location data
+                if (locationData != null) {
+                    Text(
+                        "Current Location: Latitude = ${locationData?.latitude}, Longitude = ${locationData?.longitude}",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                } else {
+                    Text(
+                        "Current Location: Latitude = ${locationData?.latitude}, Longitude = ${locationData?.longitude}",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+
+                Spacer(Modifier.height(30.dp))
 
                 Card(
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary),

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -50,6 +52,12 @@ fun LocationScreen(navController: NavController) {
         var locationPermissionGranted by remember { mutableStateOf(false) }
         var lastKnownLocation: Location? by remember { mutableStateOf(null) }
         val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+        val viewModel: LocationViewModel = viewModel()
+        val locationData by viewModel.locationData.observeAsState()
+
+        LaunchedEffect(Unit) {
+            viewModel.fetchLocation()
+        }
 
         val locationPermissionLauncher = rememberLauncherForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -61,7 +69,6 @@ fun LocationScreen(navController: NavController) {
                         val location = fusedLocationClient.lastLocation.await()
                         if (location != null) {
                             lastKnownLocation = location
-                            //snackbarHostState.showSnackbar("Godkjent - Latitude: ${location.latitude}, Longitude: ${location.longitude}")
                             navController.navigate(Routes.NOTIFICATION_SCREEN)
                         } else {
                             lastKnownLocation = null
@@ -141,6 +148,7 @@ fun LocationScreen(navController: NavController) {
                 Spacer(modifier = Modifier
                     .height(32.dp)
                     .size(32.dp))
+
 
                 //Knapper
                 Button(onClick = {

@@ -52,12 +52,10 @@ fun NotificationScreen(navController: NavController) {
             if (isGranted) {
                 notificationPermissionGranted.value = true
                 coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Varslings tillatelse godkjent", duration = SnackbarDuration.Short)
                     navController.navigate(Routes.HOME_SCREEN)
                 }
             } else {
                 coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Varslings tillatelse avvist", duration = SnackbarDuration.Short)
                     navController.navigate(Routes.HOME_SCREEN)
                 }
             }

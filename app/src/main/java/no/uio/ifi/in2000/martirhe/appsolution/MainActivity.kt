@@ -105,7 +105,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
     private fun isNetworkAvailable(): Boolean {
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = connectivityManager.activeNetwork ?: return false
@@ -117,3 +116,4 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
