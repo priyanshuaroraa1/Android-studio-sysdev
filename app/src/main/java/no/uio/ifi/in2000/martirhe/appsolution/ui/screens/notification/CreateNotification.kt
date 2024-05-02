@@ -13,22 +13,20 @@ import no.uio.ifi.in2000.martirhe.appsolution.R
 fun CreateNotification(context: Context, channelId: String, title: String, text: String) {
     val notificationManager = NotificationManagerCompat.from(context)
 
-    val channel = NotificationChannel(channelId, "Varlsinger", NotificationManager.IMPORTANCE_DEFAULT).apply {
+    val channel = NotificationChannel(channelId, "Varslinger", NotificationManager.IMPORTANCE_DEFAULT).apply {
         description = "Varlsingskanal for Plask"
         lightColor = Color.BLUE
         enableLights(true)
     }
     notificationManager.createNotificationChannel(channel)
 
-    // Build the notification
     val notification = NotificationCompat.Builder(context, channelId)
         .setSmallIcon(R.drawable.pin)
         .setContentTitle(title)
         .setContentText(text)
-        .setPriority(NotificationCompat.PRIORITY_HIGH)
+        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setAutoCancel(true)
         .build()
 
-    // Show the notification
     notificationManager.notify(1, notification)
 }
