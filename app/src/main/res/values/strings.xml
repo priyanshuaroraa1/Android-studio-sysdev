@@ -2,7 +2,7 @@
     <string name="app_name">AppSolution</string>
     <string name="search_bar_placeholder">Søk etter badeplass</string>
 
-    //About Us
+    // About Us
     <string name="about_screen_label">About Plask</string>
     <string name="about_screen_title">Velkommen til Plask</string>
     <string name="about_screen_description">En app som viser aktuelle badetemperaturer for ulike strender og badeplasser \nlangs kysten</string>
@@ -14,7 +14,7 @@
     <string name="about_screen_license">Her skal det stå litt om lisenser og API vi har brukt. Legger til random tekst.\n\nCopyright © [year] [fullname]\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</string>
     <string name="about_screen_apibutton">Lenke til API og lisenser</string>
 
-    //Onboarding
+    // Onboarding
     <string name="pageone_maintitle">Velkommen til Plask</string>
     <string name="pageone_subtitle">Den ultimate badeguiden for dine badeeventyr i Norge</string>
     <string name="pageone_bodytext">Utforsk hundrevis av badeplasser og oppdag alt fra vanntemperaturer til vannkvalitet og aktuelle farevarsler</string>
@@ -39,13 +39,13 @@
     <string name="onboarding_next">Next</string>
     <string name="onboarding_done">Done</string>
 
-    //Location Screen
+    // Location Screen
     <string name="location_screen_label">Plask \n Ønsker å bruke posisjonen din</string>
     <string name="location_screen_subtext">Plask trenger tilgang til din lokasjon for å kunne vise deg nærliggende badeplasser og gi deg nøyaktige vær- og badevilkår. Vi forstår viktigheten av personvern og forsikrer deg om at din lokasjonsdata kun vil bli brukt internt i appen og ikke vil deles med tredjeparter.</string>
     <string name="location_screen_accept">Godta</string>
     <string name="location_screen_decline">Avvis</string>
 
-    //Location Screen
+    // Notification Screen
     <string name="notification_screen_label">Plask \n Ønsker å sende deg varslinger</string>
     <string name="notification_screen_subtext">Vi trenger tillatelse til å sende deg varsler angående oppdateringen og varsler ved dine favoritt badesteder.</string>
     <string name="notification_screen_accept">Godta</string>
@@ -59,6 +59,9 @@
     <string name="accessability_options_header">Tilgjengelighet</string>
     <string name="accessability_options_dialog_body">Tilgjengelighetsdata er hentet fra Google Maps, og det kan derfor forekomme avvik. Informasjonen forteller om fremkommelighet med rullestol, HC-toalett og HC-parkering. Hvis ingen informasjon er oppgitt, kan det både bety at badeplassen ikke er tilrettelagt, eller at vi mangler informasjon.</string>
 
+    // ProfileScreen
+    <string name="profile_header">Min profil</string>
+    <string name="settings_header">Instillinger</string>
 
 
 </resources>

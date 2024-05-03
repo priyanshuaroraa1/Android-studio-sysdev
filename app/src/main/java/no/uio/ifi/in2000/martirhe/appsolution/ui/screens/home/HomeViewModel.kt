@@ -15,13 +15,20 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.compose.CameraPositionState
+import com.google.maps.android.ktx.utils.sphericalDistance
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.client.plugins.ResponseException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -69,6 +76,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onSwimspotPinClick(swimspot: Swimspot) {
+        Log.i("SwimspotPinCLick registered", swimspot.spotName)
         updateSelectedSwimspot(swimspot)
         updateBottomSheetPosition(true)
         loadLocationForecast(swimspot.lat, swimspot.lon)
@@ -101,6 +109,22 @@ class HomeViewModel @Inject constructor(
         homeState.value.customMarker?.remove()
         _homeState.update { homeState ->
             homeState.copy(customMarker = marker)
+        }
+    }
+
+    fun updateSelectSwimspotQueue(swimspot: Swimspot) {
+        _homeState.update { homeState ->
+            homeState.copy(selectSwimspotQueue = swimspot)
+        }
+    }
+
+    fun popFromSelectSwimspotQueue() {
+        val swimspot = homeState.value.selectSwimspotQueue
+        _homeState.update { homeState ->
+            homeState.copy(selectSwimspotQueue = null)
+        }
+        if (swimspot != null) {
+            onSwimspotPinClick(swimspot)
         }
     }
 
@@ -239,27 +263,61 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun createAllMarkers(map: GoogleMap) {
+    fun createAllMarkers(
+        map: GoogleMap,
+        center: LatLng) {
         Log.i("Function call", "createAllMarkers")
 
         _homeState.update { homeState ->
             homeState.copy(map = map)
         }
 
-        homeState.value.allSwimspots.forEach { swimspot ->
-            viewModelScope.launch(Dispatchers.Default) {
-                val icon =
-                    swimspot.getMarkerIcon(metAlertUiState.value) // Assuming this doesn't need to be on the main thread
-                val latLng = swimspot.getLatLng()
-                val markerData = MarkerData(latLng, icon, swimspot)
+//        val cameraLatLng = map.cameraPosition.target
 
-                // Switch to the Main thread to update the UI
-                withContext(Dispatchers.Main) {
-                    addMarker(markerData, map)
+        viewModelScope.launch(Dispatchers.Default) {
+            homeState.value.allSwimspots
+                .sortedBy { swimspot ->
+                    swimspot.getLatLng().sphericalDistance(center)
                 }
-            }
+                .asFlow()
+                .flatMapMerge(concurrency = 50) { swimspot ->  // Control concurrency
+                    flowOf(swimspot).onEach {
+                        delay(20)  // Introduce a slight delay to stagger the markers
+                    }.map { swimspot ->
+                        val icon = swimspot.getMarkerIcon(metAlertUiState.value)
+                        val latLng = swimspot.getLatLng()
+                        MarkerData(latLng, icon, swimspot)
+                    }
+                }
+                .collect { markerData ->
+                    withContext(Dispatchers.Main) {
+                        addMarker(markerData, map)
+                    }
+                }
         }
     }
+
+//    fun createAllMarkers(map: GoogleMap) {
+//        Log.i("Function call", "createAllMarkers")
+//
+//        _homeState.update { homeState ->
+//            homeState.copy(map = map)
+//        }
+//
+//        homeState.value.allSwimspots.forEach { swimspot ->
+//            viewModelScope.launch(Dispatchers.Default) {
+//                val icon =
+//                    swimspot.getMarkerIcon(metAlertUiState.value) // Assuming this doesn't need to be on the main thread
+//                val latLng = swimspot.getLatLng()
+//                val markerData = MarkerData(latLng, icon, swimspot)
+//
+//                // Switch to the Main thread to update the UI
+//                withContext(Dispatchers.Main) {
+//                    addMarker(markerData, map)
+//                }
+//            }
+//        }
+//    }
 
     data class MarkerData(
         val latLng: LatLng,

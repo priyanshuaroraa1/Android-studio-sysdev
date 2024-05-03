@@ -35,14 +35,16 @@ import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.home.WarningIcon
 
 @Composable
 fun FavoritesScreen(
-    favoritesViewModel: FavoritesViewModel = hiltViewModel(),
+//    favoritesViewModel: FavoritesViewModel = hiltViewModel(),
     homeViewModel: HomeViewModel = hiltViewModel(),
     navController: NavController
 ) {
 
-    val favoritesState = favoritesViewModel.favoritesState.collectAsState().value
+    val homeState = homeViewModel.homeState.collectAsState().value
 
-    favoritesViewModel.updateFavorites()
+    val favourites = homeState.allSwimspots.filter {
+        it.favourited == true
+    }
 
     Column(
         Modifier
@@ -56,14 +58,15 @@ fun FavoritesScreen(
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
         ) {
-            if (favoritesState.allFavorites.size > 0) {
-                items(favoritesState.allFavorites) { swimspot ->
+            if (favourites.isNotEmpty()) {
+                items(favourites) { swimspot ->
                     FavoriteListItemCard(
                         swimspot = swimspot,
                         onClick = {
                             navController.popBackStack(Routes.HOME_SCREEN, false)
+                            homeViewModel.updateSelectSwimspotQueue(swimspot)
                         },
-                        homeViewModel
+                        homeViewModel = homeViewModel
                     )
                 }
             } else {
