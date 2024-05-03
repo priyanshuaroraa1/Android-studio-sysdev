@@ -16,6 +16,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -34,6 +35,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.notification.Notificati
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.onboarding.OnboardingScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.watersafetyrules.WaterSafetyRulesScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.theme.AppSolutionTheme
+import no.uio.ifi.in2000.martirhe.appsolution.util.NetworkLiveData
 import no.uio.ifi.in2000.martirhe.appsolution.util.PreferencesManager
 import javax.inject.Inject
 
@@ -45,10 +47,13 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val networkLiveData = NetworkLiveData(applicationContext)  // Initialiser med appens kontekst
 
         setContent {
             val snackbarHostState = remember { SnackbarHostState() }
             val scope = rememberCoroutineScope()
+
+            val isNetworkAvailable = networkLiveData.observeAsState(initial = true).value  // Observe nettverkstilstand
 
             AppSolutionTheme {
                 val navController = rememberNavController()
@@ -92,8 +97,9 @@ class MainActivity : ComponentActivity() {
                             WaterSafetyRulesScreen(navController = navController)
                         }
                     }
-                    LaunchedEffect(Unit) {
-                        if (!isNetworkAvailable()) {
+                    // Observasjon og håndtering av nettverkstilstand
+                    LaunchedEffect(isNetworkAvailable) {
+                        if (!isNetworkAvailable) {
                             scope.launch {
                                 val result = snackbarHostState.showSnackbar(
                                     message = "Ingen internettforbindelse. Noen funksjoner vil ikke være tilgjengelige",
@@ -101,23 +107,13 @@ class MainActivity : ComponentActivity() {
                                     duration = SnackbarDuration.Long
                                 )
                                 if (result == SnackbarResult.ActionPerformed) {
-                                    //Lukker snackbar
+                                    // Lukker snackbar
                                 }
                             }
                         }
                     }
                 }
             }
-        }
-    }
-    private fun isNetworkAvailable(): Boolean {
-        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val network = connectivityManager.activeNetwork ?: return false
-        val actNw = connectivityManager.getNetworkCapabilities(network) ?: return false
-        return when {
-            actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-            actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-            else -> false
         }
     }
 }
