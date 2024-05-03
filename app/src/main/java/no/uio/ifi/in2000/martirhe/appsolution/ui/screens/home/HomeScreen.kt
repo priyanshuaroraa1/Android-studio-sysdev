@@ -218,6 +218,7 @@ fun HomeScreen(
 
                 }
             ) {
+                // MapEffect observing when Markers are clicked
                 MapEffect() { map ->
                     Log.i("Map effect called", "Map effect 1 called")
                     map.setOnMarkerClickListener { marker ->
@@ -243,6 +244,7 @@ fun HomeScreen(
                         true // Return true to indicate that the click event has been handled
                     }
                 }
+
                 MapEffect(
                     key1 = homeState.selectSwimspotQueue
                 ) {map ->
