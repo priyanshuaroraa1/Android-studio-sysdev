@@ -52,7 +52,7 @@ fun LocationScreen(navController: NavController) {
         var locationPermissionGranted by remember { mutableStateOf(false) }
         var lastKnownLocation: Location? by remember { mutableStateOf(null) }
         val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-        val viewModel: LocationViewModel = viewModel()
+        val viewModel: LocationViewModel = viewModel() // Fjerne denne herfra?
         val locationData by viewModel.locationData.observeAsState()
 
         LaunchedEffect(Unit) {

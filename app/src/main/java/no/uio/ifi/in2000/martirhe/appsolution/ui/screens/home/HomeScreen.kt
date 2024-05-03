@@ -37,6 +37,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -92,6 +94,7 @@ fun HomeScreen(
         position = homeState.defaultCameraPosition
     }
     homeViewModel.updateCameraPositionState(cameraPositionState)
+    val locationData by homeViewModel.locationData.observeAsState()
 
 
     // TODO: Flytte dette til homeState?
@@ -248,6 +251,24 @@ fun HomeScreen(
                             homeViewModel.createAllMarkers(map)
 
                         }
+                    }
+                }
+                MapEffect(key1 = locationData) {map ->
+                    if (locationData != null) {
+                        homeState.userPositionMarker?.remove()
+                        val newMarker = map.addMarker(
+                            MarkerOptions()
+                                .position(
+                                    LatLng(
+                                        locationData!!.latitude,
+                                        locationData!!.longitude
+                                    )
+                                )
+                        )
+                        homeViewModel.updateUserPositionMarker(newMarker)
+
+                    
+
                     }
                 }
                 MapEffect(key1 = homeState.customSwimspot) { map ->
