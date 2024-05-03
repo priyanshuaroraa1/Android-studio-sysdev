@@ -1,10 +1,5 @@
 package no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast
 
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.Icon
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
-import no.uio.ifi.in2000.martirhe.appsolution.R
 import kotlin.math.roundToInt
 
 data class ForecastNextHour(
@@ -23,11 +18,7 @@ data class ForecastNextHour(
     }
 
     fun getWindSpeedString(): String {
-        return if (windSpeed == null) {
-            "N/A"
-        } else {
-            windSpeed.roundToInt().toString()
-        }
+        return windSpeed.roundToInt().toString()
     }
 
     fun getWindDirectionString(): String {
