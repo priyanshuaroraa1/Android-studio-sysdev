@@ -1,5 +1,6 @@
-# Team 5 - PLASK
+Hei! Har laget et utkast til READ ME filen. Noen tilbakemeldinger? 
 
+# Team 5 - PLASK
 Velkommen til GitHub-repositoriet for Plask, en Android-applikasjon designet av IN2000 studenter for å hjelpe brukere med å oppdage og utforske ulike badeplasser. 
 
 # Beskriver hvor dokumentasjonen ligger (Skjønte ikke helt)

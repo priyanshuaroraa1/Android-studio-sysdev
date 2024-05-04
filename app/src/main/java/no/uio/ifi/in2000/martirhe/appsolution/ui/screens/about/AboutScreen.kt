@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,6 +36,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -62,7 +62,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import no.uio.ifi.in2000.martirhe.appsolution.R
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.location.LocationViewModel
-import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -98,6 +97,7 @@ fun AboutScreen(navController: NavController) {
                         }
                     },
                     colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.tertiary)
+
                 )
             },
             containerColor = MaterialTheme.colorScheme.tertiary
@@ -149,7 +149,6 @@ fun AboutScreen(navController: NavController) {
 
                 Spacer(Modifier.height(16.dp))
 
-                // Displaying location data
                 if (locationData != null) {
                     Text(
                         "Current Location: Latitude = ${locationData?.latitude}, Longitude = ${locationData?.longitude}",
@@ -180,7 +179,7 @@ fun AboutScreen(navController: NavController) {
                             Icon(Icons.Default.Filter5, contentDescription = "Info Icon", tint = Color.White)
                             Spacer(Modifier.width(8.dp))
                             Text(
-                                text = "Our Team",
+                                text = "Vårt Team",
                                 color = Color.White,
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.Bold
@@ -193,19 +192,19 @@ fun AboutScreen(navController: NavController) {
                             .align(Alignment.CenterHorizontally)
                         ) {
                             TeamMembers("Priyanshu", R.drawable.priyanshu)
-                            Spacer(modifier = Modifier.width(8.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
 
                             TeamMembers("Vetle", R.drawable.vetle)
-                            Spacer(modifier = Modifier.width(8.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
 
                             TeamMembers("Bernd", R.drawable.bernd)
-                            Spacer(modifier = Modifier.width(8.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
 
                             TeamMembers("Martine", R.drawable.martine)
-                            Spacer(modifier = Modifier.width(8.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
 
                             TeamMembers("Sindre", R.drawable.sindre)
-                            Spacer(modifier = Modifier.width(8.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
                         }
 
                         Spacer(Modifier.height(16.dp))
@@ -358,8 +357,8 @@ fun TeamMembers(name: String, drawableId: Int) {
             painter = painterResource(id = drawableId),
             contentDescription = "Team ansatte bilder",
             modifier = Modifier
-                .size(55.dp)
-                .clip(CircleShape)
+                .size(65.dp)
+                //.clip(CircleShape)
         )
         Text(name, color = MaterialTheme.colorScheme.tertiary)
     }
