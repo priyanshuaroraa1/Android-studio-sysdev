@@ -80,22 +80,6 @@ private val DarkColors = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
-//@Composable
-//fun AppTheme(
-//    useDarkTheme: Boolean = isSystemInDarkTheme(),
-//    content: @Composable() () -> Unit
-//) {
-//    val colors = if (!useDarkTheme) {
-//        LightColors
-//    } else {
-//        DarkColors
-//    }
-//
-//    MaterialTheme(
-//        colorScheme = colors,
-//        content = content
-//    )
-//}
 
 @Composable
 fun AppSolutionTheme(

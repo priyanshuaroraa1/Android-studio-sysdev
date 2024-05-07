@@ -41,8 +41,7 @@ fun FavoritesScreen(
 ) {
 
     val favoritesState = favoritesViewModel.favoritesState.collectAsState().value
-
-    favoritesViewModel.updateFavorites()
+    favoritesState.allFavorites
 
     Column(
         Modifier
@@ -56,14 +55,20 @@ fun FavoritesScreen(
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
         ) {
-            if (favoritesState.allFavorites.size > 0) {
+            if (favoritesState.allFavorites.isNotEmpty()) {
                 items(favoritesState.allFavorites) { swimspot ->
                     FavoriteListItemCard(
                         swimspot = swimspot,
                         onClick = {
+                            val route = "${Routes.HOME_SCREEN}?swimspotId=${swimspot.id}"
                             navController.popBackStack(Routes.HOME_SCREEN, false)
+                            navController.navigate(route) {
+                                popUpTo(navController.graph.startDestinationId)
+                                launchSingleTop = true
+                            }
+//                            homeViewModel.updateSelectSwimspotQueue(swimspot) // TODO: Remove this shit
                         },
-                        homeViewModel
+                        homeViewModel = homeViewModel
                     )
                 }
             } else {

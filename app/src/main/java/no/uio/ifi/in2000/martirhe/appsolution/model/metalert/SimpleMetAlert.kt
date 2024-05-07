@@ -67,13 +67,16 @@ data class SimpleMetAlert(
     }
 }
 
-enum class WarningIconColor {
-    GREEN,
-    YELLOW,
-    ORANGE,
-    RED
-}
+enum class WarningIconColor(private val colorName: String) {
+    GREEN("GRØNN"),
+    YELLOW("GUL"),
+    ORANGE("ORANSJ"),
+    RED("RØD");
 
+    override fun toString(): String {
+        return colorName
+    }
+}
 //   "Green",   "Yellow",       "Orange",   "Red"
 //   "Minor",   "Moderate",     "Severe",   "Extreme"
 

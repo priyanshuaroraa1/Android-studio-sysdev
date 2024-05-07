@@ -8,12 +8,13 @@
     <string name="about_screen_info">Plask tilbyr detaljert informasjon om vann- og lufttemperatur, samt vannkvalitet ved dine favorittbadeplasser. Appen inneholder funksjoner som langtidsvarsel for badetemperaturer og muligheten til å lagre og følge med på favorittsteder.</string>
     <string name="about_screen_team">Møt Teamet Bak Plask</string>
     <string name="about_screen_teaminfo">Teamet vårt består av dedikerte utviklere og designere som er lidenskapelig opptatt av å skape den beste brukeropplevelsen. Hver medarbeider bringer unik kompetanse for å sikre at Plask ikke bare er funksjonell, men også brukervennlig og nyskapende.</string>
+
     <string name="about_screen_mail">info@plask.no</string>
     <string name="about_screen_phone">477 10 410</string>
     <string name="about_screen_license">Lisens og API-bruk: Plask benytter åpne API-er for å hente realtidsdata og andre tjenester. Vi følger gjeldende lover om datasikkerhet og brukerrettigheter. All bruk av programvare og tredjepartstjenester er i henhold til lisenser som tillater modifikasjon og videre distribusjon under spesifikke vilkår. \n\n API og lisenser vi har brukt er: \n METAlerts \n LocationForecast \n OceanForecast \n Google Maps SDK for Android (Google Maps Platform)</string>
     <string name="about_screen_apibutton">Havvarsel Case</string>
 
-    //Onboarding
+    // Onboarding
     <string name="pageone_maintitle">Velkommen til Plask</string>
     <string name="pageone_subtitle">Den ultimate badeguiden for dine badeeventyr i Norge</string>
     <string name="pageone_bodytext">Utforsk hundrevis av badeplasser og oppdag alt fra vann og land temperaturer til aktuelle farevarsler</string>
@@ -37,10 +38,11 @@
     //Location Screen
     <string name="location_screen_label">Plask ønsker å bruke posisjonen din</string>
     <string name="location_screen_subtext">Plask trenger tilgang til din lokasjon for å kunne vise deg nærliggende badeplasser og gi deg nøyaktige vær- og badevilkår. \n\n Vi forstår viktigheten av personvern og forsikrer deg om at din lokasjonsdata kun vil bli brukt internt i appen og ikke vil deles med tredjeparter.</string>
+
     <string name="location_screen_accept">Godta</string>
     <string name="location_screen_decline">Avvis</string>
 
-    //Location Screen
+    // Notification Screen
     <string name="notification_screen_label">Plask \n Ønsker å sende deg varslinger</string>
     <string name="notification_screen_subtext">Vi trenger tillatelse til å sende deg varsler angående oppdateringen og varsler ved dine favoritt badesteder.</string>
     <string name="notification_screen_accept">Godta</string>
@@ -59,4 +61,9 @@
     // HomeScreen BottomSheetScaffold
     <string name="accessability_options_header">Tilgjengelighet</string>
     <string name="accessability_options_dialog_body">Tilgjengelighetsdata er hentet fra Google Maps, og det kan derfor forekomme avvik. Informasjonen forteller om fremkommelighet med rullestol, HC-toalett og HC-parkering. Hvis ingen informasjon er oppgitt, kan det både bety at badeplassen ikke er tilrettelagt, eller at vi mangler informasjon.</string>
+
+    // ProfileScreen
+    <string name="profile_header">Min profil</string>
+    <string name="settings_header">Instillinger</string>
+
 </resources>

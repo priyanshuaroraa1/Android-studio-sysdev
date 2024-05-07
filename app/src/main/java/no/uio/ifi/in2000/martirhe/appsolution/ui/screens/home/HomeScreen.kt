@@ -57,6 +57,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
@@ -78,6 +79,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.WarningIconColor
 import no.uio.ifi.in2000.martirhe.appsolution.model.oceanforecast.OceanForecastRightNow
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.HomeSearchBar
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.MediumHeader
+import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.SkeletonLoadingCard
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.SmallHeader
 
 
@@ -85,19 +87,33 @@ import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.SmallHeader
 @OptIn(ExperimentalMaterial3Api::class, MapsComposeExperimentalApi::class)
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel = hiltViewModel(),
+    swimspotId: Int = -1,
 ) {
     val homeState = homeViewModel.homeState.collectAsState().value
     val context = LocalContext.current
 
+
+    var initialPosition = homeState.defaultCameraPosition
+    val navSwimspot = homeState.allSwimspots.find { it.id == swimspotId }
+    // Determine initial camera position
+    if (navSwimspot != null) {
+        initialPosition = CameraPosition.fromLatLngZoom(
+            LatLng(navSwimspot.lat, navSwimspot.lon), 11f
+        )
+    }
+
+
+    // Remember the CameraPositionState with the determined initial position
     val cameraPositionState = rememberCameraPositionState {
-        position = homeState.defaultCameraPosition
+        position = initialPosition
     }
     homeViewModel.updateCameraPositionState(cameraPositionState)
     val locationData by homeViewModel.locationData.observeAsState()
 
 
-    // TODO: Flytte dette til homeState?
+    homeViewModel.updateCameraPositionState(cameraPositionState)
+
     val mapStyleString = loadMapStyleFromAssets()
     val mapProperties = MapProperties(
         isMyLocationEnabled = false,
@@ -120,6 +136,7 @@ fun HomeScreen(
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
     homeViewModel.updateBottomSheetState(scaffoldState.bottomSheetState)
+
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
@@ -218,6 +235,17 @@ fun HomeScreen(
 
                 }
             ) {
+                // Navigate to requested swimspot when Map is drawn
+                MapEffect {
+                    if (swimspotId != -1) {
+                        homeState.allSwimspots.find { it.id == swimspotId }
+                            ?.let {
+                                homeViewModel.onSwimspotPinClick(it)
+                                homeViewModel.moveCamera(it.getLatLng())
+                            }
+                    }
+                }
+                // MapEffect observing when Markers are clicked
                 MapEffect() { map ->
                     Log.i("Map effect called", "Map effect 1 called")
                     map.setOnMarkerClickListener { marker ->
@@ -245,10 +273,12 @@ fun HomeScreen(
                 }
                 MapEffect(
                 ) { map ->
-
                     map.setOnMapLoadedCallback {
                         coroutineScope.launch(Dispatchers.Default) {
-                            homeViewModel.createAllMarkers(map)
+                            homeViewModel.createAllMarkers(
+                                map,
+                                cameraPositionState.position.target
+                            )
 
                         }
                     }
@@ -357,7 +387,6 @@ fun BottomSheetSwimspotContent(
 
                     ) {
                         val metAlertStateNew = homeViewModel.metAlertUiState.collectAsState().value
-//                        val homeState = homeViewModel.homeState.collectAsState().value
 
                         metAlertStateNew.let { state ->
                             when (state) {
@@ -412,7 +441,9 @@ fun BottomSheetSwimspotContent(
                                 }
 
                                 is LocationForecastUiState.Loading -> {
-                                    Text(text = "Loading")
+                                    WeatherNextHourSkeletonLoading()
+
+
                                 }
 
                                 is LocationForecastUiState.Error -> {
@@ -460,10 +491,7 @@ fun BottomSheetSwimspotContent(
                             }
 
                             is LocationForecastUiState.Loading -> {
-                                Row {
-                                    Spacer(modifier = Modifier.width(outerEdgePaddingValues))
-                                    Text(text = "Loading")
-                                }
+                                WeatherNextWeekSkeletonLoading()
                             }
 
                             is LocationForecastUiState.Error -> {
@@ -577,6 +605,7 @@ fun WeatherNextWeekCard(
     oceanForecastRightNow: OceanForecastRightNow?
 ) {
 
+
     Row {
         Spacer(modifier = Modifier.width(outerEdgePaddingValues))
         SmallHeader(text = "Neste 7 dager")
@@ -611,7 +640,7 @@ fun WeatherNextWeekCard(
                                 smallText = "i lufta",
                                 smallerSize = true,
                             )
-                            if (oceanForecastRightNow != null) {
+                            if (oceanForecastRightNow != null && oceanForecastRightNow.isSaltWater) {
                                 LargeAndSmallText(
                                     largeText = oceanForecastRightNow.getWaterTemperatureString() + "° ",
                                     smallText = "i vannet",
@@ -633,6 +662,54 @@ fun WeatherNextWeekCard(
 
 }
 
+
+@Composable
+fun WeatherNextHourSkeletonLoading() {
+    Column(
+        Modifier.padding(vertical = dimensionResource(id = R.dimen.padding_medium))
+    ) {
+        Spacer(modifier = Modifier.height(8.dp))
+        SkeletonLoadingCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(32.dp)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        SkeletonLoadingCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(112.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+        SkeletonLoadingCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(84.dp)
+        )
+    }
+}
+
+@Composable
+fun WeatherNextWeekSkeletonLoading() {
+    Column(
+        Modifier.padding(all = dimensionResource(id = R.dimen.padding_medium))
+    ) {
+        Spacer(modifier = Modifier.height(8.dp))
+        SkeletonLoadingCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(32.dp)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        SkeletonLoadingCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(160.dp)
+        )
+    }
+}
 
 @Composable
 fun WeatherNextHourCard(
@@ -852,7 +929,7 @@ fun MetAlertDialog(
                                         )
                                         Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding_small)))
                                         SmallHeader(
-                                            text = simpleMetAlert.eventAwarenessName + ": " + simpleMetAlert.area,
+                                            text = simpleMetAlert.getAwarenessLevelColor().toString() + ": " + simpleMetAlert.eventAwarenessName + ": " + simpleMetAlert.area,
                                             paddingTop = 0.dp,
                                             paddingBottom = 0.dp
                                         )
