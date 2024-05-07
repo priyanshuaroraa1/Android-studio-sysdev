@@ -31,6 +31,10 @@
     <string name="pagefour_subtitle">Søk og Oppdag</string>
     <string name="pagefour_bodytext">Bruk vårt søkeverktøy for å finne badesteder basert på dine preferanser, fra vannkvalitet til værforhold</string>
 
+    <string name="pagefive_maintitle">Se farevarsel i kartet</string>
+    <string name="pagefive_subtitle">Røde, Oransje og Gule farevarsler</string>
+    <string name="pagefive_bodytext">På kartet ser du badeplasser markert med ulike pin-farger basert på havvarselet for hvert sted. Finn og sammenlign badesteder basert på havvarsel for å velge det tryggeste og mest behagelige stedet for din bading.</string>
+
     <string name="onboarding_skip">Hopp over</string>
     <string name="onboarding_next">Neste</string>
     <string name="onboarding_done">Ferdig</string>
