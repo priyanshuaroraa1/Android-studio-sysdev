@@ -95,14 +95,14 @@ fun HomeScreen(
 
 
     var initialPosition = homeState.defaultCameraPosition
-    val navSwimspot = homeState.allSwimspots.find { it.id == swimspotId }
+    val navigateToSwimspot = homeState.allSwimspots.find { it.id == swimspotId }
     // Determine initial camera position
-    if (navSwimspot != null) {
+
+    if (navigateToSwimspot != null) {
         initialPosition = CameraPosition.fromLatLngZoom(
-            LatLng(navSwimspot.lat, navSwimspot.lon), 11f
+            LatLng(navigateToSwimspot.lat, navigateToSwimspot.lon), 11f
         )
     }
-
 
     // Remember the CameraPositionState with the determined initial position
     val cameraPositionState = rememberCameraPositionState {

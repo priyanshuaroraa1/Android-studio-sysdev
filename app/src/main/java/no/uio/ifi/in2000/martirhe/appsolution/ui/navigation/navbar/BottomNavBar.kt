@@ -116,32 +116,6 @@ fun BottomNavBar(
                             restoreState = true
                         }
 
-
-//
-//                        // Check if the target route is the home screen
-//                        if (item.route == Routes.HOME_SCREEN) {
-//                            // Pop everything off the navigation stack until we get to the home screen
-//                            navController.popBackStack(navController.graph.findStartDestination().id, inclusive = false)
-//                        } else {
-//                            // When navigating to a screen other than the home screen
-//                            // Check if we're not already on that screen
-//                            if (currentRoute != item.route) {
-//                                navController.navigate(item.route) {
-//                                    // Restore state when reselecting a previously selected item
-//                                    restoreState = true
-//
-//                                    // Avoid multiple copies of the same destination
-//                                    launchSingleTop = true
-//
-//                                    // Only pop up to the home destination if it's not the home screen
-//                                    // This is to preserve the home screen's state and avoid recreating it
-//                                    popUpTo(Routes.HOME_SCREEN) {
-//                                        // Keep the home screen as the root and do not pop it
-//                                        saveState = true
-//                                    }
-//                                }
-//                            }
-//                        }
                     }
                 )
             }

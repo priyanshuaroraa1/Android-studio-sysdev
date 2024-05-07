@@ -40,6 +40,7 @@ fun FavoritesScreen(
     navController: NavController
 ) {
 
+    favoritesViewModel.updateFavorites()
     val favoritesState = favoritesViewModel.favoritesState.collectAsState().value
     favoritesState.allFavorites
 
