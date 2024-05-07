@@ -11,7 +11,7 @@
     <string name="about_screen_mail">info@plask.no</string>
     <string name="about_screen_phone">477 10 410</string>
     <string name="about_screen_license">Lisens og API-bruk: Plask benytter åpne API-er for å hente realtidsdata og andre tjenester. Vi følger gjeldende lover om datasikkerhet og brukerrettigheter. All bruk av programvare og tredjepartstjenester er i henhold til lisenser som tillater modifikasjon og videre distribusjon under spesifikke vilkår. \n\n API og lisenser vi har brukt er: \n METAlerts \n LocationForecast \n OceanForecast \n Google Maps SDK for Android (Google Maps Platform)</string>
-    <string name="about_screen_apibutton">Vis API og Lisensdetaljer</string>
+    <string name="about_screen_apibutton">Havvarsel Case</string>
 
     //Onboarding
     <string name="pageone_maintitle">Velkommen til Plask</string>

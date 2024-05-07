@@ -127,7 +127,8 @@ fun NotificationScreen(navController: NavController) {
                     Button(
                         onClick = {
                             coroutineScope.launch {
-                                snackbarHostState.showSnackbar("Du kan aktivere varslingstillatelser i innstillinger")
+                                snackbarHostState.showSnackbar("Du kan aktivere varslingstillatelser senere")
+                                navController.navigate(Routes.HOME_SCREEN)
                             }
                         },
                         colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.secondary),)

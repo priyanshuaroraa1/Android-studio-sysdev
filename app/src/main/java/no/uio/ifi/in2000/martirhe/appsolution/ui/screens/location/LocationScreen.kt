@@ -181,7 +181,7 @@ fun LocationScreen(navController: NavController) {
                     coroutineScope.launch {
                         if (snackbarHostState.showSnackbar(
                                 "Vi anbefaler å aktivere lokasjonstjenester.",
-                                actionLabel = "Gå videre uansett",
+                                actionLabel = "Gå videre uten",
                             ) == SnackbarResult.ActionPerformed
                         ) {
                             navController.navigate(Routes.NOTIFICATION_SCREEN)
