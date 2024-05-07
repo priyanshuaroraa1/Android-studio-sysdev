@@ -75,7 +75,6 @@ fun LocationScreen(navController: NavController) {
                 }
             } else {
                 coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Tillatelse avslått.", duration = SnackbarDuration.Short)
                     navController.navigate(Routes.NOTIFICATION_SCREEN)
                 }
             }
