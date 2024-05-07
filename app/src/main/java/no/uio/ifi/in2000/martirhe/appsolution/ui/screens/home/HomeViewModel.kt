@@ -20,6 +20,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.client.plugins.ResponseException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asFlow
@@ -106,25 +107,11 @@ class HomeViewModel @Inject constructor(
     }
 
     fun updateCustomMarker(marker: Marker?) {
-        homeState.value.customMarker?.remove()
-        _homeState.update { homeState ->
-            homeState.copy(customMarker = marker)
-        }
-    }
-
-    fun updateSelectSwimspotQueue(swimspot: Swimspot) {
-        _homeState.update { homeState ->
-            homeState.copy(selectSwimspotQueue = swimspot)
-        }
-    }
-
-    fun popFromSelectSwimspotQueue() {
-        val swimspot = homeState.value.selectSwimspotQueue
-        _homeState.update { homeState ->
-            homeState.copy(selectSwimspotQueue = null)
-        }
-        if (swimspot != null) {
-            onSwimspotPinClick(swimspot)
+        viewModelScope.launch(Dispatchers.Main) {
+            homeState.value.customMarker?.remove()
+            _homeState.update { homeState ->
+                homeState.copy(customMarker = marker)
+            }
         }
     }
 
@@ -233,8 +220,9 @@ class HomeViewModel @Inject constructor(
             _homeState.update { homeState ->
                 homeState.copy(customSwimspot = null)
             }
-            Log.i("I got here jjaa", swimspotWithId.id.toString())
-            homeState.value.customMarker?.remove()
+            withContext(Dispatchers.Main) {
+                homeState.value.customMarker?.remove()
+            }
 
             // Add marker
             _homeState.update { homeState ->
@@ -263,16 +251,14 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun createAllMarkers(
         map: GoogleMap,
-        center: LatLng) {
-        Log.i("Function call", "createAllMarkers")
-
+        center: LatLng
+    ) {
         _homeState.update { homeState ->
             homeState.copy(map = map)
         }
-
-//        val cameraLatLng = map.cameraPosition.target
 
         viewModelScope.launch(Dispatchers.Default) {
             homeState.value.allSwimspots
@@ -280,8 +266,8 @@ class HomeViewModel @Inject constructor(
                     swimspot.getLatLng().sphericalDistance(center)
                 }
                 .asFlow()
-                .flatMapMerge(concurrency = 50) { swimspot ->  // Control concurrency
-                    flowOf(swimspot).onEach {
+                .flatMapMerge(concurrency = 50) {
+                    flowOf(it).onEach {
                         delay(20)  // Introduce a slight delay to stagger the markers
                     }.map { swimspot ->
                         val icon = swimspot.getMarkerIcon(metAlertUiState.value)
@@ -336,14 +322,16 @@ class HomeViewModel @Inject constructor(
 
                 newMarker?.tag = markerData.swimspot
 
-                _homeState.update { homeState ->
-                    val updatedMarkers = homeState.allMarkers.toMutableMap()
-                    updatedMarkers[markerData.swimspot.id]?.remove()
-                    updatedMarkers[markerData.swimspot.id!!] = newMarker
-                    homeState.copy(
-                        allMarkers = updatedMarkers,
-                        map = map
-                    )
+                if (markerData.swimspot.id != null) {
+                    _homeState.update { homeState ->
+                        val updatedMarkers = homeState.allMarkers.toMutableMap()
+                        updatedMarkers[markerData.swimspot.id]?.remove()
+                        updatedMarkers[markerData.swimspot.id] = newMarker
+                        homeState.copy(
+                            allMarkers = updatedMarkers,
+                            map = map
+                        )
+                    }
                 }
             }
         }

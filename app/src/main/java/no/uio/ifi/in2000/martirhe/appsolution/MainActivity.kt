@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.navbar.BottomNavBar
@@ -70,6 +72,16 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.HOME_SCREEN) {
                             HomeScreen()
+                        }
+                        composable(
+                            Routes.HOME_SCREEN_WITH_ID,
+                            arguments = listOf(navArgument("swimspotId") {
+                                type = NavType.IntType
+                                defaultValue = -1  // Assuming -1 means no ID was passed
+                            })
+                        ) {
+                            // Extract the optional swimspotId argument and use it in HomeScreen
+                            HomeScreen(swimspotId = it.arguments?.getInt("swimspotId") ?: -1)
                         }
                         composable(Routes.FAVORITES_SCREEN) {
                             FavoritesScreen(
