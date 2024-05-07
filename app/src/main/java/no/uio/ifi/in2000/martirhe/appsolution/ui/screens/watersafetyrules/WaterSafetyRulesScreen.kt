@@ -31,7 +31,7 @@ import com.google.android.gms.maps.model.Circle
 import no.uio.ifi.in2000.martirhe.appsolution.R
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "SuspiciousIndentation")
 @Composable
 fun WaterSafetyRulesScreen(navController: NavController) {
     val context = LocalContext.current

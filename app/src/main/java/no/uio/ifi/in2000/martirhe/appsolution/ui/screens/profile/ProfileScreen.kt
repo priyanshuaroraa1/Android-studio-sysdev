@@ -36,6 +36,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
 fun ProfileScreen(
     navController: NavController
 ) {
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -82,6 +83,7 @@ fun ProfileScreen(
         }
     }
 }
+
 
 @Composable
 fun MenuItem(
