@@ -49,6 +49,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -92,7 +93,6 @@ fun HomeScreen(
 ) {
     val homeState = homeViewModel.homeState.collectAsState().value
     val context = LocalContext.current
-
 
     var initialPosition = homeState.defaultCameraPosition
     val navigateToSwimspot = homeState.allSwimspots.find { it.id == swimspotId }
@@ -404,11 +404,9 @@ fun BottomSheetSwimspotContent(
                                 }
 
                                 is MetAlertUiState.Loading -> {
-                                    Text(text = "Loading")
                                 }
 
                                 is MetAlertUiState.Error -> {
-                                    Text(text = "Error")
                                 }
                             }
                         }
@@ -426,7 +424,6 @@ fun BottomSheetSwimspotContent(
                                                     homeViewModel = homeViewModel,
                                                 )
                                             }
-
                                             else -> {
                                                 WeatherNextHourCard(
                                                     locationForecastUiState.forecastNextHour,
@@ -447,7 +444,7 @@ fun BottomSheetSwimspotContent(
                                 }
 
                                 is LocationForecastUiState.Error -> {
-                                    Text(text = "Error")
+                                    WeatherNextHourErrorCard()
                                 }
                             }
                         }
@@ -495,10 +492,7 @@ fun BottomSheetSwimspotContent(
                             }
 
                             is LocationForecastUiState.Error -> {
-                                Row {
-                                    Spacer(modifier = Modifier.width(outerEdgePaddingValues))
-                                    Text(text = "Error")
-                                }
+                                // Error message is shown at top of BottomSheet
                             }
                         }
                     }
@@ -688,6 +682,35 @@ fun WeatherNextHourSkeletonLoading() {
                 .fillMaxWidth()
                 .height(84.dp)
         )
+    }
+}
+
+@Composable
+fun WeatherNextHourErrorCard() {
+    Column(
+        Modifier
+            .fillMaxWidth()
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = dimensionResource(id = R.dimen.padding_medium)),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(dimensionResource(id = R.dimen.padding_medium)),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                MediumHeader(text = "Oops!")
+                Text(
+                    text = "Det ser ut til at vi ikke klarte å hente værdata for dette badestedet.",
+                    textAlign = TextAlign.Center)
+            }
+        }
     }
 }
 
