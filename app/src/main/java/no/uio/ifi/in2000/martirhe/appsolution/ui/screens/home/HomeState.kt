@@ -16,7 +16,6 @@ import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
 data class HomeState @OptIn(ExperimentalMaterial3Api::class) constructor(
     val allSwimspots: List<Swimspot> = emptyList(),
     val allMarkers: Map<Int, Marker?> = emptyMap(),
-    val selectSwimspotQueue: Swimspot? = null,
     val map: GoogleMap? = null,
     val lastKnownLocation: Location? = null,
     val selectedSwimspot: Swimspot? = null,

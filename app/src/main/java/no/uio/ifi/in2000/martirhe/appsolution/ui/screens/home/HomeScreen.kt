@@ -55,6 +55,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
@@ -84,18 +85,28 @@ import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.SmallHeader
 @OptIn(ExperimentalMaterial3Api::class, MapsComposeExperimentalApi::class)
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel = hiltViewModel(),
+    swimspotId: Int = -1,
 ) {
     val homeState = homeViewModel.homeState.collectAsState().value
-//    val metAlertUiState = homeViewModel.metAlertUiState.collectAsState().value
 
-    val cameraPositionState = rememberCameraPositionState {
-        position = homeState.defaultCameraPosition
+    var initialPosition = homeState.defaultCameraPosition
+    val navSwimspot = homeState.allSwimspots.find { it.id == swimspotId }
+    // Determine initial camera position
+    if (navSwimspot != null) {
+        initialPosition = CameraPosition.fromLatLngZoom(
+            LatLng(navSwimspot.lat, navSwimspot.lon), 11f
+        )
     }
+
+
+    // Remember the CameraPositionState with the determined initial position
+    val cameraPositionState = rememberCameraPositionState {
+        position = initialPosition
+    }
+
     homeViewModel.updateCameraPositionState(cameraPositionState)
 
-
-    // TODO: Flytte dette til homeState?
     val mapStyleString = loadMapStyleFromAssets()
     val mapProperties = MapProperties(
         isMyLocationEnabled = false,
@@ -118,6 +129,7 @@ fun HomeScreen(
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
     homeViewModel.updateBottomSheetState(scaffoldState.bottomSheetState)
+
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
@@ -218,6 +230,16 @@ fun HomeScreen(
 
                 }
             ) {
+                // Navigate to requested swimspot when Map is drawn
+                MapEffect {
+                    if (swimspotId != -1) {
+                        homeState.allSwimspots.find { it.id == swimspotId }
+                            ?.let {
+                                homeViewModel.onSwimspotPinClick(it)
+                                homeViewModel.moveCamera(it.getLatLng())
+                            }
+                    }
+                }
                 // MapEffect observing when Markers are clicked
                 MapEffect() { map ->
                     Log.i("Map effect called", "Map effect 1 called")
@@ -244,27 +266,14 @@ fun HomeScreen(
                         true // Return true to indicate that the click event has been handled
                     }
                 }
-
-                MapEffect(
-                    key1 = homeState.selectSwimspotQueue
-                ) {map ->
-                    map.setOnMapLoadedCallback {
-                        if (homeState.selectSwimspotQueue != null) {
-                            homeViewModel.popFromSelectSwimspotQueue()
-                        }
-                    }
-                }
-                MapEffect(
-//                    key1 = metAlertUiState,
-//                    key2 = homeState.allSwimspots, // TODO: Usikker på om jeg trenger denne
-                ) { map ->
+                MapEffect{ map ->
 
                     map.setOnMapLoadedCallback {
                         coroutineScope.launch(Dispatchers.Default) {
                             homeViewModel.createAllMarkers(
                                 map,
                                 cameraPositionState.position.target
-                                )
+                            )
 
                         }
                     }
@@ -897,7 +906,7 @@ fun MetAlertDialog(
                                         )
                                         Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding_small)))
                                         SmallHeader(
-                                            text = simpleMetAlert.eventAwarenessName + ": " + simpleMetAlert.area,
+                                            text = simpleMetAlert.getAwarenessLevelColor().toString() + ": " + simpleMetAlert.eventAwarenessName + ": " + simpleMetAlert.area,
                                             paddingTop = 0.dp,
                                             paddingBottom = 0.dp
                                         )
