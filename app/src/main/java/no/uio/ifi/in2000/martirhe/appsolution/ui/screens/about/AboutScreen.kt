@@ -166,19 +166,19 @@ fun AboutScreen(navController: NavController) {
                             .align(Alignment.CenterHorizontally)
                         ) {
                             TeamMembers("Priyanshu", R.drawable.priyanshu)
-                            Spacer(modifier = Modifier.width(4.dp))
+                            Spacer(modifier = Modifier.width(2.dp))
 
                             TeamMembers("Vetle", R.drawable.vetle)
-                            Spacer(modifier = Modifier.width(4.dp))
+                            Spacer(modifier = Modifier.width(2.dp))
 
                             TeamMembers("Bernd", R.drawable.bernd)
-                            Spacer(modifier = Modifier.width(4.dp))
+                            Spacer(modifier = Modifier.width(2.dp))
 
                             TeamMembers("Martine", R.drawable.martine)
-                            Spacer(modifier = Modifier.width(4.dp))
+                            Spacer(modifier = Modifier.width(2.dp))
 
                             TeamMembers("Sindre", R.drawable.sindre)
-                            Spacer(modifier = Modifier.width(4.dp))
+                            Spacer(modifier = Modifier.width(2.dp))
                         }
 
                         Spacer(Modifier.height(16.dp))
@@ -258,7 +258,6 @@ fun AboutScreen(navController: NavController) {
 
                                 Spacer(modifier = Modifier.height(4.dp))
 
-                                // Phone Row
                                 Row(
                                     modifier = Modifier
                                         .clickable(
@@ -330,10 +329,9 @@ fun TeamMembers(name: String, drawableId: Int) {
             painter = painterResource(id = drawableId),
             contentDescription = "Team ansatte bilder",
             modifier = Modifier
-                .size(65.dp)
-                //.clip(CircleShape)
+                .size(60.dp)
         )
-        Text(name, color = MaterialTheme.colorScheme.primaryContainer)
+        Text(name, color = MaterialTheme.colorScheme.primaryContainer, fontSize = 11.sp)
     }
 }
 

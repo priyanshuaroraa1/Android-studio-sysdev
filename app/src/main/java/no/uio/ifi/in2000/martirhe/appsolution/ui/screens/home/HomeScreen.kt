@@ -296,11 +296,9 @@ fun HomeScreen(
                                 )
                         )
                         homeViewModel.updateUserPositionMarker(newMarker)
-
-                    
-
                     }
                 }
+
                 MapEffect(key1 = homeState.customSwimspot) { map ->
                     Log.i("Map effect called", "Map effect 3 called")
 

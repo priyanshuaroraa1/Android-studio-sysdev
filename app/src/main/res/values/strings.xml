@@ -6,7 +6,7 @@
     <string name="about_screen_label">Om Plask</string>
     <string name="about_screen_description">Plask er din guide til badetemperaturer langs kysten. Utforsk ulike strender og badeplasser med oppdatert informasjon rett i hånden.</string>
     <string name="about_screen_info">Plask tilbyr detaljert informasjon om vann- og lufttemperatur, samt vannkvalitet ved dine favorittbadeplasser. Appen inneholder funksjoner som langtidsvarsel for badetemperaturer og muligheten til å lagre og følge med på favorittsteder.</string>
-    <string name="about_screen_team">Møt Teamet Bak Plask</string>
+    <string name="about_screen_team">Møt teamet bak Plask</string>
     <string name="about_screen_teaminfo">Teamet vårt består av dedikerte utviklere og designere som er lidenskapelig opptatt av å skape den beste brukeropplevelsen. Hver medarbeider bringer unik kompetanse for å sikre at Plask ikke bare er funksjonell, men også brukervennlig og nyskapende.</string>
 
     <string name="about_screen_mail">info@plask.no</string>
@@ -54,7 +54,7 @@
 
     //WaterSafetyRulesScreen
     <string name="watersafetyrulesscreen_topbar">Badevett</string>
-    <string name="watersafetyrulesscreen_label">Badevett Regler</string>
+    <string name="watersafetyrulesscreen_label">Badevettregler</string>
     <string name="watersafetyrulesscreen_rules">1. Lær å svømme \n 2. Før du går uti, forsikre deg om at du kan komme opp igjen \n 3. Bad helst sammen med andre \n 4. Stup bare der det er dypt \n 5. Svøm langs land \n 6. Svøm ikke under brygge eller foran stupebrett \n 7. Dytt ikke andre ut i vannet og dukk aldri noen under vann \n 8. Hold deg på land hvis du føler deg kald eller uvel \n 9. Rop på hjelp bare hvis du er i fare – aldri ellers!</string>
     <string name="watersafetyrulesscreen_readmore">Les mer om badevett regler her</string>
 

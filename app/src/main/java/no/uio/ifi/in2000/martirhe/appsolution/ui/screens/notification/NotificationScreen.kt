@@ -12,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -26,6 +25,7 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.martirhe.appsolution.R
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
+import no.uio.ifi.in2000.martirhe.appsolution.util.setRepeatingAlarm
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -36,21 +36,22 @@ fun NotificationScreen(navController: NavController) {
         val notificationPermissionGranted = remember { mutableStateOf(false) }
         val context = LocalContext.current
 
-        val notificationPermissionLauncher = rememberLauncherForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (isGranted) {
-                notificationPermissionGranted.value = true
-                coroutineScope.launch {
-                    CreateNotification(context, "channel_01", "Velkommen til Plask!", "Onboarding fullført. Utforsk appen nå!")
-                    navController.navigate(Routes.HOME_SCREEN)
-                }
-            } else {
-                coroutineScope.launch {
-                    navController.navigate(Routes.HOME_SCREEN)
-                }
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            notificationPermissionGranted.value = true
+            coroutineScope.launch {
+                CreateNotification(context, "channel_01", "Velkommen til Plask!", "Onboarding fullført. Utforsk appen nå!")
+                setRepeatingAlarm(context)  // Sett opp den gjentakende alarmen
+                navController.navigate(Routes.HOME_SCREEN)
+            }
+        } else {
+            coroutineScope.launch {
+                navController.navigate(Routes.HOME_SCREEN)
             }
         }
+    }
 
             Scaffold(
                 containerColor = MaterialTheme.colorScheme.background,
@@ -100,6 +101,9 @@ fun NotificationScreen(navController: NavController) {
                     Button(
                         onClick = {
                             notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                            if (notificationPermissionGranted.value) {
+                                setRepeatingAlarm(context)
+                            }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onPrimary, contentColor = MaterialTheme.colorScheme.background),
                         shape = MaterialTheme.shapes.medium

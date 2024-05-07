@@ -11,7 +11,6 @@
     <!-- Notifikasjon -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
-
     <!-- TODO: Skal alow backup være true? Gjør sånn at den ber om permissions på nytt etter reinstallering-->
     <application
         android:name=".PlaskApp"
@@ -25,6 +24,13 @@
         android:theme="@style/Theme.AppSolution"
         tools:targetApi="31">
 
+        <receiver android:name=".util.NotificationReceiver"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="no.uio.ifi.in2000.martirhe.appsolution.util"/>
+            </intent-filter>
+        </receiver>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
