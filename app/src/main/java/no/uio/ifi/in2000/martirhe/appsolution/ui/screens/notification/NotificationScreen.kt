@@ -43,7 +43,7 @@ fun NotificationScreen(navController: NavController) {
             notificationPermissionGranted.value = true
             coroutineScope.launch {
                 CreateNotification(context, "channel_01", "Velkommen til Plask!", "Onboarding fullført. Utforsk appen nå!")
-                setRepeatingAlarm(context)  // Sett opp den gjentakende alarmen
+                setRepeatingAlarm(context)
                 navController.navigate(Routes.HOME_SCREEN)
             }
         } else {

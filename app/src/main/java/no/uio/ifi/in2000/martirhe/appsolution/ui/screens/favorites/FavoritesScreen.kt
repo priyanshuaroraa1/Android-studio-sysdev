@@ -67,7 +67,6 @@ fun FavoritesScreen(
                                 popUpTo(navController.graph.startDestinationId)
                                 launchSingleTop = true
                             }
-//                            homeViewModel.updateSelectSwimspotQueue(swimspot) // TODO: Remove this shit
                         },
                         homeViewModel = homeViewModel
                     )

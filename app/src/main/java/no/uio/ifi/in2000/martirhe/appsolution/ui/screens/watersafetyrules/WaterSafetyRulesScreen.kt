@@ -112,8 +112,8 @@ fun WaterSafetyRulesScreen(navController: NavController) {
                     }
                 }
                 Column(
-                    modifier = Modifier.fillMaxWidth(), // Ensures the column takes up the full width
-                    horizontalAlignment = Alignment.CenterHorizontally // Centers children horizontally
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Button(
                         onClick = {

@@ -13,7 +13,6 @@ class NotificationReceiver : BroadcastReceiver() {
         val notificationText = "Plask savner deg, kom å sjekk ut dine favoritt badesteder"
         CreateNotification(context, "channel_01", "Daglig påminnelse", notificationText)
     }
-
 }
 
 @SuppressLint("ServiceCast")
