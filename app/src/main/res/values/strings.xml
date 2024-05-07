@@ -33,7 +33,7 @@
 
     <string name="pagefive_maintitle">Se farevarsel i kartet</string>
     <string name="pagefive_subtitle">Røde, Oransje og Gule farevarsler</string>
-    <string name="pagefive_bodytext">På kartet ser du badeplasser markert med ulike pin-farger basert på havvarselet for hvert sted. Finn og sammenlign badesteder basert på havvarsel for å velge det tryggeste og mest behagelige stedet for din bading.</string>
+    <string name="pagefive_bodytext">På kartet ser du badeplasser markert med ulike pin-farger basert på havvarselet for hvert sted. Finn og sammenlign badesteder basert på havvarsel for å velge det tryggeste og mest behagelige stedet for din bading. I tillegg ser du også badesteder som du har lagret som favoritt.</string>
 
     <string name="onboarding_skip">Hopp over</string>
     <string name="onboarding_next">Neste</string>
