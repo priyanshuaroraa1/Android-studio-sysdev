@@ -34,25 +34,19 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import no.uio.ifi.in2000.martirhe.appsolution.R
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
+import no.uio.ifi.in2000.martirhe.appsolution.ui.theme.md_theme_dark_background
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LocationScreen(navController: NavController) {
-    MaterialTheme(
-        colorScheme = lightColorScheme(
-            primary = Color(0xFF7DCCE9),
-            secondary = Color(0xFF0E2D4E),
-            tertiary = Color(0xFFF2EDEC),
-            onPrimary = Color.White,
-        )
-    ) {
+
         val context = LocalContext.current
         val coroutineScope = rememberCoroutineScope()
         val snackbarHostState = remember { SnackbarHostState() }
         var locationPermissionGranted by remember { mutableStateOf(false) }
         var lastKnownLocation: Location? by remember { mutableStateOf(null) }
         val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-        val viewModel: LocationViewModel = viewModel() // Fjerne denne herfra?
+        val viewModel: LocationViewModel = viewModel() //
         val locationData by viewModel.locationData.observeAsState()
 
         LaunchedEffect(Unit) {
@@ -88,8 +82,8 @@ fun LocationScreen(navController: NavController) {
         }
 
         Scaffold(
-            containerColor = MaterialTheme.colorScheme.onPrimary,
-            contentColor = MaterialTheme.colorScheme.tertiary,
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.primaryContainer,
             topBar = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -120,7 +114,7 @@ fun LocationScreen(navController: NavController) {
                     style = MaterialTheme.typography.headlineLarge.copy(
                         fontSize = 26.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontFamily = FontFamily(Font(R.font.font))
                     ),
                     textAlign = TextAlign.Center,
@@ -141,7 +135,7 @@ fun LocationScreen(navController: NavController) {
                 Text(
                     stringResource(id = R.string.location_screen_subtext),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold
                 )
@@ -163,14 +157,15 @@ fun LocationScreen(navController: NavController) {
                                 val location = fusedLocationClient.lastLocation.await()
                                 lastKnownLocation = location
                             } catch (e: Exception) {
-                                snackbarHostState.showSnackbar("Error obtaining location.")
+                                snackbarHostState.showSnackbar("Kunne ikke finne posisjon")
                             }
                         }
                     } else {
                         locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                     }
                 },
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.onPrimaryContainer, contentColor = MaterialTheme.colorScheme.background),
                     shape = MaterialTheme.shapes.medium) {
                     Text(stringResource(id = R.string.location_screen_accept))
                 }
@@ -188,11 +183,10 @@ fun LocationScreen(navController: NavController) {
                         }
                     }
                 },
-                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.secondary),)
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onPrimary),)
                 {
                     Text(stringResource(id = R.string.location_screen_decline))
                 }
             }
         }
     }
-}

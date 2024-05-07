@@ -70,6 +70,7 @@ fun ProfileScreen(
             MenuItem(
                 buttonText = "Badevettreglene",
                 buttonOnClick = {
+                    navController.navigate(Routes.WATERSAFETYRULES_SCREEN)
 
                 }
             )

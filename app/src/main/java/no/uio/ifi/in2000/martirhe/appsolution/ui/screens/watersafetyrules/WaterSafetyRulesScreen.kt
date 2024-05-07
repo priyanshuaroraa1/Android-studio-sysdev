@@ -14,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -26,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.android.gms.maps.model.Circle
 import no.uio.ifi.in2000.martirhe.appsolution.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,14 +36,6 @@ import no.uio.ifi.in2000.martirhe.appsolution.R
 fun WaterSafetyRulesScreen(navController: NavController) {
     val context = LocalContext.current
 
-    MaterialTheme(
-        colorScheme = lightColorScheme(
-            primary = Color(0xFF7DCCE9),
-            secondary = Color(0xFF0E2D4E),
-            tertiary = Color(0xFFF2EDEC),
-            onPrimary = Color.White,
-        )
-    ) {
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -57,10 +51,10 @@ fun WaterSafetyRulesScreen(navController: NavController) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     },
-                    colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.onPrimary)
+                    colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.background)
                 )
             },
-            containerColor = MaterialTheme.colorScheme.onPrimary
+            containerColor = MaterialTheme.colorScheme.background
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -77,7 +71,7 @@ fun WaterSafetyRulesScreen(navController: NavController) {
                     style = MaterialTheme.typography.headlineLarge.copy(
                         fontSize = 32.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontFamily = FontFamily(Font(R.font.font))
                     ),
                     textAlign = TextAlign.Center,
@@ -110,42 +104,40 @@ fun WaterSafetyRulesScreen(navController: NavController) {
                             style = MaterialTheme.typography.headlineLarge.copy(
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.ExtraBold,
-                                color = MaterialTheme.colorScheme.secondary,
+                                color = MaterialTheme.colorScheme.onPrimary,
                                 fontFamily = FontFamily(Font(R.font.fontbadevett)),
                             ),
                             textAlign = TextAlign.Center,
                         )
-
-                        Column(
-                            modifier = Modifier.fillMaxWidth(), // Ensures the column takes up the full width
-                            horizontalAlignment = Alignment.CenterHorizontally // Centers children horizontally
-                        ) {
-                            Button(
-                                onClick = {
-                                    val intent = Intent(Intent.ACTION_VIEW).apply {
-                                        data = Uri.parse("https://rs.no/badevett/")
-                                    }
-                                    context.startActivity(intent)
-                                },
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = MaterialTheme.colorScheme.secondary,
-                                    contentColor = MaterialTheme.colorScheme.onPrimary
-                                ),
-                                shape = RoundedCornerShape(18.dp),
-                                elevation = ButtonDefaults.buttonElevation(
-                                    defaultElevation = 8.dp,
-                                    pressedElevation = 12.dp,
-                                    disabledElevation = 0.dp
-                                ),
-                                modifier = Modifier.padding(16.dp)
-                            ) {
-                                Text(stringResource(id = R.string.watersafetyrulesscreen_readmore))
-                            }
-                        }
                     }
                 }
-                Spacer(modifier = Modifier.height(80.dp))
+                Column(
+                    modifier = Modifier.fillMaxWidth(), // Ensures the column takes up the full width
+                    horizontalAlignment = Alignment.CenterHorizontally // Centers children horizontally
+                ) {
+                    Button(
+                        onClick = {
+                            val intent = Intent(Intent.ACTION_VIEW).apply {
+                                data = Uri.parse("https://rs.no/badevett/")
+                            }
+                            context.startActivity(intent)
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                            contentColor = MaterialTheme.colorScheme.background
+                        ),
+                        shape = RoundedCornerShape(18.dp),
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 8.dp,
+                            pressedElevation = 12.dp,
+                            disabledElevation = 0.dp
+                        ),
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(stringResource(id = R.string.watersafetyrulesscreen_readmore))
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
-}

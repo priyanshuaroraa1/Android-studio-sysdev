@@ -30,14 +30,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun OnboardingScreen(navController: NavController) {
-    MaterialTheme(
-        colorScheme = lightColorScheme(
-            primary = Color(0xFF7DCCE9),
-            secondary = Color(0xFF0E2D4E),
-            tertiary = Color(0xFFF2EDEC),
-            onPrimary = Color.White,
-        )
-    ) {
+
         var currentPage by remember { mutableStateOf(0) }
         val totalPages = 4
 
@@ -72,8 +65,8 @@ fun OnboardingScreen(navController: NavController) {
         }
 
         Scaffold(
-            containerColor = MaterialTheme.colorScheme.onPrimary,
-            contentColor = MaterialTheme.colorScheme.tertiary,
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.primaryContainer,
             topBar = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -108,7 +101,6 @@ fun OnboardingScreen(navController: NavController) {
             OnboardingContent(imageId, mainTitle, subTitle, bodyText, currentPage, totalPages)
         }
     }
-}
 
 @Composable
 fun OnboardingContent(
@@ -145,7 +137,7 @@ fun OnboardingContent(
                 textAlign = TextAlign.Center,
                 fontFamily = FontFamily(Font(R.font.font))
             ),
-            color = MaterialTheme.colorScheme.secondary
+            color = MaterialTheme.colorScheme.onPrimary
         )
 
         Spacer(
@@ -157,7 +149,7 @@ fun OnboardingContent(
         Text(
             subTitle,
             style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.secondary,
+            color = MaterialTheme.colorScheme.onPrimary,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.SemiBold
         )
@@ -171,7 +163,7 @@ fun OnboardingContent(
         Text(
             bodyText,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.secondary,
+            color = MaterialTheme.colorScheme.onPrimary,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Normal
         )
@@ -223,25 +215,25 @@ fun OnboardingBottomBar(
         if (currentPage < totalPages - 1) {
             TextButton(
                 onClick = onSkipClicked,
-                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.secondary)
+                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onPrimary)
             ) {
                 Text(
                     stringResource(id = R.string.onboarding_skip),
-                    color = MaterialTheme.colorScheme.secondary
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }
         }
 
         Button(
             onClick = onNextClicked,
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onPrimary),
             shape = MaterialTheme.shapes.medium
         ) {
             Text(
                 text = if (currentPage < totalPages - 1) stringResource(id = R.string.onboarding_next) else stringResource(
                     id = R.string.onboarding_done
                 ),
-                color = MaterialTheme.colorScheme.onSecondary
+                color = MaterialTheme.colorScheme.background
             )
         }
     }
