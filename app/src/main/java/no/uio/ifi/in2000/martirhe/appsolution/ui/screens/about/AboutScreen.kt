@@ -69,18 +69,8 @@ import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.location.LocationViewMo
 fun AboutScreen(navController: NavController) {
 
     val context = LocalContext.current
-    val viewModel: LocationViewModel = viewModel()
-    val locationData by viewModel.locationData.observeAsState()
     val interactionSource = remember { MutableInteractionSource() }
 
-    MaterialTheme(
-        colorScheme = lightColorScheme(
-            primary = Color(0xFF7DCCE9),
-            secondary = Color(0xFF0E2D4E),
-            tertiary = Color(0xFFF2EDEC),
-            onPrimary = Color.White,
-            )
-    ) {
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -96,11 +86,11 @@ fun AboutScreen(navController: NavController) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     },
-                    colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.tertiary)
+                    colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.background)
 
                 )
             },
-            containerColor = MaterialTheme.colorScheme.tertiary
+            containerColor = MaterialTheme.colorScheme.background
         ) {
             Column(
                 modifier = Modifier
@@ -125,7 +115,7 @@ fun AboutScreen(navController: NavController) {
 
                 Text(
                     stringResource(id = R.string.about_screen_description),
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontSize = 25.sp,
@@ -140,33 +130,17 @@ fun AboutScreen(navController: NavController) {
 
                 Text(
                     stringResource(id = R.string.about_screen_info),
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     textAlign = TextAlign.Center,
                     lineHeight = 23.sp,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
 
-                Spacer(Modifier.height(16.dp))
-
-                if (locationData != null) {
-                    Text(
-                        "Current Location: Latitude = ${locationData?.latitude}, Longitude = ${locationData?.longitude}",
-                        color = MaterialTheme.colorScheme.onBackground,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                } else {
-                    Text(
-                        "Current Location: Latitude = ${locationData?.latitude}, Longitude = ${locationData?.longitude}",
-                        color = MaterialTheme.colorScheme.onBackground,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                }
-
                 Spacer(Modifier.height(30.dp))
 
                 Card(
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(
@@ -180,7 +154,7 @@ fun AboutScreen(navController: NavController) {
                             Spacer(Modifier.width(8.dp))
                             Text(
                                 text = "Vårt Team",
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.background,
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.Bold
                             )
@@ -211,7 +185,7 @@ fun AboutScreen(navController: NavController) {
 
                         Text(
                             stringResource(id = R.string.about_screen_team),
-                            color = MaterialTheme.colorScheme.tertiary,
+                            color = MaterialTheme.colorScheme.primaryContainer,
                             style = MaterialTheme.typography.titleMedium.copy(
                                 textAlign = TextAlign.Center,
                                 fontSize = 18.sp,
@@ -225,7 +199,7 @@ fun AboutScreen(navController: NavController) {
                         Spacer(Modifier.height(16.dp))
 
                         Card(
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Column(
@@ -236,7 +210,7 @@ fun AboutScreen(navController: NavController) {
 
                                 Text(
                                     stringResource(id = R.string.about_screen_teaminfo),
-                                    color = MaterialTheme.colorScheme.secondary,
+                                    color = MaterialTheme.colorScheme.onPrimary,
                                     textAlign = TextAlign.Center,
                                     style = MaterialTheme.typography.bodyMedium.copy(
                                         lineHeight = 23.sp,
@@ -248,7 +222,7 @@ fun AboutScreen(navController: NavController) {
                         Spacer(modifier = Modifier.height(16.dp))
 
                         Card(
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Column(
@@ -277,7 +251,7 @@ fun AboutScreen(navController: NavController) {
                                     Spacer(modifier = Modifier.width(4.dp))
                                     Text(
                                         stringResource(id = R.string.about_screen_mail),
-                                        color = MaterialTheme.colorScheme.secondary,
+                                        color = MaterialTheme.colorScheme.onPrimary,
                                         style = TextStyle(textDecoration = TextDecoration.Underline)
                                     )
                                 }
@@ -306,7 +280,7 @@ fun AboutScreen(navController: NavController) {
                                     Spacer(modifier = Modifier.width(4.dp))
                                     Text(
                                         stringResource(id = R.string.about_screen_phone),
-                                        color = MaterialTheme.colorScheme.secondary,
+                                        color = MaterialTheme.colorScheme.onPrimary,
                                         style = TextStyle(textDecoration = TextDecoration.Underline)
                                     )
                                 }
@@ -319,7 +293,7 @@ fun AboutScreen(navController: NavController) {
 
                 Text(
                     stringResource(id = R.string.about_screen_license),
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     textAlign = TextAlign.Center,
                     lineHeight = 23.sp,
                     style = MaterialTheme.typography.bodyMedium,
@@ -338,7 +312,7 @@ fun AboutScreen(navController: NavController) {
                     },
                     modifier = Modifier
                         .fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onPrimary, MaterialTheme.colorScheme.background)
                 ) {
                     Text(
                         stringResource(id = R.string.about_screen_apibutton),
@@ -349,7 +323,6 @@ fun AboutScreen(navController: NavController) {
             }
         }
     }
-}
 @Composable
 fun TeamMembers(name: String, drawableId: Int) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -360,7 +333,7 @@ fun TeamMembers(name: String, drawableId: Int) {
                 .size(65.dp)
                 //.clip(CircleShape)
         )
-        Text(name, color = MaterialTheme.colorScheme.tertiary)
+        Text(name, color = MaterialTheme.colorScheme.primaryContainer)
     }
 }
 

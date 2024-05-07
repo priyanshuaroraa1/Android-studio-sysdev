@@ -31,14 +31,6 @@ import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
 @Composable
 fun NotificationScreen(navController: NavController) {
 
-    MaterialTheme(
-        colorScheme = lightColorScheme(
-            primary = Color(0xFF7DCCE9),
-            secondary = Color(0xFF0E2D4E),
-            tertiary = Color(0xFFF2EDEC),
-            onPrimary = Color.White,
-        )
-    ) {
         val coroutineScope = rememberCoroutineScope()
         val snackbarHostState = remember { SnackbarHostState() }
         val notificationPermissionGranted = remember { mutableStateOf(false) }
@@ -60,17 +52,9 @@ fun NotificationScreen(navController: NavController) {
             }
         }
 
-        MaterialTheme(
-            colorScheme = lightColorScheme(
-                primary = Color(0xFF7DCCE9),
-                secondary = Color(0xFF0E2D4E),
-                tertiary = Color(0xFFF2EDEC),
-                onPrimary = Color.White
-            )
-        ) {
             Scaffold(
-                containerColor = MaterialTheme.colorScheme.onPrimary,
-                contentColor = MaterialTheme.colorScheme.tertiary,
+                containerColor = MaterialTheme.colorScheme.background,
+                contentColor = MaterialTheme.colorScheme.primaryContainer,
                 snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
             ) {
                 Column(
@@ -85,7 +69,7 @@ fun NotificationScreen(navController: NavController) {
                         style = MaterialTheme.typography.headlineLarge.copy(
                             fontSize = 36.sp,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.secondary
+                            color = MaterialTheme.colorScheme.onPrimary
                         ),
                         textAlign = TextAlign.Center,
                         fontFamily = FontFamily(Font(R.font.font))
@@ -106,7 +90,7 @@ fun NotificationScreen(navController: NavController) {
                     Text(
                         stringResource(id = R.string.notification_screen_subtext),
                         style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Bold
                     )
@@ -117,7 +101,7 @@ fun NotificationScreen(navController: NavController) {
                         onClick = {
                             notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onPrimary, contentColor = MaterialTheme.colorScheme.background),
                         shape = MaterialTheme.shapes.medium
                     ) {
                         Text(stringResource(id = R.string.notification_screen_accept))
@@ -131,12 +115,10 @@ fun NotificationScreen(navController: NavController) {
                                 navController.navigate(Routes.HOME_SCREEN)
                             }
                         },
-                        colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.secondary),)
+                        colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onPrimary),)
                     {
                         Text(stringResource(id = R.string.location_screen_decline))
                     }
                 }
             }
-        }
-    }
 }
