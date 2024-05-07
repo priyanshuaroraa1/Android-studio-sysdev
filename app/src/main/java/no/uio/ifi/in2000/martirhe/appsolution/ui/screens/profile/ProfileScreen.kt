@@ -12,45 +12,50 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.LargeHeader
 import no.uio.ifi.in2000.martirhe.appsolution.R
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     navController: NavController
 ) {
-
     Scaffold(
         topBar = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(
-                    onClick = {
-                        navController.popBackStack()
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                        contentDescription = "Tilbake"
+            TopAppBar(
+                title = {
+                    Text(
+                        stringResource(id = R.string.profile_header),
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onBackground,
                     )
-                }
-                LargeHeader(text = stringResource(id = R.string.profile_header))
-            }
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.navigateUp() }) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.background)
 
-        }
+            )
+        },
+        containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
 
         Column(
@@ -60,13 +65,6 @@ fun ProfileScreen(
                 .fillMaxWidth()
         ) {
 
-            MenuItem(
-                buttonText = "Instillinger",
-                buttonOnClick = {
-
-                }
-            )
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_medium)))
             MenuItem(
                 buttonText = "Badevettreglene",
                 buttonOnClick = {
@@ -84,7 +82,6 @@ fun ProfileScreen(
         }
     }
 }
-
 
 @Composable
 fun MenuItem(

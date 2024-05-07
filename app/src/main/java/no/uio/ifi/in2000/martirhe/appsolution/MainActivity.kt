@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val networkLiveData = NetworkLiveData(applicationContext)  // Initialiser med appens kontekst
+        val networkLiveData = NetworkLiveData(applicationContext)
 
         setContent {
             val snackbarHostState = remember { SnackbarHostState() }
