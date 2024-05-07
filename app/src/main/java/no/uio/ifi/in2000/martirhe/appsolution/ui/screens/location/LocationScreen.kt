@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -49,8 +51,13 @@ fun LocationScreen(navController: NavController) {
         val snackbarHostState = remember { SnackbarHostState() }
         var locationPermissionGranted by remember { mutableStateOf(false) }
         var lastKnownLocation: Location? by remember { mutableStateOf(null) }
-        val fusedLocationClient: FusedLocationProviderClient =
-            LocationServices.getFusedLocationProviderClient(context)
+        val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+        val viewModel: LocationViewModel = viewModel() // Fjerne denne herfra?
+        val locationData by viewModel.locationData.observeAsState()
+
+        LaunchedEffect(Unit) {
+            viewModel.fetchLocation()
+        }
 
         val locationPermissionLauncher = rememberLauncherForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -61,25 +68,21 @@ fun LocationScreen(navController: NavController) {
                     try {
                         val location = fusedLocationClient.lastLocation.await()
                         if (location != null) {
-                            // Oppdaterer lastKnownLocation etter å sjekket null-verdi
                             lastKnownLocation = location
-                            // Viser posisjon
-                            snackbarHostState.showSnackbar("Posisjonen din er godkjent!")
-                            snackbarHostState.showSnackbar("Godkjent - Latitude: ${location.latitude}, Longitude: ${location.longitude}")
                             navController.navigate(Routes.NOTIFICATION_SCREEN)
                         } else {
-                            // Vis man ikke finner posisjon
                             lastKnownLocation = null
-                            snackbarHostState.showSnackbar("Posisjon ikke funnet.")
+                            navController.navigate(Routes.NOTIFICATION_SCREEN)
                         }
                     } catch (e: Exception) {
-                        // Exception handling
-                        snackbarHostState.showSnackbar("Feil med å finne posisjon: ${e.localizedMessage}")
+                        snackbarHostState.showSnackbar("Feil med å finne posisjonen din: ${e.localizedMessage}", duration = SnackbarDuration.Short)
+                        navController.navigate(Routes.NOTIFICATION_SCREEN)
                     }
                 }
             } else {
                 coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Tillatelse avslått.")
+                    snackbarHostState.showSnackbar("Tillatelse avslått.", duration = SnackbarDuration.Short)
+                    navController.navigate(Routes.NOTIFICATION_SCREEN)
                 }
             }
         }
@@ -117,7 +120,8 @@ fun LocationScreen(navController: NavController) {
                     style = MaterialTheme.typography.headlineLarge.copy(
                         fontSize = 26.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.secondary
+                        color = MaterialTheme.colorScheme.secondary,
+                        fontFamily = FontFamily(Font(R.font.font))
                     ),
                     textAlign = TextAlign.Center,
                 )
@@ -144,6 +148,7 @@ fun LocationScreen(navController: NavController) {
                 Spacer(modifier = Modifier
                     .height(32.dp)
                     .size(32.dp))
+
 
                 //Knapper
                 Button(onClick = {
@@ -175,8 +180,8 @@ fun LocationScreen(navController: NavController) {
                 Button(onClick = {
                     coroutineScope.launch {
                         if (snackbarHostState.showSnackbar(
-                                "We strongly recommend activating location services.",
-                                actionLabel = "Go ahead anyways",
+                                "Vi anbefaler å aktivere lokasjonstjenester.",
+                                actionLabel = "Gå videre uten",
                             ) == SnackbarResult.ActionPerformed
                         ) {
                             navController.navigate(Routes.NOTIFICATION_SCREEN)

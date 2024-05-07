@@ -2,11 +2,8 @@ package no.uio.ifi.in2000.martirhe.appsolution.ui.screens.notification
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.os.Build
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -30,7 +27,6 @@ import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.martirhe.appsolution.R
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun NotificationScreen(navController: NavController) {
@@ -46,20 +42,20 @@ fun NotificationScreen(navController: NavController) {
         val coroutineScope = rememberCoroutineScope()
         val snackbarHostState = remember { SnackbarHostState() }
         val notificationPermissionGranted = remember { mutableStateOf(false) }
+        val context = LocalContext.current
 
-        // Define the permission launcher
         val notificationPermissionLauncher = rememberLauncherForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
                 notificationPermissionGranted.value = true
                 coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Notification permission granted.")
-                    navController.navigate(Routes.HOME_SCREEN) // Assuming "homeScreen" is your destination after permissions
+                    CreateNotification(context, "channel_01", "Velkommen til Plask!", "Onboarding fullført. Utforsk appen nå!")
+                    navController.navigate(Routes.HOME_SCREEN)
                 }
             } else {
                 coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Notification permission denied.")
+                    navController.navigate(Routes.HOME_SCREEN)
                 }
             }
         }
@@ -92,9 +88,7 @@ fun NotificationScreen(navController: NavController) {
                             color = MaterialTheme.colorScheme.secondary
                         ),
                         textAlign = TextAlign.Center,
-                        fontFamily = FontFamily(
-                            Font(R.font.font1)
-                        )
+                        fontFamily = FontFamily(Font(R.font.font))
                     )
 
                     Spacer(modifier = Modifier.height(32.dp))
@@ -133,7 +127,8 @@ fun NotificationScreen(navController: NavController) {
                     Button(
                         onClick = {
                             coroutineScope.launch {
-                                snackbarHostState.showSnackbar("You can enable notification permissions in settings.")
+                                snackbarHostState.showSnackbar("Du kan aktivere varslingstillatelser senere")
+                                navController.navigate(Routes.HOME_SCREEN)
                             }
                         },
                         colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.secondary),)

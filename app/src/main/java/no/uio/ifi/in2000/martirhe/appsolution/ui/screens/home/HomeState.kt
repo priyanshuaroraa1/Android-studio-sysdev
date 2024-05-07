@@ -17,6 +17,7 @@ data class HomeState @OptIn(ExperimentalMaterial3Api::class) constructor(
     val allSwimspots: List<Swimspot> = emptyList(),
     val allMarkers: Map<Int, Marker?> = emptyMap(),
     val map: GoogleMap? = null,
+    val userPositionMarker: Marker? = null,
     val lastKnownLocation: Location? = null,
     val selectedSwimspot: Swimspot? = null,
     val customSwimspot: Swimspot? = null,

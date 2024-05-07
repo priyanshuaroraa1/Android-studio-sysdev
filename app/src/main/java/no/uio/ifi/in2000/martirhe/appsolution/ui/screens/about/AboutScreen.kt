@@ -1,10 +1,10 @@
 package no.uio.ifi.in2000.martirhe.appsolution.ui.screens.about
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,8 +36,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,15 +58,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import no.uio.ifi.in2000.martirhe.appsolution.R
-import no.uio.ifi.in2000.martirhe.appsolution.util.UiEvent
+import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.location.LocationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AboutScreen(navController: NavController) {
 
     val context = LocalContext.current
+    val viewModel: LocationViewModel = viewModel()
+    val locationData by viewModel.locationData.observeAsState()
     val interactionSource = remember { MutableInteractionSource() }
 
     MaterialTheme(
@@ -90,10 +97,11 @@ fun AboutScreen(navController: NavController) {
                         }
                     },
                     colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.tertiary)
+
                 )
             },
             containerColor = MaterialTheme.colorScheme.tertiary
-        ) { innerPadding ->
+        ) {
             Column(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
@@ -103,30 +111,17 @@ fun AboutScreen(navController: NavController) {
             ) {
 
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.plasklogo1),
                         contentDescription = "App Logo",
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .size(250.dp),
                         contentScale = ContentScale.Fit,
                     )
                 }
-
-                Text(
-                    stringResource(id = R.string.about_screen_title),
-                    color = MaterialTheme.colorScheme.primary,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontSize = 35.sp,
-                        lineHeight = 28.sp,
-                        fontFamily = FontFamily(Font(R.font.font1)),
-                        fontWeight = FontWeight.Bold
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
 
                 Text(
                     stringResource(id = R.string.about_screen_description),
@@ -135,8 +130,7 @@ fun AboutScreen(navController: NavController) {
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontSize = 25.sp,
                         lineHeight = 28.sp,
-                        fontFamily = FontFamily(Font(R.font.font1)),
-                        //fontWeight = FontWeight.Bold
+                        fontFamily = FontFamily(Font(R.font.font))
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -147,13 +141,29 @@ fun AboutScreen(navController: NavController) {
                 Text(
                     stringResource(id = R.string.about_screen_info),
                     color = MaterialTheme.colorScheme.secondary,
-                    textAlign = TextAlign.Start,
+                    textAlign = TextAlign.Center,
                     lineHeight = 23.sp,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
 
                 Spacer(Modifier.height(16.dp))
+
+                if (locationData != null) {
+                    Text(
+                        "Current Location: Latitude = ${locationData?.latitude}, Longitude = ${locationData?.longitude}",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                } else {
+                    Text(
+                        "Current Location: Latitude = ${locationData?.latitude}, Longitude = ${locationData?.longitude}",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+
+                Spacer(Modifier.height(30.dp))
 
                 Card(
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary),
@@ -169,7 +179,7 @@ fun AboutScreen(navController: NavController) {
                             Icon(Icons.Default.Filter5, contentDescription = "Info Icon", tint = Color.White)
                             Spacer(Modifier.width(8.dp))
                             Text(
-                                text = "Our Team",
+                                text = "Vårt Team",
                                 color = Color.White,
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.Bold
@@ -179,22 +189,22 @@ fun AboutScreen(navController: NavController) {
                         Spacer(Modifier.height(8.dp))
 
                         Row(modifier = Modifier
-                            .horizontalScroll(rememberScrollState())
                             .align(Alignment.CenterHorizontally)
                         ) {
-                            Ansatte("Priyanshu", R.drawable.priyanshu)
-                            Spacer(modifier = Modifier.width(8.dp))
+                            TeamMembers("Priyanshu", R.drawable.priyanshu)
+                            Spacer(modifier = Modifier.width(4.dp))
 
-                            Ansatte("Vetle", R.drawable.vetle)
-                            Spacer(modifier = Modifier.width(8.dp))
+                            TeamMembers("Vetle", R.drawable.vetle)
+                            Spacer(modifier = Modifier.width(4.dp))
 
-                            Ansatte("Bernd", R.drawable.bernd)
-                            Spacer(modifier = Modifier.width(8.dp))
+                            TeamMembers("Bernd", R.drawable.bernd)
+                            Spacer(modifier = Modifier.width(4.dp))
 
-                            Ansatte("Martine", R.drawable.martine)
-                            Spacer(modifier = Modifier.width(8.dp))
+                            TeamMembers("Martine", R.drawable.martine)
+                            Spacer(modifier = Modifier.width(4.dp))
 
-                            Ansatte("Sindre", R.drawable.sindre)
+                            TeamMembers("Sindre", R.drawable.sindre)
+                            Spacer(modifier = Modifier.width(4.dp))
                         }
 
                         Spacer(Modifier.height(16.dp))
@@ -227,6 +237,7 @@ fun AboutScreen(navController: NavController) {
                                 Text(
                                     stringResource(id = R.string.about_screen_teaminfo),
                                     color = MaterialTheme.colorScheme.secondary,
+                                    textAlign = TextAlign.Center,
                                     style = MaterialTheme.typography.bodyMedium.copy(
                                         lineHeight = 23.sp,
                                     ),
@@ -237,7 +248,7 @@ fun AboutScreen(navController: NavController) {
                         Spacer(modifier = Modifier.height(16.dp))
 
                         Card(
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary),
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Column(
@@ -304,7 +315,7 @@ fun AboutScreen(navController: NavController) {
                     }
                 }
 
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(18.dp))
 
                 Text(
                     stringResource(id = R.string.about_screen_license),
@@ -321,7 +332,7 @@ fun AboutScreen(navController: NavController) {
                 Button(
                     onClick = {
                         val intent = Intent(Intent.ACTION_VIEW).apply {
-                            data = Uri.parse("https://www.vg.no")
+                            data = Uri.parse("https://in2000.met.no/2024/4-havvarsel.html")
                         }
                         context.startActivity(intent)
                     },
@@ -340,16 +351,16 @@ fun AboutScreen(navController: NavController) {
     }
 }
 @Composable
-fun Ansatte(name: String, drawableId: Int) {
+fun TeamMembers(name: String, drawableId: Int) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Image(
             painter = painterResource(id = drawableId),
-            contentDescription = "Ansatte Image",
+            contentDescription = "Team ansatte bilder",
             modifier = Modifier
-                .size(55.dp)
-                .clip(CircleShape)
+                .size(65.dp)
+                //.clip(CircleShape)
         )
-        Text(name, color = MaterialTheme.colorScheme.primary)
+        Text(name, color = MaterialTheme.colorScheme.tertiary)
     }
 }
 

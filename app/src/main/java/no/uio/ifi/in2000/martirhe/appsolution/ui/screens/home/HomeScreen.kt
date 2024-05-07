@@ -6,9 +6,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,11 +29,16 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -89,6 +91,8 @@ fun HomeScreen(
     swimspotId: Int = -1,
 ) {
     val homeState = homeViewModel.homeState.collectAsState().value
+    val context = LocalContext.current
+
 
     var initialPosition = homeState.defaultCameraPosition
     val navSwimspot = homeState.allSwimspots.find { it.id == swimspotId }
@@ -104,6 +108,9 @@ fun HomeScreen(
     val cameraPositionState = rememberCameraPositionState {
         position = initialPosition
     }
+    homeViewModel.updateCameraPositionState(cameraPositionState)
+    val locationData by homeViewModel.locationData.observeAsState()
+
 
     homeViewModel.updateCameraPositionState(cameraPositionState)
 
@@ -157,7 +164,7 @@ fun HomeScreen(
 
                         Row(
                             modifier = Modifier
-                                .weight(1f) // Give Text a weight of 1
+                                .weight(1f)
                         ) {
 
                             Text(
@@ -166,9 +173,8 @@ fun HomeScreen(
                                 modifier = Modifier
                                     .padding(
                                         top = dimensionResource(id = R.dimen.padding_medium),
-//                                    bottom = 3.dp
                                     )
-                                    .weight(1f) // Give Text a weight of 1,
+                                    .weight(1f)
                                     .clickable {
                                         coroutineScope.launch {
                                             val currentZoom = cameraPositionState.position.zoom
@@ -212,7 +218,6 @@ fun HomeScreen(
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
-//            HomeSearchBar(homeViewModel = homeViewModel)
 
             GoogleMap(
                 modifier = Modifier,
@@ -244,8 +249,8 @@ fun HomeScreen(
                 MapEffect() { map ->
                     Log.i("Map effect called", "Map effect 1 called")
                     map.setOnMarkerClickListener { marker ->
-                        // Dette skjer når en Marker blir klikket på:
-                        val swimspot = marker.tag as? Swimspot // Cast the tag to your data type
+
+                        val swimspot = marker.tag as? Swimspot
                         Log.i("Marker tag cast:", swimspot.toString())
                         if (swimspot != null) {
                             homeViewModel.onSwimspotPinClick(swimspot)
@@ -263,11 +268,11 @@ fun HomeScreen(
                             scaffoldState.bottomSheetState.expand()
                         }
 
-                        true // Return true to indicate that the click event has been handled
+                        true
                     }
                 }
-                MapEffect{ map ->
-
+                MapEffect(
+                ) { map ->
                     map.setOnMapLoadedCallback {
                         coroutineScope.launch(Dispatchers.Default) {
                             homeViewModel.createAllMarkers(
@@ -276,6 +281,24 @@ fun HomeScreen(
                             )
 
                         }
+                    }
+                }
+                MapEffect(key1 = locationData) {map ->
+                    if (locationData != null) {
+                        homeState.userPositionMarker?.remove()
+                        val newMarker = map.addMarker(
+                            MarkerOptions()
+                                .position(
+                                    LatLng(
+                                        locationData!!.latitude,
+                                        locationData!!.longitude
+                                    )
+                                )
+                        )
+                        homeViewModel.updateUserPositionMarker(newMarker)
+
+                    
+
                     }
                 }
                 MapEffect(key1 = homeState.customSwimspot) { map ->

@@ -140,10 +140,10 @@ fun OnboardingContent(
         Text(
             text = mainTitle,
             style = TextStyle(
-                fontSize = 44.sp,
+                fontSize = 34.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                fontFamily = FontFamily(Font(R.font.font1))
+                fontFamily = FontFamily(Font(R.font.font))
             ),
             color = MaterialTheme.colorScheme.secondary
         )
