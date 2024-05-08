@@ -1,4 +1,5 @@
 ```mermaid
+flowchart LR
 %% Nodes
     A(Start)
     B(Åpne appen)
