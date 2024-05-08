@@ -127,6 +127,40 @@ G  -- Huk er lagret som favoritt i listen -->  H
 ```
 
 
+## Sekvensdiagram (Use case 1)
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant UI
+    participant ViewModel
+    participant Repository
+    participant DataSource 
+
+    loop Skrive i søkefeltet
+    User->> UI: Skrive et symbol i søkefeltet
+    UI  ->> ViewModel: Oppdatere HomeState
+    ViewModel->>UI: UI observerer endringer i HomeState
+    UI->>User: Tegner Composables på nytt med endringer
+    end
+    User->>UI: Klikke på en badeplass i søkeforslagene
+    UI->>ViewModel: Kalle på onSearchbarSelectSwimspot()
+    ViewModel->>UI: Oppdaterer SelectedSwimspot i HomeState
+    ViewModel->>Repository: Etterspørre data fra repository
+    Repository->>DataSource: Etterspørre data fra DataSource
+    DataSource->>Repository: Returnere LocationForecast-objekt
+    Repository->>ViewModel: Oppdatere LocationForecastUiState
+    ViewModel->>UI: UI observerer endringer i LocationForecastUiState
+    UI->>User: Tegner Composables på nytt
+    alt Farevarsel
+    User->>UI: Klikker på farevarsel
+    UI->>ViewModel: 
+    end
+
+```
+
+
+
 
 
 
