@@ -81,7 +81,7 @@ sequenceDiagram
     participant Repository
     participant DataSource 
 
-    
+    loop Søke etter, og velge, badeplass
     loop Skrive i søkefeltet
     User->> UI: Skrive et symbol i søkefeltet
     UI  ->> ViewModel: Oppdatere HomeState
@@ -97,13 +97,13 @@ sequenceDiagram
     Repository->>ViewModel: Oppdatere LocationForecastUiState
     ViewModel->>UI: UI observerer endringer i LocationForecastUiState
     UI->>User: Tegner Composables på nytt
+    end
     alt Farevarsel
     User->>UI: Klikker på farevarsel
     UI->>ViewModel: Oppdaterer HomeState
     ViewModel->>UI: UI observerer endringene i HomeState
     UI->>User: Tegner Composables på nytt
     end
-
 ```
 
 
