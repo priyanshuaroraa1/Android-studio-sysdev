@@ -1,5 +1,3 @@
-
-
 # Modellering av funksjonalitet i PLASK
 Dette dokumentet tar for seg noe av hovedfunksjonaliteten i appen PLASK.
 
@@ -27,7 +25,7 @@ Fra kravene identifisert over, har vi identifisert to Use-caser som dekker flere
 
 ### Klassediagram
 
-## Use-case 1 - Finne badeplass i Drøbak
+# Use-case 1 - Finne badeplass i Drøbak
 Dette use-caset bekriver en bruker som er på dagstur til Drøbak, og ønsker å finne den badeplassen i Drøbak som frister mest å bade ved.
 
 **Navn**: Finn badeplass i Drøbak
@@ -48,7 +46,37 @@ Dette use-caset bekriver en bruker som er på dagstur til Drøbak, og ønsker å
 4.2 Klikker på farvarselsymbolet
 4.3 Ser at farlige værfohold gjør det lite attraktivt å bade. Velger å ikke bade i Drøbak på denne dagsturen
 
-## Use-case 2 - Lagre Huk som favoritt
+## Use case-diagram
+
+```mermaid
+flowchart TD
+%% Nodes
+    A(Start)
+    B(Åpne appen)
+    C(Skrive 'Drø' inn i søkefeltet)
+    D(Klikke på en badeplass i søkemenyen)
+    E(Se åpå værvarsel og bilde)
+    F(Klikke på en annen badeplass i kartet)
+    G(Klikke på farevarsel)
+    H(Slutt)
+
+%% Edge connections between nodes
+    A --> B --> C --> D --> E 
+    E --> F --> E
+    E --> G
+    G -- Velger å bade --> H
+    G -- Velger å ikke bade --> H
+
+```
+
+## Sekvensdiagram
+
+
+
+
+
+
+# Use-case 2 - Lagre Huk som favoritt
 Dette use-caset beskriver en bruker som elsker å bade ved Huk-badeplass, og derfor ønsker å lagre Huk som favoritt.
 
 **Navn**: Lagre Huk som favoritt
@@ -72,29 +100,8 @@ Dette use-caset beskriver en bruker som elsker å bade ved Huk-badeplass, og der
 ### Alternativ flyt 2
 4.1 Huk er allerede markert med stjerne
 
-## Use case-diagram (Use case 1)
 
-```mermaid
-flowchart TD
-%% Nodes
-    A(Start)
-    B(Åpne appen)
-    C(Skrive 'Drø' inn i søkefeltet)
-    D(Klikke på en badeplass i søkemenyen)
-    E(Se åpå værvarsel og bilde)
-    F(Klikke på en annen badeplass i kartet)
-    G(Klikke på farevarsel)
-    H(Slutt)
-
-%% Edge connections between nodes
-    A --> B --> C --> D --> E 
-    E --> F --> E
-    E --> G
-    G -- Velger å bade --> H
-    G -- Velger å ikke bade --> H
-
-```
-## Use case-diagram (Use case 2)
+## Use case-diagram
 
 ```mermaid
 flowchart  TD
@@ -119,7 +126,7 @@ K  -- Huk er allerede markert med stjerne -->
 G  -- Huk er lagret som favoritt i listen -->  H
 ```
 
-## Sekvensdiagram (Use case 1)
+
 
 
 
