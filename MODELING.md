@@ -71,6 +71,36 @@ flowchart TD
 
 ## Sekvensdiagram
 
+Dette sekvensdiagrammet beskriver samhandlingen mellom Bruker, UI og ViewModel, samt hvordan ViewModel henter data fra Repository og DataSource. I sekvensdiagrammet er det ikke spesifisert både LocationForecast og OceanForecast som Repository og DataSource, ettersom begge disse er implementert relativt likt. Sekvensdiagrammet inkluderer ikke prosesser som skjer ved oppstart av appen, som f.eks. kall på MetAlertRepository og -DataSource, men har som forutsetning at dette allerede er oppdatert i HomeState.
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant UI
+    participant ViewModel
+    participant Repository
+    participant DataSource 
+
+    loop Skrive i søkefeltet
+    User->> UI: Skrive et symbol i søkefeltet
+    UI  ->> ViewModel: Oppdatere HomeState
+    ViewModel->>UI: UI observerer endringer i HomeState
+    UI->>User: Tegner Composables på nytt med endringer
+    end
+    User->>UI: Klikke på en badeplass i søkeforslagene
+    UI->>ViewModel: Kalle på onSearchbarSelectSwimspot()
+    ViewModel->>UI: Oppdaterer SelectedSwimspot i HomeState
+    ViewModel->>Repository: Etterspørre data fra repository
+    Repository->>DataSource: Etterspørre data fra DataSource
+    DataSource->>Repository: Returnere LocationForecast-objekt
+    Repository->>ViewModel: Oppdatere LocationForecastUiState
+    ViewModel->>UI: UI observerer endringer i LocationForecastUiState
+    UI->>User: Tegner Composables på nytt
+    alt Farevarsel
+    User->>UI: Klikker på farevarsel
+    UI->>ViewModel: 
+    end
+```
 
 
 
@@ -125,40 +155,6 @@ B  -->  I  -->  J  -->  K
 K  -- Huk er allerede markert med stjerne -->
 G  -- Huk er lagret som favoritt i listen -->  H
 ```
-
-
-## Sekvensdiagram (Use case 1)
-
-```mermaid
-sequenceDiagram
-    actor User
-    participant UI
-    participant ViewModel
-    participant Repository
-    participant DataSource 
-
-    loop Skrive i søkefeltet
-    User->> UI: Skrive et symbol i søkefeltet
-    UI  ->> ViewModel: Oppdatere HomeState
-    ViewModel->>UI: UI observerer endringer i HomeState
-    UI->>User: Tegner Composables på nytt med endringer
-    end
-    User->>UI: Klikke på en badeplass i søkeforslagene
-    UI->>ViewModel: Kalle på onSearchbarSelectSwimspot()
-    ViewModel->>UI: Oppdaterer SelectedSwimspot i HomeState
-    ViewModel->>Repository: Etterspørre data fra repository
-    Repository->>DataSource: Etterspørre data fra DataSource
-    DataSource->>Repository: Returnere LocationForecast-objekt
-    Repository->>ViewModel: Oppdatere LocationForecastUiState
-    ViewModel->>UI: UI observerer endringer i LocationForecastUiState
-    UI->>User: Tegner Composables på nytt
-    alt Farevarsel
-    User->>UI: Klikker på farevarsel
-    UI->>ViewModel: 
-    end
-
-```
-
 
 
 
