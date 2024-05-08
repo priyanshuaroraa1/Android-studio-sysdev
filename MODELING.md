@@ -65,6 +65,13 @@ Dette use-caset beskriver en bruker som elsker å bade ved Huk-badeplass, og der
  5. Klikke på *Favoritter* i navigasjonsmenyen
  6. Ser at Huk er sagret som favoritt
 
+### Alternativ flyt 1
+2.1 Skriver "Huk" i søkefeltet
+2.2 Klikker på Huk i søkemenyen.
+
+### Alternativ flyt 2
+4.1 Huk er allerede markert med stjerne
+
 ## Use case-diagram (Use case 1)
 
 ```mermaid
@@ -83,6 +90,36 @@ flowchart TD
     A --> B --> C --> D --> E 
     E --> F --> E
     E --> G
-    G -- Velger å ikke bade --> H
     G -- Velger å bade --> H
+    G -- Velger å ikke bade --> H
+
 ```
+## Use case-diagram (Use case 2)
+
+```mermaid
+flowchart  TD
+
+%% Nodes
+A(Start)
+B(Åpne appen)
+C(Navigere til Huk i kartet)
+I(Skrive inn 'Huk' i søkefeltet)
+J(Trykke på 'Huk' i søkemenyen)
+D(Klikke på Markøren til Huk badeplass)
+K(Se info om Huk badeplass)
+E(Klikke på stjernen ved siden av navnet til badeplassen)
+F(Klikke på Favoritter i navigasjonsmenyen)
+G(Klikke på farevarsel)
+H(Slutt)
+
+%% Edge connections between nodes
+A  -->  B  -->  C  -->  D  -->  K  -->  E  -->  F  -->  G
+B  -->  I  -->  J  -->  K
+K  -- Huk er allerede markert med stjerne -->
+G  -- Huk er lagret som favoritt i listen -->  H
+```
+
+## Sekvensdiagram (Use case 1)
+
+
+
