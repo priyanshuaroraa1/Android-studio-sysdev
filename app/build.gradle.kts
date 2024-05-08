@@ -18,7 +18,7 @@ android {
     defaultConfig {
         applicationId = "no.uio.ifi.in2000.martirhe.appsolution"
         minSdk = 33 // Updated from 24 to 26, endret til 33 for notification
-        targetSdk = 34
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
 

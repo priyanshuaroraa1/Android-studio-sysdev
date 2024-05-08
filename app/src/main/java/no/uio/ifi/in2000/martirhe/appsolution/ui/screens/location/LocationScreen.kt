@@ -60,19 +60,19 @@ fun LocationScreen(navController: NavController) {
                         val location = fusedLocationClient.lastLocation.await()
                         if (location != null) {
                             lastKnownLocation = location
-                            navController.navigate(Routes.NOTIFICATION_SCREEN)
+                            navController.navigate(Routes.HOME_SCREEN)
                         } else {
                             lastKnownLocation = null
-                            navController.navigate(Routes.NOTIFICATION_SCREEN)
+                            navController.navigate(Routes.HOME_SCREEN)
                         }
                     } catch (e: Exception) {
                         snackbarHostState.showSnackbar("Feil med å finne posisjonen din: ${e.localizedMessage}", duration = SnackbarDuration.Short)
-                        navController.navigate(Routes.NOTIFICATION_SCREEN)
+                        navController.navigate(Routes.HOME_SCREEN)
                     }
                 }
             } else {
                 coroutineScope.launch {
-                    navController.navigate(Routes.NOTIFICATION_SCREEN)
+                    navController.navigate(Routes.HOME_SCREEN)
                 }
             }
         }
@@ -173,7 +173,7 @@ fun LocationScreen(navController: NavController) {
                                 actionLabel = "Gå videre uten",
                             ) == SnackbarResult.ActionPerformed
                         ) {
-                            navController.navigate(Routes.NOTIFICATION_SCREEN)
+                            navController.navigate(Routes.HOME_SCREEN)
                         }
                     }
                 },

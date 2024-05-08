@@ -2,9 +2,6 @@ package no.uio.ifi.in2000.martirhe.appsolution
 
 import FavoritesScreen
 import android.annotation.SuppressLint
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,11 +30,9 @@ import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.navbar.BottomNavBar
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.about.AboutScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.home.HomeScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.location.LocationScreen
-import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.notification.NotificationScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.onboarding.OnboardingScreen
-import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.watersafetyrules.WaterSafetyRulesScreen
-
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.profile.ProfileScreen
+import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.watersafetyrules.WaterSafetyRulesScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.theme.AppSolutionTheme
 import no.uio.ifi.in2000.martirhe.appsolution.util.NetworkLiveData
 import no.uio.ifi.in2000.martirhe.appsolution.util.PreferencesManager
@@ -70,7 +65,7 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(
                     bottomBar = {
-                        if (currentRoute != Routes.ONBOARDING_SCREEN && currentRoute != Routes.LOCATION_SCREEN && currentRoute != Routes.NOTIFICATION_SCREEN) {
+                        if (currentRoute != Routes.ONBOARDING_SCREEN && currentRoute != Routes.LOCATION_SCREEN) {
                             BottomNavBar(navController = navController)
                         }
                     },
@@ -87,9 +82,6 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.LOCATION_SCREEN) {
                             LocationScreen(navController)
-                        }
-                        composable(Routes.NOTIFICATION_SCREEN) {
-                            NotificationScreen(navController)
                         }
                         composable(Routes.HOME_SCREEN) {
                             HomeScreen()
