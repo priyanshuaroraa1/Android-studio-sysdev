@@ -18,7 +18,7 @@ android {
     defaultConfig {
         applicationId = "no.uio.ifi.in2000.martirhe.appsolution"
         minSdk = 24
-        targetSdk = 34 //pga google play
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
