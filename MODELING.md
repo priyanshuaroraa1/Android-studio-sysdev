@@ -223,10 +223,17 @@ classDiagram
 
 Følgende tilstandsdiagram viser hvordan tilstanden til OceanForecastUiState endrer seg over tid. 
 
+```mermaid
+stateDiagram
 
+state OceanForecastUiState {
 
-
-
+    Success --> Loading: When new API-request
+    Loading --> Success: When API-call successfull
+    Loading --> Error: When API-call unsuccessfull
+    Error --> Loading: When new API-request
+}
+```
 
 
 # Use-case 2 - Lagre Huk som favoritt
