@@ -25,6 +25,46 @@ Fra kravene identifisert over, har vi identifisert to Use-caser som dekker flere
 
 ### Klassediagram
 
+## Use case-diagram
+Dette diagrammet viser ulike use caser i appen. 
+
+```mermaid```
+flowchart LR
+%% Nodes
+
+    A{User}
+    subgraph System
+    B(Legge til og fjerne favorittbadeplass)
+    C(Søke etter badeplass)
+    F(Finne badeplass i kartet)
+    D(Se på favorittbadeplasser)
+    E(Sjekke badevettreglene)
+    G(Se badetemperatur)
+    H(Se værmelding)
+    I(Se bilde av badeplass)
+    J(Se tilgjengelighetsinformasjon)
+    end
+
+%% Edge connections between nodes
+    A --> C --> F
+    A --> D -->F
+    A --> E
+    A --> F -- include --> G
+    F -- include --> B
+    F -- include --> H
+    F -- include --> I
+    F -- include --> J
+
+
+%% Individual node styling. Try the visual editor toolbar for easier styling!
+    style A color:#FFFFFF, stroke:#2962FF, fill:#2962FF
+```
+
+%% Individual node styling. Try the visual editor toolbar for easier styling!
+    style A color:#FFFFFF, stroke:#2962FF, fill:#2962FF
+    
+%% You can add notes with two "%" signs in a row!
+
 # Use-case 1 - Finne badeplass i Drøbak
 Dette use-caset bekriver en bruker som er på dagstur til Drøbak, og ønsker å finne den badeplassen i Drøbak som frister mest å bade ved.
 
