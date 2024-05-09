@@ -75,20 +75,21 @@ Dette use-caset bekriver en bruker som er på dagstur til Drøbak, og ønsker å
 **Postbetingelser**: *Ingen*
 
 ### Hovedflyt
-- 1 - Åpne appen
-- 2 - Skrive "Drø" inn i søkefeltet
-- 3 - Klikke på "Badeparken i Drøbak"
-- 4 - Se på værvarsel og bilde
-- 5 - Klikke på en annen badeplass i nærheten
-- 6 - Se på værvarsel og bilde
+1. Åpne appen
+2. Skrive "Drø" inn i søkefeltet
+3. Klikke på "Badeparken i Drøbak"
+4. Se på værvarsel og bilde
+5. Klikke på en annen badeplass i nærheten
+6. Se på værvarsel og bilde
 
 ### Alternativ flyt
 4.1 Det er et farevarsel for Badeparken i Drøbak
 
 4.2 Klikker på farvarselsymbolet
+
 4.3 Ser at farlige værfohold gjør det lite attraktivt å bade. Velger å ikke bade i Drøbak på denne dagsturen
 
-## Use case-diagram
+## Aktivitetsdiagram
 
 ```mermaid
 flowchart TD
@@ -97,18 +98,27 @@ flowchart TD
     B(Åpne appen)
     C(Skrive 'Drø' inn i søkefeltet)
     D(Klikke på en badeplass i søkemenyen)
-    E(Se åpå værvarsel og bilde)
+    E(Se på værvarsel og bilde)
     F(Klikke på en annen badeplass i kartet)
     G(Klikke på farevarsel)
     H(Slutt)
+    I{Fornøyd?}
+    J{Vises\nfarevarsel?}
+    K(Velger å bade)
+    L(Velger å ikke bade)
+
 
 %% Edge connections between nodes
     A --> B --> C --> D --> E 
-    E --> F --> E
-    E --> G
-    G -- Velger å bade --> H
-    G -- Velger å ikke bade --> H
+    E --> I -- Ja --> J -- nei --> K
+    J -- Ja --> G
+    I -- Nei --> F --> E
+    G --> K --> H
+    G --> L --> H
 
+
+    style A color:#FFFFFF, stroke:#2962FF, fill:#2962FF
+    style H color:#FFFFFF, stroke:#2962FF, fill:#2962FF
 ```
 
 ## Sekvensdiagram
@@ -194,14 +204,19 @@ E(Klikke på stjernen ved siden av navnet til badeplassen)
 F(Klikke på Favoritter i navigasjonsmenyen)
 G(Klikke på farevarsel)
 H(Slutt)
+L{Søke eller lete?}
+M{Er Huk favoritt}
 
 %% Edge connections between nodes
-A  -->  B  -->  C  -->  D  -->  K  -->  E  -->  F  -->  G
-B  -->  I  -->  J  -->  K
-K  -- Huk er allerede markert med stjerne -->
-G  -- Huk er lagret som favoritt i listen -->  H
-```
+A -->  B --> L -- Søke--> C  -->  D  -->  K  
+L -- Lete -->  I  -->  J  -->  K --> M
+M --Nei-->  E  -->  F  -->  G
+M -- Ja -->
+G -->  H
 
+style A color:#FFFFFF, stroke:#2962FF, fill:#2962FF
+style H color:#FFFFFF, stroke:#2962FF, fill:#2962FF
+```
 
 ## Sekvensdiagram
 
@@ -253,5 +268,6 @@ sequenceDiagram
     ViewModel->>UI: UI observerer endringer i FavoritesState
     UI->>User: Tegner Composables.
 ```
+
 
 
