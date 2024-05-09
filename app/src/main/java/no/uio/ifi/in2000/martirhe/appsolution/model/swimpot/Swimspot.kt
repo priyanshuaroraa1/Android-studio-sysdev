@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.martirhe.appsolution.data.local.database
+package no.uio.ifi.in2000.martirhe.appsolution.model.swimpot
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

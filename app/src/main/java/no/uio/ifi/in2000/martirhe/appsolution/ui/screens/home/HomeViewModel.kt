@@ -13,7 +13,6 @@ import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -27,7 +26,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.compose.CameraPositionState
-import dagger.hilt.android.internal.Contexts.getApplication
 import com.google.maps.android.ktx.utils.sphericalDistance
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.client.plugins.ResponseException
@@ -46,7 +44,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import no.uio.ifi.in2000.martirhe.appsolution.data.local.database.Swimspot
+import no.uio.ifi.in2000.martirhe.appsolution.model.swimpot.Swimspot
 import no.uio.ifi.in2000.martirhe.appsolution.data.local.database.SwimspotRepository
 import no.uio.ifi.in2000.martirhe.appsolution.data.remote.locationforecast.LocationForecastRepositoryInterface
 import no.uio.ifi.in2000.martirhe.appsolution.data.remote.oceanforecast.OceanForecastRepositoryInterface
@@ -211,7 +209,6 @@ class HomeViewModel @Inject constructor(
     fun onFavouriteClick(
         swimspot: Swimspot
     ) {
-        Log.i("GOT HERE", swimspot.favourited.toString() + ", " + swimspot.original.toString())
         when (swimspot.favourited to swimspot.original) {
             false to true -> makeSwimspotFavourite(swimspot)
             true to true -> makeSwimspotNotFavourite(swimspot)
