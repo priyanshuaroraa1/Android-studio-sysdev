@@ -161,6 +161,55 @@ G  -- Huk er lagret som favoritt i listen -->  H
 ```
 
 
+## Sekvensdiagram
 
+På samme måte som tidligere, beskriver dette sekvensdiagrammet samhandlingen mellom Bruker, UI og ViewModel. I tillegg vises hvordan ViewModel henter data fra Repository, DataSource og Database. Implementasjonen av databasen er i dette diagrammet abstrahert bort, men i hovedsak kommuniserer ViewModel med et repository, som igjen kommuniserer med et DataAccessObject (DAO), som kommuniserer med databasen.
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant UI
+    participant ViewModel
+    participant Repository
+    participant DataSource 
+    participant Database
+
+    %% Navigere til Huk i kartet
+    %% Klikke på Markøren til Huk badeplass
+    %% Klikke på stjernen ved siden av navnet til badeplassen
+    %% Klikke på Favoritter i navigasjonsmenyen
+    %% Ser at Huk er sagret som favoritt
+
+    loop Navigere i kartet
+    User->>UI: Navigere i kartet
+    UI->>UI: Oppdatere cameraPositionState
+    UI->>User: Composables tegnes på nytt
+    end
+
+    loop Velge badeplass i kartet
+    User->>UI: Klikke på en badeplass-markør i kartet
+    UI->>ViewModel: Kalle på onSwimspotPinClick()
+    ViewModel->>UI: Oppdaterer SelectedSwimspot i HomeState
+    ViewModel->>Repository: Etterspørre data fra repository
+    Repository->>DataSource: Etterspørre data fra DataSource
+    DataSource->>Repository: Returnere LocationForecast-objekt
+    Repository->>ViewModel: Oppdatere LocationForecastUiState
+    ViewModel->>UI: UI observerer endringer i LocationForecastUiState
+    UI->>User: Tegner Composables på nytt
+    end
+
+    User->>UI: Klikke på stjernen ved siden av navnet
+    UI->>ViewModel: Kalle på onFavouriteClick()
+    ViewModel->>Database: Oppdatere database
+    Database->>ViewModel: ViewModelen observerer databasen som Flow
+    ViewModel->>UI: Tegne Markør i kartet på nytt
+
+    UI->>UI: Navigere til FavoritesScreen
+    UI-->>ViewModel: Opprette instans av FavoritesViewModel (om nødvendig)
+    ViewModel->>Database: Etterspørre favoriserte badeplasser
+    Database->>ViewModel: Returnere liste av Swimspot-objekter
+    ViewModel->>UI: UI observerer endringer i FavoritesState
+    UI->>User: Tegner Composables.
+```
 
 
