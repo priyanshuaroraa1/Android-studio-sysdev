@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "no.uio.ifi.in2000.martirhe.appsolution"
-    compileSdk = 34
+    compileSdk = 28
 
     room {
         schemaDirectory("$projectDir/schemas")
@@ -17,8 +17,9 @@ android {
 
     defaultConfig {
         applicationId = "no.uio.ifi.in2000.martirhe.appsolution"
-        minSdk = 33 // Updated from 24 to 26, endret til 33 for notification
-        targetSdk = 33
+        minSdk = 24
+        //noinspection ExpiredTargetSdkVersion
+        targetSdk = 28
         versionCode = 1
         versionName = "1.0"
 
@@ -34,7 +35,6 @@ android {
                 arguments["room.schemaLocation"] = "$projectDir/schemas"
             }
         }
-
     }
 
     buildTypes {
