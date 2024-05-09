@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "no.uio.ifi.in2000.martirhe.appsolution"
-    compileSdk = 28
+    compileSdk = 34
 
     room {
         schemaDirectory("$projectDir/schemas")
@@ -18,8 +18,7 @@ android {
     defaultConfig {
         applicationId = "no.uio.ifi.in2000.martirhe.appsolution"
         minSdk = 24
-        //noinspection ExpiredTargetSdkVersion
-        targetSdk = 28
+        targetSdk = 34 //pga google play
         versionCode = 1
         versionName = "1.0"
 
