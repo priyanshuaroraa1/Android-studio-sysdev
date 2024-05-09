@@ -16,19 +16,24 @@ Utgangspunktet for denne modelleringen er noen av de viktigste funksjonelle krav
 - Brukeren skal kunne se bilde av badeplassene
 - Det skal være mulig å søke etter badeplasser både på navn, sted og område.
 
-### Use case 
-Fra kravene identifisert over, har vi identifisert to Use-caser som dekker flere av hovedfunksjonene i appen.
-
 ### Use case-diagram
+De funksjonelle kravene over har gitt opphav til use case-diagrammet under. Her representerer vi ulike user-stories og hvordan de henger sammen, slik som brukeren opplever appen.
+
+### Use case 
+Fra kravene identifisert over, har vi identifisert to Use-caser som dekker flere av hovedfunksjonene i appen. Disse er først beskrevet med en tekstlig beskrivelse.
+
+### Aktivitetsdiagram
+Deretter er use casene videre modellert i et aktivitetsdiagram som viser hvordan brukeren jobber seg gjennom den aktuelle funksjonaliteten. Dette viser i stor grad hvordan brukeren opplever appen.
 
 ### Sekvensdiagram
+Hver av use-casene er videre modellert med et sekvensdiagram, som viser i større detalj hvordan dataflyten foregår.
 
 ### Klassediagram
 
 ## Use case-diagram
 Dette diagrammet viser ulike use caser i appen. 
 
-```mermaid```
+```mermaid
 flowchart LR
 %% Nodes
 
@@ -43,27 +48,23 @@ flowchart LR
     H(Se værmelding)
     I(Se bilde av badeplass)
     J(Se tilgjengelighetsinformasjon)
+    K(Se farevarsler for badeplassene)
     end
 
 %% Edge connections between nodes
+    A --> E
     A --> C --> F
     A --> D -->F
-    A --> E
     A --> F -- include --> G
     F -- include --> B
     F -- include --> H
     F -- include --> I
     F -- include --> J
-
-
+    F -- include --> K
+    
 %% Individual node styling. Try the visual editor toolbar for easier styling!
     style A color:#FFFFFF, stroke:#2962FF, fill:#2962FF
 ```
-
-%% Individual node styling. Try the visual editor toolbar for easier styling!
-    style A color:#FFFFFF, stroke:#2962FF, fill:#2962FF
-    
-%% You can add notes with two "%" signs in a row!
 
 # Use-case 1 - Finne badeplass i Drøbak
 Dette use-caset bekriver en bruker som er på dagstur til Drøbak, og ønsker å finne den badeplassen i Drøbak som frister mest å bade ved.
@@ -74,15 +75,16 @@ Dette use-caset bekriver en bruker som er på dagstur til Drøbak, og ønsker å
 **Postbetingelser**: *Ingen*
 
 ### Hovedflyt
-1. Åpne appen
-2. Skrive "Drø" inn i søkefeltet
-3. Klikke på "Badeparken i Drøbak"
-4. Se på værvarsel og bilde
-5. Klikke på en annen badeplass i nærheten
-6. Se på værvarsel og bilde
+- 1 - Åpne appen
+- 2 - Skrive "Drø" inn i søkefeltet
+- 3 - Klikke på "Badeparken i Drøbak"
+- 4 - Se på værvarsel og bilde
+- 5 - Klikke på en annen badeplass i nærheten
+- 6 - Se på værvarsel og bilde
 
 ### Alternativ flyt
 4.1 Det er et farevarsel for Badeparken i Drøbak
+
 4.2 Klikker på farvarselsymbolet
 4.3 Ser at farlige værfohold gjør det lite attraktivt å bade. Velger å ikke bade i Drøbak på denne dagsturen
 
