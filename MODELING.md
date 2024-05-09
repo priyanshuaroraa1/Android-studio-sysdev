@@ -161,6 +161,69 @@ sequenceDiagram
 
 ## Klassediagram
 
+Dette klassediagrammet beskriver forholdet mellom klassene som brukes til å hente data fra API-ene fra Meterologisk institutt.
+- **Hvit pil** peker på interfacet/klassen en klasse arver fra, og er markert med "inheritance".
+- **Sort pil** peker på klassen som en variabel er en instanse av. Pilen er markert med hvilken variabel det er snakk om.
+
+
+
+```mermaid
+classDiagram
+
+    class OceanForecastDataSource{
+        -String apiKey
+        -HttpClient client
+        +fetchOceanForecast(lat, lon)
+    }
+
+    class OceanForecastRepositoryInterface{
+        <<interface>>
+        getOceanForecast(lat, lon)
+        getOceanForecastRightNow(oceanForecast, lat, lon)
+    }
+
+    class OceanForecastRepository{
+        - OceanForecastDataSource dataSource
+        getOceanForecast(lat, lon)
+        getOceanForecastRightNow(oceanForecast, lat, lon)
+    }
+
+    class OceanForecastState{
+        <<sealed interface>>
+    }
+    class Success {
+        + OceanForecastRightNow oceanForecastRightNow
+    }
+    class Loading {
+    }
+    class Error {
+    }
+
+    class HomeViewModel{
+        -LocationForecastRepositoryInterface locationForecastRepository,
+        -OceanForecastRepositoryInterface oceanForecastRepository,
+        -MetAlertRepositoryInterface metAlertRepository,
+        -SwimspotRepository swimspotRepository,
+        -PreferencesManager preferencesManager,
+        ...
+        -OceanForecastState oceanForecastState,
+    }
+
+    OceanForecastRepository "1" --> "1" OceanForecastDataSource : dataSource
+    HomeViewModel "1" --> "1" OceanForecastRepository : oceanForecastRepository
+    HomeViewModel "1" --> "1" Success : oceanForecastState
+
+    OceanForecastRepository --|> OceanForecastRepositoryInterface : Inheritance
+    Success --|> OceanForecastState : Inheritance
+    Loading --|> OceanForecastState : Inheritance
+    Error --|> OceanForecastState : Inheritance
+```
+
+## Tilstandsdiagram
+
+Følgende tilstandsdiagram viser hvordan tilstanden til OceanForecastUiState endrer seg over tid. 
+
+
 
 
 
