@@ -21,7 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.favorites.FavoritesViewModel
 import no.uio.ifi.in2000.martirhe.appsolution.R
-import no.uio.ifi.in2000.martirhe.appsolution.data.local.database.Swimspot
+import no.uio.ifi.in2000.martirhe.appsolution.model.swimpot.Swimspot
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.WarningIconColor
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.LargeHeader

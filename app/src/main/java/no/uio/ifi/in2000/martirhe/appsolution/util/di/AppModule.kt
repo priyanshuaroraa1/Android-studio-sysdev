@@ -1,4 +1,4 @@
-package no.uio.ifi.in2000.martirhe.appsolution.data.di
+package no.uio.ifi.in2000.martirhe.appsolution.util.di
 
 import android.content.Context
 import android.content.SharedPreferences

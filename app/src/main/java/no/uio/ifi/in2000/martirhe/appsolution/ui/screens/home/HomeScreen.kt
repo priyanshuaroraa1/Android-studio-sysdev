@@ -72,7 +72,7 @@ import io.ktor.utils.io.errors.IOException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.martirhe.appsolution.R
-import no.uio.ifi.in2000.martirhe.appsolution.data.local.database.Swimspot
+import no.uio.ifi.in2000.martirhe.appsolution.model.swimpot.Swimspot
 import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.ForecastNextHour
 import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.ForecastNextWeek
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
