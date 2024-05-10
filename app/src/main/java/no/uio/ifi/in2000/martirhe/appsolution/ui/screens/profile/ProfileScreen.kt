@@ -56,7 +56,6 @@ import java.io.InputStream
 @Composable
 fun ProfileScreen(navController: NavController) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
-    val context = LocalContext.current
     val pickMedia = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         imageUri = uri
     }
@@ -88,7 +87,7 @@ fun ProfileScreen(navController: NavController) {
         ) {
             ProfileHeader(imageUri, onImagePickerClick = { pickMedia.launch("image/*") })
 
-            Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
             MenuItem(
                 buttonText = "Badevettreglene",

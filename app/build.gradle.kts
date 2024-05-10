@@ -152,6 +152,12 @@ dependencies {
     kapt("com.google.dagger:hilt-compiler:2.49")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
+// DataStore
+    implementation ("androidx.datastore:datastore-preferences:1.1.1")
+
+// ViewModel
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+
     // KTX for the Maps SDK for Android
     implementation("com.google.maps.android:maps-ktx:5.0.0")
     // KTX for the Maps SDK for Android Utility Library
