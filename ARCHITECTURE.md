@@ -77,7 +77,7 @@ En brukerhistorie som forekommer ofte i PLASK er at en bruker klikker på en bad
 - **GoogleMap SDK for Android**: Composable for å fremvise kart fra Google sin Google Maps Platform. Krever API-nøkkel fra et GCP-prosjekt (Google Cloud Platform).
 
 ## Beslutning om API-nivå
-Appen målretter API-nivå 33 (Android 13) for å utnytte de nyeste Android-funksjonene som forbedrer funksjonaliteten og brukeropplevelsen, som forbedret håndtering av varsler og personvernsfunksjoner.
+Vi ønsket å sette minimum API-nivå i appen så lavt som mulig, for at den skulle være tilgjengelig for så mange brukere som mulig. Vi valgte minimum API-level 28, som gjør appen tilgjengelig for 86,4% av alle android-enheter. Vi ønsket å benytte oss av et lavere API-nivå, men opplevde ustabilitet i forbindelse med å tegne inn over 500 Markører i Google Maps-composablen på lavere nivåer. Basert på feilmeldinger, ser dette ut til å være relatert til GPU-ens maximum-texture-size.
 
 ## Sikkerhetsaspekter
 - **Sikker lagring av API-nøkler**: Bruker Secrets Gradle Plugin for å håndtere API-nøkler sikkert og holde dem utenfor versjonskontroll.
