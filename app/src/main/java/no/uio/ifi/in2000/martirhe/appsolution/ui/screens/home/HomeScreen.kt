@@ -96,7 +96,6 @@ fun HomeScreen(
 
     var initialPosition = homeState.defaultCameraPosition
     val navigateToSwimspot = homeState.allSwimspots.find { it.id == swimspotId }
-    // Determine initial camera position
 
     if (navigateToSwimspot != null) {
         initialPosition = CameraPosition.fromLatLngZoom(
@@ -104,7 +103,6 @@ fun HomeScreen(
         )
     }
 
-    // Remember the CameraPositionState with the determined initial position
     val cameraPositionState = rememberCameraPositionState {
         position = initialPosition
     }
@@ -235,7 +233,6 @@ fun HomeScreen(
 
                 }
             ) {
-                // Navigate to requested swimspot when Map is drawn
                 MapEffect {
                     if (swimspotId != -1) {
                         homeState.allSwimspots.find { it.id == swimspotId }
@@ -245,7 +242,6 @@ fun HomeScreen(
                             }
                     }
                 }
-                // MapEffect observing when Markers are clicked
                 MapEffect() { map ->
                     Log.i("Map effect called", "Map effect 1 called")
                     map.setOnMarkerClickListener { marker ->
@@ -263,7 +259,6 @@ fun HomeScreen(
                                 durationMs = 250
                             )
                         }
-                        // Expand BottomSheet
                         coroutineScope.launch {
                             scaffoldState.bottomSheetState.expand()
                         }
@@ -296,11 +291,9 @@ fun HomeScreen(
                                 )
                         )
                         homeViewModel.updateUserPositionMarker(newMarker)
-
-                    
-
                     }
                 }
+
                 MapEffect(key1 = homeState.customSwimspot) { map ->
                     Log.i("Map effect called", "Map effect 3 called")
 
@@ -492,7 +485,6 @@ fun BottomSheetSwimspotContent(
                             }
 
                             is LocationForecastUiState.Error -> {
-                                // Error message is shown at top of BottomSheet
                             }
                         }
                     }
@@ -1121,7 +1113,7 @@ fun LargeAndSmallText(
             Image(
                 painter = image,
                 contentDescription = imageDescription,
-                modifier = Modifier.size(16.dp) // Set size or other modifiers as needed
+                modifier = Modifier.size(16.dp)
             )
         }
 
@@ -1186,7 +1178,7 @@ fun WarningIcon(
     Image(
         painter = imageResource,
         contentDescription = warningIconDescription,
-        modifier = Modifier.size(24.dp) // Set size or other modifiers as needed
+        modifier = Modifier.size(24.dp)
     )
 }
 

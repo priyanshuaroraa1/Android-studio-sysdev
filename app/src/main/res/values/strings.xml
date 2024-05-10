@@ -6,7 +6,7 @@
     <string name="about_screen_label">Om Plask</string>
     <string name="about_screen_description">Plask er din guide til badetemperaturer langs kysten. Utforsk ulike strender og badeplasser med oppdatert informasjon rett i hånden.</string>
     <string name="about_screen_info">Plask tilbyr detaljert informasjon om vann- og lufttemperatur, samt vannkvalitet ved dine favorittbadeplasser. Appen inneholder funksjoner som langtidsvarsel for badetemperaturer og muligheten til å lagre og følge med på favorittsteder.</string>
-    <string name="about_screen_team">Møt Teamet Bak Plask</string>
+    <string name="about_screen_team">Møt teamet bak Plask</string>
     <string name="about_screen_teaminfo">Teamet vårt består av dedikerte utviklere og designere som er lidenskapelig opptatt av å skape den beste brukeropplevelsen. Hver medarbeider bringer unik kompetanse for å sikre at Plask ikke bare er funksjonell, men også brukervennlig og nyskapende.</string>
 
     <string name="about_screen_mail">info@plask.no</string>
@@ -31,6 +31,10 @@
     <string name="pagefour_subtitle">Søk og Oppdag</string>
     <string name="pagefour_bodytext">Bruk vårt søkeverktøy for å finne badesteder basert på dine preferanser, fra vannkvalitet til værforhold</string>
 
+    <string name="pagefive_maintitle">Se farevarsel i kartet</string>
+    <string name="pagefive_subtitle">Røde, Oransje og Gule farevarsler</string>
+    <string name="pagefive_bodytext">På kartet ser du badeplasser markert med ulike pin-farger basert på havvarselet for hvert sted. Finn og sammenlign badesteder basert på havvarsel for å velge det tryggeste og mest behagelige stedet for din bading. I tillegg ser du også badesteder som du har lagret som favoritt.</string>
+
     <string name="onboarding_skip">Hopp over</string>
     <string name="onboarding_next">Neste</string>
     <string name="onboarding_done">Ferdig</string>
@@ -42,15 +46,9 @@
     <string name="location_screen_accept">Godta</string>
     <string name="location_screen_decline">Avvis</string>
 
-    // Notification Screen
-    <string name="notification_screen_label">Plask \n Ønsker å sende deg varslinger</string>
-    <string name="notification_screen_subtext">Vi trenger tillatelse til å sende deg varsler angående oppdateringen og varsler ved dine favoritt badesteder.</string>
-    <string name="notification_screen_accept">Godta</string>
-    <string name="notification_screen_decline">Avvis</string>
-
     //WaterSafetyRulesScreen
     <string name="watersafetyrulesscreen_topbar">Badevett</string>
-    <string name="watersafetyrulesscreen_label">Badevett Regler</string>
+    <string name="watersafetyrulesscreen_label">Badevettregler</string>
     <string name="watersafetyrulesscreen_rules">1. Lær å svømme \n 2. Før du går uti, forsikre deg om at du kan komme opp igjen \n 3. Bad helst sammen med andre \n 4. Stup bare der det er dypt \n 5. Svøm langs land \n 6. Svøm ikke under brygge eller foran stupebrett \n 7. Dytt ikke andre ut i vannet og dukk aldri noen under vann \n 8. Hold deg på land hvis du føler deg kald eller uvel \n 9. Rop på hjelp bare hvis du er i fare – aldri ellers!</string>
     <string name="watersafetyrulesscreen_readmore">Les mer om badevett regler her</string>
 

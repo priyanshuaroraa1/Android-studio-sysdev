@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -36,15 +35,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -58,10 +52,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import no.uio.ifi.in2000.martirhe.appsolution.R
-import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.location.LocationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -166,19 +158,19 @@ fun AboutScreen(navController: NavController) {
                             .align(Alignment.CenterHorizontally)
                         ) {
                             TeamMembers("Priyanshu", R.drawable.priyanshu)
-                            Spacer(modifier = Modifier.width(4.dp))
+                            Spacer(modifier = Modifier.width(2.dp))
 
                             TeamMembers("Vetle", R.drawable.vetle)
-                            Spacer(modifier = Modifier.width(4.dp))
+                            Spacer(modifier = Modifier.width(2.dp))
 
                             TeamMembers("Bernd", R.drawable.bernd)
-                            Spacer(modifier = Modifier.width(4.dp))
+                            Spacer(modifier = Modifier.width(2.dp))
 
                             TeamMembers("Martine", R.drawable.martine)
-                            Spacer(modifier = Modifier.width(4.dp))
+                            Spacer(modifier = Modifier.width(2.dp))
 
                             TeamMembers("Sindre", R.drawable.sindre)
-                            Spacer(modifier = Modifier.width(4.dp))
+                            Spacer(modifier = Modifier.width(2.dp))
                         }
 
                         Spacer(Modifier.height(16.dp))
@@ -258,7 +250,6 @@ fun AboutScreen(navController: NavController) {
 
                                 Spacer(modifier = Modifier.height(4.dp))
 
-                                // Phone Row
                                 Row(
                                     modifier = Modifier
                                         .clickable(
@@ -330,10 +321,9 @@ fun TeamMembers(name: String, drawableId: Int) {
             painter = painterResource(id = drawableId),
             contentDescription = "Team ansatte bilder",
             modifier = Modifier
-                .size(65.dp)
-                //.clip(CircleShape)
+                .size(60.dp)
         )
-        Text(name, color = MaterialTheme.colorScheme.primaryContainer)
+        Text(name, color = MaterialTheme.colorScheme.primaryContainer, fontSize = 11.sp)
     }
 }
 

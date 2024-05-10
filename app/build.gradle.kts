@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId = "no.uio.ifi.in2000.martirhe.appsolution"
-        minSdk = 33 // Updated from 24 to 26, endret til 33 for notification
+        minSdk = 28
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -34,7 +34,6 @@ android {
                 arguments["room.schemaLocation"] = "$projectDir/schemas"
             }
         }
-
     }
 
     buildTypes {
@@ -171,6 +170,9 @@ dependencies {
 
     // Coil (for AsyncImage)
     implementation("io.coil-kt:coil-compose:2.6.0")
+
+    // ActivityResultLauncher
+    implementation ("androidx.activity:activity-ktx:1.9.0")
 
     implementation ("androidx.compose.material:material:1.6.5")
 
