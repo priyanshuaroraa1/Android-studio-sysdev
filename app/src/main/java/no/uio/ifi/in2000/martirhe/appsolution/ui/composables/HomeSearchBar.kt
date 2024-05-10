@@ -43,7 +43,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.CoroutineScope
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.home.HomeViewModel
 import no.uio.ifi.in2000.martirhe.appsolution.R
-import no.uio.ifi.in2000.martirhe.appsolution.data.local.database.Swimspot
+import no.uio.ifi.in2000.martirhe.appsolution.model.swimpot.Swimspot
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.home.SwimspotPinIcon
 
 @OptIn(ExperimentalMaterial3Api::class)

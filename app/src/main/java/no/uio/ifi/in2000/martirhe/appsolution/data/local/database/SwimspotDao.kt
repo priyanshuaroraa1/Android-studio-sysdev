@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
+import no.uio.ifi.in2000.martirhe.appsolution.model.swimpot.Swimspot
 
 @Dao
 interface SwimspotDao {
