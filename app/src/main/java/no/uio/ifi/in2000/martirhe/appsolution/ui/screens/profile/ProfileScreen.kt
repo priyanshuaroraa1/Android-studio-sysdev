@@ -55,7 +55,6 @@ import java.io.InputStream
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(navController: NavController) {
-
     Scaffold(
         topBar = {
             TopAppBar(
