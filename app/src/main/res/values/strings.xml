@@ -38,6 +38,8 @@
     <string name="onboarding_skip">Hopp over</string>
     <string name="onboarding_next">Neste</string>
     <string name="onboarding_done">Ferdig</string>
+    <string name="onboarding_back">Tilbake</string>
+
 
     //Location Screen
     <string name="location_screen_label">Plask ønsker å bruke posisjonen din</string>

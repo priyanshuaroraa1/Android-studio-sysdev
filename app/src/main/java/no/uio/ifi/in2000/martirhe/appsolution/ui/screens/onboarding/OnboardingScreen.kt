@@ -92,7 +92,14 @@ fun OnboardingScreen(navController: NavController) {
                 OnboardingBottomBar(
                     currentPage = currentPage,
                     totalPages = totalPages,
-                    onSkipClicked = { currentPage = totalPages - 1 },
+                    onBackClicked = {
+                        if (currentPage > 0) {
+                            currentPage--
+                        }
+                    },
+                    onSkipClicked = {
+                        currentPage = totalPages - 1
+                    },
                     onNextClicked = {
                         if (currentPage < totalPages - 1) {
                             currentPage++
@@ -207,6 +214,7 @@ fun PageIndicator(currentPage: Int, totalPages: Int) {
 fun OnboardingBottomBar(
     currentPage: Int,
     totalPages: Int,
+    onBackClicked: () -> Unit,
     onSkipClicked: () -> Unit,
     onNextClicked: () -> Unit
 ) {
@@ -217,13 +225,25 @@ fun OnboardingBottomBar(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (currentPage < totalPages - 1) {
+        if (currentPage == 0) {
+            // Vis "Hopp over" kun på første side
             TextButton(
                 onClick = onSkipClicked,
                 colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onPrimary)
             ) {
                 Text(
                     stringResource(id = R.string.onboarding_skip),
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        } else {
+            // Vis "Tilbake" på alle andre sider
+            TextButton(
+                onClick = onBackClicked,
+                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onPrimary)
+            ) {
+                Text(
+                    stringResource(id = R.string.onboarding_back),
                     color = MaterialTheme.colorScheme.onPrimary
                 )
             }
@@ -235,9 +255,7 @@ fun OnboardingBottomBar(
             shape = MaterialTheme.shapes.medium
         ) {
             Text(
-                text = if (currentPage < totalPages - 1) stringResource(id = R.string.onboarding_next) else stringResource(
-                    id = R.string.onboarding_done
-                ),
+                text = if (currentPage < totalPages - 1) stringResource(id = R.string.onboarding_next) else stringResource(id = R.string.onboarding_done),
                 color = MaterialTheme.colorScheme.background
             )
         }
