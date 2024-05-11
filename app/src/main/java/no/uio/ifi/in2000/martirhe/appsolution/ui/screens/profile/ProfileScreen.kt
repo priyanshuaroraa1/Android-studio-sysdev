@@ -55,11 +55,6 @@ import java.io.InputStream
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(navController: NavController) {
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
-    val context = LocalContext.current
-    val pickMedia = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        imageUri = uri
-    }
 
     Scaffold(
         topBar = {
@@ -86,7 +81,7 @@ fun ProfileScreen(navController: NavController) {
                 .padding(paddingValues)
                 .padding(horizontal = dimensionResource(id = R.dimen.padding_medium))
         ) {
-            ProfileHeader(imageUri, onImagePickerClick = { pickMedia.launch("image/*") })
+            ProfileHeader()
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -108,18 +103,7 @@ fun ProfileScreen(navController: NavController) {
 }
 
 @Composable
-fun ProfileHeader(imageUri: Uri?, onImagePickerClick: () -> Unit) {
-    val context = LocalContext.current
-    var imageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
-
-    LaunchedEffect(imageUri) {
-        imageUri?.let { uri ->
-            val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
-            val bitmap = android.graphics.BitmapFactory.decodeStream(inputStream)
-            imageBitmap = bitmap.asImageBitmap()
-        }
-    }
-
+fun ProfileHeader() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -136,30 +120,14 @@ fun ProfileHeader(imageUri: Uri?, onImagePickerClick: () -> Unit) {
                 modifier = Modifier
                     .size(120.dp)
                     .clip(CircleShape)
-                    .clickable(onClick = onImagePickerClick)
                     .background(MaterialTheme.colorScheme.surfaceVariant)
             ) {
-                if (imageUri != null && imageBitmap != null) {
-                    Image(
-                        bitmap = imageBitmap!!,
-                        contentDescription = "Profile Picture",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.matchParentSize()
-                    )
-                } else {
                     Icon(
                         imageVector = Icons.Default.AccountCircle,
                         contentDescription = "Default Profile Picture",
                         modifier = Modifier.matchParentSize()
                     )
                 }
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                "Trykk på bildet for å endre",
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
         }
     }
 }
