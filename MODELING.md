@@ -149,10 +149,10 @@ sequenceDiagram
     User->>UI: Klikke på en badeplass i søkeforslagene
     UI -) ViewModel: Kalle på onSearchbarSelectSwimspot()
     ViewModel ->> UI: UI observerer endringer i SelectedSwimspot i HomeState
-    ViewModel->>Repository: Etterspørre data fra repository
-    Repository->>DataSource: Etterspørre data fra DataSource
-    DataSource-->>Repository: Returnere LocationForecast-objekt
-    Repository-->>ViewModel: Oppdatere LocationForecastUiState
+    ViewModel-)Repository: Etterspørre data fra repository
+    Repository-)DataSource: Etterspørre data fra DataSource
+    DataSource--)Repository: Returnere LocationForecast-objekt
+    Repository--)ViewModel: Oppdatere LocationForecastUiState
     ViewModel->>UI: UI observerer endringer i LocationForecastUiState
     UI->>User: Tegner Composables på nytt
     end
@@ -161,8 +161,6 @@ sequenceDiagram
     UI->>ViewModel: Oppdaterer HomeState
     ViewModel->>UI: UI observerer endringene i HomeState
     UI->>User: Tegner Composables på nytt
-    else
-
     end
 ```
 
