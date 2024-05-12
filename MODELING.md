@@ -98,7 +98,6 @@ Dette use-caset bekriver en bruker som er på dagstur til Drøbak, og ønsker å
 flowchart TD
 %% Nodes
     A(Start)
-    B(Åpne appen)
     C(Skrive 'Drø' inn i søkefeltet)
     D(Klikke på en badeplass i søkemenyen)
     E(Se på værvarsel og bilde)
@@ -112,7 +111,7 @@ flowchart TD
 
 
 %% Edge connections between nodes
-    A --> B --> C --> D --> E 
+    A --> C --> D --> E 
     E --> I -- Ja --> J -- nei --> K
     J -- Ja --> G
     I -- Nei --> F --> E
