@@ -263,14 +263,13 @@ Dette use-caset beskriver en bruker som elsker å bade ved Huk-badeplass, og der
 4.1 Huk er allerede markert med stjerne
 
 
-## Use case-diagram
+## Aktivitetsdiagram
 
 ```mermaid
 flowchart  TD
 
 %% Nodes
 A(Start)
-B(Åpne appen)
 C(Navigere til Huk i kartet)
 I(Skrive inn 'Huk' i søkefeltet)
 J(Trykke på 'Huk' i søkemenyen)
@@ -284,7 +283,7 @@ L{Søke eller lete?}
 M{Er Huk favoritt}
 
 %% Edge connections between nodes
-A -->  B --> L -- Søke--> C  -->  D  -->  K  
+A --> L -- Søke--> C  -->  D  -->  K  
 L -- Lete -->  I  -->  J  -->  K --> M
 M --Nei-->  E  -->  F  -->  G
 M -- Ja -->
