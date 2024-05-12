@@ -1,5 +1,5 @@
 # Modellering av funksjonalitet i PLASK
-Dette dokumentet tar for seg noe av hovedfunksjonaliteten i appen PLASK.
+Dette dokumentet tar for seg noe av hovedfunksjonaliteten i appen PLASK. Noen av modellene avviker litt i notasjon fra Unified Modeling Language (UML), ettersom vi har valgt å følge oppgavetekstens anbefaling og bruke Mermaid for modellering. Alle avvik fra UML er oppgitt under.
 
 
 ## Funksjonelle krav
@@ -21,9 +21,12 @@ De funksjonelle kravene over har gitt opphav til use case-diagrammet under. Her 
 
 ### Use case 
 Fra kravene identifisert over, har vi identifisert to Use-caser som dekker flere av hovedfunksjonene i appen. Disse er først beskrevet med en tekstlig beskrivelse.
+Diagrammet avviker fra UML ved at noden "User" ikke ser ut som en strekfigur, og at includes- og extends-relasjojnene ikke er notert med "<<" og ">>".
 
 ### Aktivitetsdiagram
 Deretter er use casene videre modellert i et aktivitetsdiagram som viser hvordan brukeren jobber seg gjennom den aktuelle funksjonaliteten. Dette viser i stor grad hvordan brukeren opplever appen.
+
+Diagrammet avviker fra UML ved at noden User ikke ser ut som en strekfigur, og at includes- og extends-relasjojnene ikke er notert med 
 
 ### Sekvensdiagram
 Hver av use-casene er videre modellert med et sekvensdiagram, som viser i større detalj hvordan dataflyten foregår.
