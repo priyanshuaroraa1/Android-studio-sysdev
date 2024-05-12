@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -39,6 +40,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -158,19 +160,19 @@ fun AboutScreen(navController: NavController) {
                             .align(Alignment.CenterHorizontally)
                         ) {
                             TeamMembers("Priyanshu", R.drawable.priyanshu)
-                            Spacer(modifier = Modifier.width(2.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
 
                             TeamMembers("Vetle", R.drawable.vetle)
-                            Spacer(modifier = Modifier.width(2.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
 
                             TeamMembers("Bernd", R.drawable.bernd)
-                            Spacer(modifier = Modifier.width(2.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
 
                             TeamMembers("Martine", R.drawable.martine)
-                            Spacer(modifier = Modifier.width(2.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
 
                             TeamMembers("Sindre", R.drawable.sindre)
-                            Spacer(modifier = Modifier.width(2.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
                         }
 
                         Spacer(Modifier.height(16.dp))
@@ -322,6 +324,7 @@ fun TeamMembers(name: String, drawableId: Int) {
             contentDescription = "Team medlem bilder",
             modifier = Modifier
                 .size(60.dp)
+                .clip(CircleShape)
         )
         Text(name, color = MaterialTheme.colorScheme.primaryContainer, fontSize = 11.sp)
     }
