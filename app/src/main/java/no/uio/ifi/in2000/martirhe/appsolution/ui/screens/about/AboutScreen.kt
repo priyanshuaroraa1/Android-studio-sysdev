@@ -96,7 +96,7 @@ fun AboutScreen(navController: NavController) {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.plasklogo1),
+                        painter = painterResource(id = R.drawable.plask_logo),
                         contentDescription = "App Logo",
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
