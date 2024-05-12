@@ -75,18 +75,22 @@ Dette use-caset bekriver en bruker som er på dagstur til Drøbak, og ønsker å
 **Navn**: Finn badeplass i Drøbak
 **Aktør**: Bruker
 **Prebetingelser**: Internettilkobling
-**Postbetingelser**: *Ingen*
+**Postbetingelser**: Brukeren skal ha bestemt seg for hvor å bade på dagstud i Drøbak.
 
 ### Hovedflyt
 1. Åpne appen
 2. Skrive "Drø" inn i søkefeltet
 3. Klikke på "Badeparken i Drøbak"
 4. Se på værvarsel og bilde
-5. Klikke på en annen badeplass i nærheten
-6. Se på værvarsel og bilde
+5. Bestemmer seg for å bade eller å ikke bade ved en badeplass
 
-### Alternativ flyt
-4.1 Det er et farevarsel for Badeparken i Drøbak
+### Alternativ flyt 1 (Kan repeteres)
+4.1 Se på værvarsel og bilde
+
+4.2 Er ikke fornøy og navigerer til en ny badeplass
+
+### Alternativ flyt 2
+4.1 Det er et farevarsel for badeplassen
 
 4.2 Klikker på farvarselsymbolet
 
