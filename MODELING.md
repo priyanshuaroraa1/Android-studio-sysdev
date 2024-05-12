@@ -324,26 +324,26 @@ sequenceDiagram
 
     loop Velge badeplass i kartet
     User->>UI: Klikke på en badeplass-markør i kartet
-    UI->>ViewModel: Kalle på onSwimspotPinClick()
+    UI-)ViewModel: Kalle på onSwimspotPinClick()
     ViewModel->>UI: Oppdaterer SelectedSwimspot i HomeState
-    ViewModel->>Repository: Etterspørre data fra repository
-    Repository->>DataSource: Etterspørre data fra DataSource
-    DataSource->>Repository: Returnere LocationForecast-objekt
-    Repository->>ViewModel: Oppdatere LocationForecastUiState
+    ViewModel-)Repository: Etterspørre data fra repository
+    Repository-)DataSource: Etterspørre data fra DataSource
+    DataSource--)Repository: Returnere LocationForecast-objekt
+    Repository--)ViewModel: Oppdatere LocationForecastUiState
     ViewModel->>UI: UI observerer endringer i LocationForecastUiState
     UI->>User: Tegner Composables på nytt
     end
 
     User->>UI: Klikke på stjernen ved siden av navnet
-    UI->>ViewModel: Kalle på onFavouriteClick()
-    ViewModel->>Database: Oppdatere database
-    Database->>ViewModel: ViewModelen observerer databasen som Flow
-    ViewModel->>UI: Tegne Markør i kartet på nytt
+    UI-)ViewModel: Kalle på onFavouriteClick()
+    ViewModel-)Database: Oppdatere database
+    Database--)ViewModel: ViewModelen observerer databasen som Flow
+    ViewModel-)UI: Tegne Markør i kartet på nytt
 
     UI->>UI: Navigere til FavoritesScreen
-    UI-->>ViewModel: Opprette instans av FavoritesViewModel (om nødvendig)
-    ViewModel->>Database: Etterspørre favoriserte badeplasser
-    Database->>ViewModel: Returnere liste av Swimspot-objekter
+    UI->>ViewModel: Opprette instans av FavoritesViewModel (om nødvendig)
+    ViewModel-)Database: Etterspørre favoriserte badeplasser
+    Database--)ViewModel: Returnere liste av Swimspot-objekter
     ViewModel->>UI: UI observerer endringer i FavoritesState
     UI->>User: Tegner Composables.
 ```
