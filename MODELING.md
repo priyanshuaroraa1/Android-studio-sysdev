@@ -94,7 +94,7 @@ Dette use-caset bekriver en bruker som er på dagstur til Drøbak, og ønsker å
 
 4.2 Klikker på farvarselsymbolet
 
-4.3 Ser at farlige værfohold gjør det lite attraktivt å bade. Velger å ikke bade i Drøbak på denne dagsturen
+4.3 Ser at værforholdene kan gjøre det ugunstig å bade.
 
 ## Aktivitetsdiagram
 
