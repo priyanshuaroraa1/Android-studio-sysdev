@@ -120,7 +120,7 @@ fun LocationScreen(navController: NavController) {
 
                 Image(
                     painter = painterResource(id = R.drawable.location),
-                    contentDescription = "Main Illustration",
+                    contentDescription = "Lokasjon illustrasjon",
                     modifier = Modifier
                         .size(250.dp)
                         .clip(CircleShape)

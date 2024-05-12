@@ -75,7 +75,7 @@ fun AboutScreen(navController: NavController) {
                     },
                     navigationIcon = {
                         IconButton(onClick = { navController.navigateUp() }) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Tilbake ikon")
                         }
                     },
                     colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.background)
@@ -97,7 +97,7 @@ fun AboutScreen(navController: NavController) {
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.plask_logo),
-                        contentDescription = "App Logo",
+                        contentDescription = "Plask logo",
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
                             .size(250.dp),
@@ -142,7 +142,7 @@ fun AboutScreen(navController: NavController) {
                     ) {
 
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(Icons.Default.Filter5, contentDescription = "Info Icon", tint = Color.White)
+                            Icon(Icons.Default.Filter5, contentDescription = "Info ikon", tint = Color.White)
                             Spacer(Modifier.width(8.dp))
                             Text(
                                 text = "Vårt Team",
@@ -237,7 +237,7 @@ fun AboutScreen(navController: NavController) {
                                 ) {
                                     Icon(
                                         Icons.Filled.Email,
-                                        contentDescription = "Email",
+                                        contentDescription = "Mail ikon",
                                         tint = MaterialTheme.colorScheme.secondary
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
@@ -265,7 +265,7 @@ fun AboutScreen(navController: NavController) {
                                 ) {
                                     Icon(
                                         Icons.Filled.Phone,
-                                        contentDescription = "Phone",
+                                        contentDescription = "Telefon ikon",
                                         tint = MaterialTheme.colorScheme.secondary
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
@@ -319,7 +319,7 @@ fun TeamMembers(name: String, drawableId: Int) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Image(
             painter = painterResource(id = drawableId),
-            contentDescription = "Team ansatte bilder",
+            contentDescription = "Team medlem bilder",
             modifier = Modifier
                 .size(60.dp)
         )
