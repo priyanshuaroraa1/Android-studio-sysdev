@@ -75,7 +75,7 @@ Dette use-caset bekriver en bruker som er på dagstur til Drøbak, og ønsker å
 **Navn**: Finn badeplass i Drøbak
 **Aktør**: Bruker
 **Prebetingelser**: Internettilkobling
-**Postbetingelser**: Brukeren skal ha bestemt seg for hvor å bade på dagstud i Drøbak.
+**Postbetingelser**: Brukeren skal ha bestemt seg for hvor å bade på dagstur i Drøbak.
 
 ### Hovedflyt
 1. Åpne appen
