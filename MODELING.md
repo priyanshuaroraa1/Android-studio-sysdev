@@ -17,16 +17,13 @@ Utgangspunktet for denne modelleringen er noen av de viktigste funksjonelle krav
 - Det skal være mulig å søke etter badeplasser både på navn, sted og område.
 
 ### Use case-diagram
-De funksjonelle kravene over har gitt opphav til use case-diagrammet under. Her representerer vi ulike user-stories og hvordan de henger sammen, slik som brukeren opplever appen.
+De funksjonelle kravene over har gitt opphav til use case-diagrammet under. Her representerer vi ulike user-stories og hvordan de henger sammen, slik som brukeren opplever appen. Diagrammet avviker fra UML ved at noden "User" ikke ser ut som en strekfigur, og at includes- og extends-relasjojnene ikke er notert med "<<" og ">>".
 
 ### Use case 
 Fra kravene identifisert over, har vi identifisert to Use-caser som dekker flere av hovedfunksjonene i appen. Disse er først beskrevet med en tekstlig beskrivelse.
-Diagrammet avviker fra UML ved at noden "User" ikke ser ut som en strekfigur, og at includes- og extends-relasjojnene ikke er notert med "<<" og ">>".
 
 ### Aktivitetsdiagram
-Deretter er use casene videre modellert i et aktivitetsdiagram som viser hvordan brukeren jobber seg gjennom den aktuelle funksjonaliteten. Dette viser i stor grad hvordan brukeren opplever appen.
-
-Diagrammet avviker fra UML ved at noden User ikke ser ut som en strekfigur, og at includes- og extends-relasjojnene ikke er notert med 
+Deretter er den ene use casen modellert i et aktivitetsdiagram som viser hvordan brukeren jobber seg gjennom den aktuelle funksjonaliteten. Dette viser i stor grad hvordan brukeren opplever appen. Diagrammet avviker fra UML ved at start-feltet ikke er modellert som en svart prikk, og at slutt-feltet ikke er modellert som en svart prikk med sirkel rundt.
 
 ### Sekvensdiagram
 Hver av use-casene er videre modellert med et sekvensdiagram, som viser i større detalj hvordan dataflyten foregår.
@@ -97,6 +94,8 @@ Dette use-caset bekriver en bruker som er på dagstur til Drøbak, og ønsker å
 4.3 Ser at værforholdene kan gjøre det ugunstig å bade.
 
 ## Aktivitetsdiagram
+
+Det kan i noen sammenhenger være nødvendig å tegen et aktivitetsdiagram som dekker all funksjonalitet i en app, men vi har vurdert det som mer hensiktsmessig å lage et aktivitetsdiagram koblet opp mot denne use casen. Grunnen til det er at denne use casen dekker den viktigste funksjonaliteten til appen, og også mesteparten av tiden brukerne bruker i appen. 
 
 ```mermaid
 flowchart TD
