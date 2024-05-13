@@ -165,7 +165,7 @@ class HomeViewModel @Inject constructor(
     fun updateUserPositionMarker(marker: Marker?) {
         homeState.value.userPositionMarker?.remove()
         _homeState.update { homeState ->
-            homeState.copy(customMarker = marker)
+            homeState.copy(userPositionMarker = marker)
         }
     }
 

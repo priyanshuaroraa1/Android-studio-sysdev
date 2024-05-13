@@ -15,7 +15,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -34,7 +33,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import no.uio.ifi.in2000.martirhe.appsolution.R
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
-import no.uio.ifi.in2000.martirhe.appsolution.ui.theme.md_theme_dark_background
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -46,8 +44,7 @@ fun LocationScreen(navController: NavController) {
         var locationPermissionGranted by remember { mutableStateOf(false) }
         var lastKnownLocation: Location? by remember { mutableStateOf(null) }
         val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-        val viewModel: LocationViewModel = viewModel() //
-        val locationData by viewModel.locationData.observeAsState()
+        val viewModel: LocationViewModel = viewModel()
 
         LaunchedEffect(Unit) {
             viewModel.fetchLocation()
@@ -63,20 +60,19 @@ fun LocationScreen(navController: NavController) {
                         val location = fusedLocationClient.lastLocation.await()
                         if (location != null) {
                             lastKnownLocation = location
-                            navController.navigate(Routes.NOTIFICATION_SCREEN)
+                            navController.navigate(Routes.HOME_SCREEN)
                         } else {
                             lastKnownLocation = null
-                            navController.navigate(Routes.NOTIFICATION_SCREEN)
+                            navController.navigate(Routes.HOME_SCREEN)
                         }
                     } catch (e: Exception) {
                         snackbarHostState.showSnackbar("Feil med å finne posisjonen din: ${e.localizedMessage}", duration = SnackbarDuration.Short)
-                        navController.navigate(Routes.NOTIFICATION_SCREEN)
+                        navController.navigate(Routes.HOME_SCREEN)
                     }
                 }
             } else {
                 coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Tillatelse avslått.", duration = SnackbarDuration.Short)
-                    navController.navigate(Routes.NOTIFICATION_SCREEN)
+                    navController.navigate(Routes.HOME_SCREEN)
                 }
             }
         }
@@ -143,8 +139,6 @@ fun LocationScreen(navController: NavController) {
                     .height(32.dp)
                     .size(32.dp))
 
-
-                //Knapper
                 Button(onClick = {
                     if (ContextCompat.checkSelfPermission(
                             context,
@@ -179,7 +173,7 @@ fun LocationScreen(navController: NavController) {
                                 actionLabel = "Gå videre uten",
                             ) == SnackbarResult.ActionPerformed
                         ) {
-                            navController.navigate(Routes.NOTIFICATION_SCREEN)
+                            navController.navigate(Routes.HOME_SCREEN)
                         }
                     }
                 },

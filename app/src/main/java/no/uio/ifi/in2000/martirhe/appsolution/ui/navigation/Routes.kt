@@ -6,7 +6,6 @@ object Routes {
     const val ABOUT_US_SCREEN = "about_us_screen"
     const val ONBOARDING_SCREEN = "onboarding_screen"
     const val LOCATION_SCREEN = "location_screen"
-    const val NOTIFICATION_SCREEN = "notification_screen"
     const val FAVORITES_SCREEN = "favorites_screen"
     const val WATERSAFETYRULES_SCREEN = "watersafetyrules_screen"
     const val PROFILE_SCREEN = "profile_screen"
