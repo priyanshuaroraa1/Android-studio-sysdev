@@ -10,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -23,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import io.ktor.http.ContentType
 import no.uio.ifi.in2000.martirhe.appsolution.R
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
 
@@ -31,7 +29,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
 @Composable
 fun OnboardingScreen(navController: NavController) {
 
-        var currentPage by remember { mutableStateOf(0) }
+        var currentPage by remember { mutableIntStateOf(0) }
         val totalPages = 4
 
         val (imageId, mainTitle, subTitle, bodyText) = when (currentPage) {

@@ -95,7 +95,7 @@ class HomeViewModel @Inject constructor(
 
     }
 
-    fun fetchLocation() {
+    private fun fetchLocation() {
         val locationRequest = LocationRequest.create().apply {
             interval = 10000
             fastestInterval = 5000
@@ -145,6 +145,7 @@ class HomeViewModel @Inject constructor(
             favourited = false,
             url = null,
         )
+        updateSearchbarActive(false)
         updateCustomSwimspot(customSwimspot)
         updateSelectedSwimspot(customSwimspot)
         updateBottomSheetPosition(true)
