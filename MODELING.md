@@ -1,5 +1,5 @@
 # Modellering av funksjonalitet i PLASK
-Dette dokumentet tar for seg noe av hovedfunksjonaliteten i appen PLASK.
+Dette dokumentet tar for seg noe av hovedfunksjonaliteten i appen PLASK. Noen av modellene avviker litt i notasjon fra Unified Modeling Language (UML), ettersom vi har valgt å følge oppgavetekstens anbefaling og bruke Mermaid for modellering. Alle avvik fra UML er oppgitt under.
 
 
 ## Funksjonelle krav
@@ -17,13 +17,13 @@ Utgangspunktet for denne modelleringen er noen av de viktigste funksjonelle krav
 - Det skal være mulig å søke etter badeplasser både på navn, sted og område.
 
 ### Use case-diagram
-De funksjonelle kravene over har gitt opphav til use case-diagrammet under. Her representerer vi ulike user-stories og hvordan de henger sammen, slik som brukeren opplever appen.
+De funksjonelle kravene over har gitt opphav til use case-diagrammet under. Her representerer vi ulike user-stories og hvordan de henger sammen, slik som brukeren opplever appen. Diagrammet avviker fra UML ved at noden "User" ikke ser ut som en strekfigur, og at includes- og extends-relasjojnene ikke er notert med "<<" og ">>".
 
 ### Use case 
 Fra kravene identifisert over, har vi identifisert to Use-caser som dekker flere av hovedfunksjonene i appen. Disse er først beskrevet med en tekstlig beskrivelse.
 
 ### Aktivitetsdiagram
-Deretter er use casene videre modellert i et aktivitetsdiagram som viser hvordan brukeren jobber seg gjennom den aktuelle funksjonaliteten. Dette viser i stor grad hvordan brukeren opplever appen.
+Deretter er den ene use casen modellert i et aktivitetsdiagram som viser hvordan brukeren jobber seg gjennom den aktuelle funksjonaliteten. Dette viser i stor grad hvordan brukeren opplever appen. Diagrammet avviker fra UML ved at start-feltet ikke er modellert som en svart prikk, og at slutt-feltet ikke er modellert som en svart prikk med sirkel rundt.
 
 ### Sekvensdiagram
 Hver av use-casene er videre modellert med et sekvensdiagram, som viser i større detalj hvordan dataflyten foregår.
@@ -72,30 +72,35 @@ Dette use-caset bekriver en bruker som er på dagstur til Drøbak, og ønsker å
 **Navn**: Finn badeplass i Drøbak
 **Aktør**: Bruker
 **Prebetingelser**: Internettilkobling
-**Postbetingelser**: *Ingen*
+**Postbetingelser**: Brukeren skal ha bestemt seg for hvor å bade på dagstur i Drøbak.
 
 ### Hovedflyt
 1. Åpne appen
 2. Skrive "Drø" inn i søkefeltet
 3. Klikke på "Badeparken i Drøbak"
 4. Se på værvarsel og bilde
-5. Klikke på en annen badeplass i nærheten
-6. Se på værvarsel og bilde
+5. Bestemmer seg for å bade eller å ikke bade ved en badeplass
 
-### Alternativ flyt
-4.1 Det er et farevarsel for Badeparken i Drøbak
+### Alternativ flyt 1 (Kan repeteres)
+4.1 Se på værvarsel og bilde
+
+4.2 Er ikke fornøy og navigerer til en ny badeplass
+
+### Alternativ flyt 2
+4.1 Det er et farevarsel for badeplassen
 
 4.2 Klikker på farvarselsymbolet
 
-4.3 Ser at farlige værfohold gjør det lite attraktivt å bade. Velger å ikke bade i Drøbak på denne dagsturen
+4.3 Ser at værforholdene kan gjøre det ugunstig å bade.
 
 ## Aktivitetsdiagram
+
+Det kan i noen sammenhenger være nødvendig å tegne et aktivitetsdiagram som dekker all funksjonalitet i en app, men vi har vurdert det som mer hensiktsmessig å lage et aktivitetsdiagram koblet opp mot denne use casen. Grunnen til det er at denne use casen dekker den viktigste funksjonaliteten til appen, og også mesteparten av tiden brukerne bruker i appen. 
 
 ```mermaid
 flowchart TD
 %% Nodes
     A(Start)
-    B(Åpne appen)
     C(Skrive 'Drø' inn i søkefeltet)
     D(Klikke på en badeplass i søkemenyen)
     E(Se på værvarsel og bilde)
@@ -109,7 +114,7 @@ flowchart TD
 
 
 %% Edge connections between nodes
-    A --> B --> C --> D --> E 
+    A --> C --> D --> E 
     E --> I -- Ja --> J -- nei --> K
     J -- Ja --> G
     I -- Nei --> F --> E
@@ -141,12 +146,12 @@ sequenceDiagram
     UI->>User: Tegner Composables på nytt med endringer
     end
     User->>UI: Klikke på en badeplass i søkeforslagene
-    UI->>ViewModel: Kalle på onSearchbarSelectSwimspot()
-    ViewModel->>UI: Oppdaterer SelectedSwimspot i HomeState
-    ViewModel->>Repository: Etterspørre data fra repository
-    Repository->>DataSource: Etterspørre data fra DataSource
-    DataSource->>Repository: Returnere LocationForecast-objekt
-    Repository->>ViewModel: Oppdatere LocationForecastUiState
+    UI -) ViewModel: Kalle på onSearchbarSelectSwimspot()
+    ViewModel ->> UI: UI observerer endringer i SelectedSwimspot i HomeState
+    ViewModel-)Repository: Etterspørre data fra repository
+    Repository-)DataSource: Etterspørre data fra DataSource
+    DataSource--)Repository: Returnere LocationForecast-objekt
+    Repository--)ViewModel: Oppdatere LocationForecastUiState
     ViewModel->>UI: UI observerer endringer i LocationForecastUiState
     UI->>User: Tegner Composables på nytt
     end
@@ -221,7 +226,7 @@ classDiagram
 
 ## Tilstandsdiagram
 
-Følgende tilstandsdiagram viser hvordan tilstanden til OceanForecastUiState endrer seg over tid. 
+Følgende tilstandsdiagram viser hvordan tilstanden til OceanForecastUiState endrer seg over tid. LocationForecastUiState og MetAlertUiState er implementert på samme måte.
 
 ```mermaid
 stateDiagram
@@ -261,14 +266,13 @@ Dette use-caset beskriver en bruker som elsker å bade ved Huk-badeplass, og der
 4.1 Huk er allerede markert med stjerne
 
 
-## Use case-diagram
+## Aktivitetsdiagram
 
 ```mermaid
 flowchart  TD
 
 %% Nodes
 A(Start)
-B(Åpne appen)
 C(Navigere til Huk i kartet)
 I(Skrive inn 'Huk' i søkefeltet)
 J(Trykke på 'Huk' i søkemenyen)
@@ -282,7 +286,7 @@ L{Søke eller lete?}
 M{Er Huk favoritt}
 
 %% Edge connections between nodes
-A -->  B --> L -- Søke--> C  -->  D  -->  K  
+A --> L -- Søke--> C  -->  D  -->  K  
 L -- Lete -->  I  -->  J  -->  K --> M
 M --Nei-->  E  -->  F  -->  G
 M -- Ja -->
@@ -319,26 +323,26 @@ sequenceDiagram
 
     loop Velge badeplass i kartet
     User->>UI: Klikke på en badeplass-markør i kartet
-    UI->>ViewModel: Kalle på onSwimspotPinClick()
+    UI-)ViewModel: Kalle på onSwimspotPinClick()
     ViewModel->>UI: Oppdaterer SelectedSwimspot i HomeState
-    ViewModel->>Repository: Etterspørre data fra repository
-    Repository->>DataSource: Etterspørre data fra DataSource
-    DataSource->>Repository: Returnere LocationForecast-objekt
-    Repository->>ViewModel: Oppdatere LocationForecastUiState
+    ViewModel-)Repository: Etterspørre data fra repository
+    Repository-)DataSource: Etterspørre data fra DataSource
+    DataSource--)Repository: Returnere LocationForecast-objekt
+    Repository--)ViewModel: Oppdatere LocationForecastUiState
     ViewModel->>UI: UI observerer endringer i LocationForecastUiState
     UI->>User: Tegner Composables på nytt
     end
 
     User->>UI: Klikke på stjernen ved siden av navnet
-    UI->>ViewModel: Kalle på onFavouriteClick()
-    ViewModel->>Database: Oppdatere database
-    Database->>ViewModel: ViewModelen observerer databasen som Flow
-    ViewModel->>UI: Tegne Markør i kartet på nytt
+    UI-)ViewModel: Kalle på onFavouriteClick()
+    ViewModel-)Database: Oppdatere database
+    Database--)ViewModel: ViewModelen observerer databasen som Flow
+    ViewModel-)UI: Tegne Markør i kartet på nytt
 
     UI->>UI: Navigere til FavoritesScreen
-    UI-->>ViewModel: Opprette instans av FavoritesViewModel (om nødvendig)
-    ViewModel->>Database: Etterspørre favoriserte badeplasser
-    Database->>ViewModel: Returnere liste av Swimspot-objekter
+    UI->>ViewModel: Opprette instans av FavoritesViewModel (om nødvendig)
+    ViewModel-)Database: Etterspørre favoriserte badeplasser
+    Database--)ViewModel: Returnere liste av Swimspot-objekter
     ViewModel->>UI: UI observerer endringer i FavoritesState
     UI->>User: Tegner Composables.
 ```

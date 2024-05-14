@@ -1,8 +1,10 @@
 # Team 5 - PLASK
 Velkommen til GitHub-repositoriet for Plask, en Android-applikasjon designet av IN2000 studenter for å hjelpe brukere med å oppdage og utforske ulike badeplasser. 
 
-# Beskriver hvor dokumentasjonen ligger (Skjønte ikke helt)
-skriv hvor ARCHITECHTURE.md og den andre filen ligger
+# Dokumentasjon
+All dokumentasjon kan finnes i dette GitHub-repositoriet og i rapporten som er levert som en del av dette prosjektet.
+
+Prosjektets arkitektur er beskrevet i [ARCHITECTURE.md](ARCHITECTURE.md), samt at store deler av prosjektets funksjonalitet er modulert i [MODELING.md](MODELING.md).
 
 # Funksjoner
 Interaktivt kart: Kartfunksjonalitet som viser lokasjoner av badeplasser med relevant vær- og vanninformasjon.
@@ -23,7 +25,7 @@ Flow og Coroutines for asynkron datahåndtering og UI-oppdateringer.
 1. Åpne prosjektet i Android Studio.
 2. Bygg og kjør appen på en emulator eller fysisk enhet.
 
-# Kontakt (endre mail)
+# Kontakt
 For spørsmål eller innspill, vennligst ikke nøl med å kontakte vårt utviklingsteam på priyansa@uio.no. Din tilbakemelding er verdifull for oss, og vi står klare til å bistå deg.
 
 

@@ -88,7 +88,7 @@ fun HomeSearchBar(
                     if (homeState.searchBarActive) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Arrow back",
+                            contentDescription = "Tilbake knapp",
                             Modifier.clickable {
                                 homeViewModel.updateSearchbarActive(false)
                                 homeViewModel.updateSearchbarText("")
@@ -110,7 +110,7 @@ fun HomeSearchBar(
                                 }
                             },
                             imageVector = Icons.Outlined.Cancel,
-                            contentDescription = "Close Icon"
+                            contentDescription = "Avbryt ikon"
                         )
                     }
                 },
@@ -169,11 +169,11 @@ fun SearchHistoryItem(
                 homeViewModel.onSearchHistoryClick(searchString)
             }
     ) {
-        Icon(imageVector = Icons.Default.History, contentDescription = "History")
+        Icon(imageVector = Icons.Default.History, contentDescription = "Logg ikon")
         Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding_small)))
         Text(text = searchString)
         Spacer(modifier = Modifier.weight(1f))
-        Icon(imageVector = Icons.Default.NorthWest, contentDescription = "Select $searchString")
+        Icon(imageVector = Icons.Default.NorthWest, contentDescription = "Velg $searchString")
     }
 }
 

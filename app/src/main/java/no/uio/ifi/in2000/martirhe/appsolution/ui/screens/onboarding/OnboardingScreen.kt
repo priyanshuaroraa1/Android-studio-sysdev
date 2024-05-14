@@ -126,7 +126,7 @@ fun OnboardingContent(
 
         Image(
             painter = painterResource(id = imageId),
-            contentDescription = "Main Illustration",
+            contentDescription = "Onboarding illustrasjon",
             modifier = Modifier
                 .size(300.dp)
                 .clip(CircleShape)
