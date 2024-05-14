@@ -95,7 +95,7 @@ Dette use-caset bekriver en bruker som er på dagstur til Drøbak, og ønsker å
 
 ## Aktivitetsdiagram
 
-Det kan i noen sammenhenger være nødvendig å tegen et aktivitetsdiagram som dekker all funksjonalitet i en app, men vi har vurdert det som mer hensiktsmessig å lage et aktivitetsdiagram koblet opp mot denne use casen. Grunnen til det er at denne use casen dekker den viktigste funksjonaliteten til appen, og også mesteparten av tiden brukerne bruker i appen. 
+Det kan i noen sammenhenger være nødvendig å tegne et aktivitetsdiagram som dekker all funksjonalitet i en app, men vi har vurdert det som mer hensiktsmessig å lage et aktivitetsdiagram koblet opp mot denne use casen. Grunnen til det er at denne use casen dekker den viktigste funksjonaliteten til appen, og også mesteparten av tiden brukerne bruker i appen. 
 
 ```mermaid
 flowchart TD
@@ -226,7 +226,7 @@ classDiagram
 
 ## Tilstandsdiagram
 
-Følgende tilstandsdiagram viser hvordan tilstanden til OceanForecastUiState endrer seg over tid. 
+Følgende tilstandsdiagram viser hvordan tilstanden til OceanForecastUiState endrer seg over tid. LocationForecastUiState og MetAlertUiState er implementert på samme måte.
 
 ```mermaid
 stateDiagram
