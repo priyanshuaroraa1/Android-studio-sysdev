@@ -6,7 +6,7 @@ All dokumentasjon kan finnes i dette GitHub-repositoriet og i rapporten som er l
 
 Prosjektets arkitektur er beskrevet i [ARCHITECTURE.md](ARCHITECTURE.md), samt at store deler av prosjektets funksjonalitet er modellert i [MODELING.md](MODELING.md).
 
-Alle branch-navn kan slåes opp i [product_backlog.csv]product_backlog.csv) for en fullstendig oversikt.
+Alle branch-navn kan slåes opp i [product_backlog.csv](product_backlog.csv) for en fullstendig oversikt.
 
 # Hvordan kjøre appen
 //Github link her (clone rep)
