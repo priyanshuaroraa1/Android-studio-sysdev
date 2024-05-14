@@ -152,10 +152,10 @@ dependencies {
     kapt("com.google.dagger:hilt-compiler:2.49")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
-// DataStore
+    //DataStore
     implementation ("androidx.datastore:datastore-preferences:1.1.1")
 
-// ViewModel
+    //ViewModel
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
 
     // KTX for the Maps SDK for Android
@@ -188,12 +188,14 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
     testImplementation("io.ktor:ktor-client-mock:2.3.8")
     testImplementation("androidx.room:room-testing:$room_version")
-    testImplementation("junit:junit:4.13.2") // For JUnit4
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3") // If using Kotlin Coroutines
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+
+    //Splash screen
+    implementation ("androidx.core:core-splashscreen:1.0.0")
 
 }
 
-// Allow references to generated code
 kapt {
     correctErrorTypes = true
 }
