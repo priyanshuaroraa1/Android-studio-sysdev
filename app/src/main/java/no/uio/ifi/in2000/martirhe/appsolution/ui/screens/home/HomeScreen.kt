@@ -21,12 +21,10 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -60,7 +58,6 @@ fun HomeScreen(
     swimspotId: Int = -1,
 ) {
     val homeState = homeViewModel.homeState.collectAsState().value
-    val context = LocalContext.current
 
     var initialPosition = homeState.defaultCameraPosition
     val navigateToSwimspot = homeState.allSwimspots.find { it.id == swimspotId }
@@ -210,7 +207,7 @@ fun HomeScreen(
                             }
                     }
                 }
-                MapEffect() { map ->
+                MapEffect { map ->
                     Log.i("Map effect called", "Map effect 1 called")
                     map.setOnMarkerClickListener { marker ->
 
@@ -236,8 +233,7 @@ fun HomeScreen(
                         true
                     }
                 }
-                MapEffect(
-                ) { map ->
+                MapEffect{ map ->
                     map.setOnMapLoadedCallback {
                         coroutineScope.launch(Dispatchers.Default) {
                             homeViewModel.createAllMarkers(

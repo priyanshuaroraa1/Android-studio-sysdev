@@ -47,8 +47,13 @@ fun MetAlertCard(
             WarningIcon(
                 warningIconColor, warningIconDescription.toString()
             )
+            val activeAlertsString = if (numberOfAlerts == 1) {
+                "$numberOfAlerts aktivt farevarsel" // Single alert message
+            } else {
+                "$numberOfAlerts aktive farevarsler" // Plural alerts message
+            }
             Text(
-                text = "$numberOfAlerts aktive farevarsler",
+                text = activeAlertsString,
                 modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_medium))
             )
             Spacer(

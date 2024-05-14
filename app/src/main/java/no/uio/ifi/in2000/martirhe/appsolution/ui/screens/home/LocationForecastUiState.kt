@@ -10,6 +10,6 @@ sealed interface LocationForecastUiState {
         val forecastNextHour: ForecastNextHour,
         val forecastNextWeek: ForecastNextWeek,
         ): LocationForecastUiState
-    object Loading: LocationForecastUiState
-    object Error: LocationForecastUiState
+    data object Loading: LocationForecastUiState
+    data object Error: LocationForecastUiState
 }
