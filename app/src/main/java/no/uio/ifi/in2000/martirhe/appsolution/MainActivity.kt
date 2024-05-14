@@ -9,7 +9,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -119,14 +118,11 @@ class MainActivity : ComponentActivity() {
                     LaunchedEffect(isNetworkAvailable) {
                         if (!isNetworkAvailable) {
                             scope.launch {
-                                val result = snackbarHostState.showSnackbar(
+                                snackbarHostState.showSnackbar(
                                     message = "Ingen internettforbindelse. Noen funksjoner vil ikke være tilgjengelige",
                                     actionLabel = "Fortsett",
                                     duration = SnackbarDuration.Long
                                 )
-                                if (result == SnackbarResult.ActionPerformed) {
-                                    // If needs empty body to be able to close snackbar
-                                }
                             }
                         }
                     }

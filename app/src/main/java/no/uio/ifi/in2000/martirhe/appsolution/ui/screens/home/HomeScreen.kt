@@ -205,6 +205,9 @@ fun HomeScreen(
                                 homeViewModel.onSwimspotPinClick(it)
                                 homeViewModel.moveCamera(it.getLatLng())
                             }
+                        coroutineScope.launch {
+                            scaffoldState.bottomSheetState.expand()
+                        }
                     }
                 }
                 MapEffect { map ->
