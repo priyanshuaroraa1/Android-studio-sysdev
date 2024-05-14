@@ -4,7 +4,9 @@ Velkommen til GitHub-repositoriet for Plask, en Android-applikasjon designet av 
 # Dokumentasjon
 All dokumentasjon kan finnes i dette GitHub-repositoriet og i rapporten som er levert som en del av dette prosjektet.
 
-Prosjektets arkitektur er beskrevet i [ARCHITECTURE.md](ARCHITECTURE.md), samt at store deler av prosjektets funksjonalitet er modulert i [MODELING.md](MODELING.md).
+Prosjektets arkitektur er beskrevet i [ARCHITECTURE.md](ARCHITECTURE.md), samt at store deler av prosjektets funksjonalitet er modellert i [MODELING.md](MODELING.md).
+
+Alle branch-navn kan slåes opp i [product_backlog.csv]product_backlog.csv) for en fullstendig oversikt.
 
 # Funksjoner
 Interaktivt kart: Kartfunksjonalitet som viser lokasjoner av badeplasser med relevant vær- og vanninformasjon.
