@@ -25,7 +25,7 @@ Flow og Coroutines for asynkron datahåndtering og UI-oppdateringer.
 1. Åpne prosjektet i Android Studio.
 2. Bygg og kjør appen på en emulator eller fysisk enhet.
 
-# Kontakt (endre mail)
+# Kontakt
 For spørsmål eller innspill, vennligst ikke nøl med å kontakte vårt utviklingsteam på priyansa@uio.no. Din tilbakemelding er verdifull for oss, og vi står klare til å bistå deg.
 
 
