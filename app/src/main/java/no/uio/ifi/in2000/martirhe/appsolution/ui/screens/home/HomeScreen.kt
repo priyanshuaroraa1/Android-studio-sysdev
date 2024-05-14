@@ -68,7 +68,6 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.rememberCameraPositionState
-import io.ktor.utils.io.errors.IOException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.martirhe.appsolution.R
@@ -76,12 +75,17 @@ import no.uio.ifi.in2000.martirhe.appsolution.model.swimpot.Swimspot
 import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.ForecastNextHour
 import no.uio.ifi.in2000.martirhe.appsolution.model.locationforecast.ForecastNextWeek
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
-import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.WarningIconColor
 import no.uio.ifi.in2000.martirhe.appsolution.model.oceanforecast.OceanForecastRightNow
+import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.FavoriteIcon
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.HomeSearchBar
+import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.LargeAndSmallText
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.MediumHeader
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.SkeletonLoadingCard
 import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.SmallHeader
+import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.WarningIcon
+import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.WeatherIcon
+import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.getFromDirectionPainterResource
+import no.uio.ifi.in2000.martirhe.appsolution.ui.composables.loadMapStyleFromAssets
 
 
 @SuppressLint("PotentialBehaviorOverride")
@@ -196,7 +200,7 @@ fun HomeScreen(
                             modifier = Modifier
                                 .padding(dimensionResource(id = R.dimen.padding_small))
                         ) {
-                            FavouriteIcon(
+                            FavoriteIcon(
                                 homeState = homeState
                             )
                         }
@@ -897,7 +901,7 @@ fun MetAlertDialog(
             modifier = Modifier
                 .padding(dimensionResource(id = R.dimen.padding_medium))
                 .fillMaxWidth()
-                .fillMaxHeight(0.4f), colors = CardDefaults.cardColors(
+                .fillMaxHeight(0.5f), colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
 
@@ -985,7 +989,7 @@ fun WeatherInfoDialog(
             modifier = Modifier
                 .padding(dimensionResource(id = R.dimen.padding_medium))
                 .fillMaxWidth()
-                .fillMaxHeight(0.4f), colors = CardDefaults.cardColors(
+                .fillMaxHeight(0.5f), colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
 
@@ -1040,7 +1044,7 @@ fun AccessibilityInfoDialog(
             modifier = Modifier
                 .padding(dimensionResource(id = R.dimen.padding_medium))
                 .fillMaxWidth()
-                .fillMaxHeight(0.4f), colors = CardDefaults.cardColors(
+                .fillMaxHeight(0.5f), colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
 
@@ -1084,149 +1088,5 @@ fun AccessibilityInfoDialog(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewLargeAndSmallText() {
-    LargeAndSmallText(
-        largeText = "19",
-        smallText = "mm",
-        image = painterResource(id = R.drawable.north),
-        imageDescription = "Wind from north",
-    )
-}
-
-@Composable
-fun LargeAndSmallText(
-
-    largeText: String,
-    smallText: String,
-    image: Painter? = null,
-    imageDescription: String = "",
-    color: Color = MaterialTheme.colorScheme.onPrimaryContainer,
-    smallerSize: Boolean = false
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (image != null) {
-
-            Image(
-                painter = image,
-                contentDescription = imageDescription,
-                modifier = Modifier.size(16.dp)
-            )
-        }
-
-        val largeStyle =
-            if (smallerSize) MaterialTheme.typography.bodyLarge else MaterialTheme.typography.headlineSmall
-        val smallStyle =
-            if (smallerSize) MaterialTheme.typography.bodySmall else MaterialTheme.typography.bodyLarge
-        Text(
-            text = largeText,
-            color = color,
-            style = largeStyle,
-        )
-        Text(
-            text = smallText,
-            color = color,
-            style = smallStyle,
-            modifier = Modifier.padding(bottom = if (smallerSize) 0.dp else 3.dp)
-        )
-    }
-}
-
-@Composable
-fun FavouriteIcon(
-    homeState: HomeState
-) {
-    val imageResource = when (homeState.selectedSwimspot?.favourited) {
-        true -> painterResource(id = R.drawable.star_yellow)
-        else -> painterResource(id = R.drawable.star_white)
-    }
-    val description = when (homeState.selectedSwimspot?.favourited) {
-        true -> "Favoritt"
-        else -> "Ikke favoritt"
-    }
-    Image(painter = imageResource, contentDescription = description)
-}
-
-@Composable
-fun SwimspotPinIcon(
-    painter: Painter = painterResource(id = R.drawable.pin),
-    description: String = "Plask logo"
-) {
-    Image(
-        painter = painter,
-        contentDescription = description,
-        modifier = Modifier
-            .height(32.dp),
-    )
-}
 
 
-@Composable
-fun WarningIcon(
-    warningIconColor: WarningIconColor,
-    warningIconDescription: String,
-) {
-    val imageResource = when (warningIconColor) {
-        WarningIconColor.YELLOW -> painterResource(id = R.drawable.warning_yellow)
-        WarningIconColor.ORANGE -> painterResource(id = R.drawable.warning_orange)
-        WarningIconColor.RED -> painterResource(id = R.drawable.warning_red)
-        WarningIconColor.GREEN -> painterResource(id = R.drawable.warning_green)
-    }
-    Image(
-        painter = imageResource,
-        contentDescription = warningIconDescription,
-        modifier = Modifier.size(24.dp)
-    )
-}
-
-@Composable
-fun WeatherIcon(
-    iconName: String, smallerSize: Boolean = false
-) {
-    Box {
-        AsyncImage(
-            model = "https://raw.githubusercontent.com/metno/weathericons/main/weather/png/$iconName.png",
-            contentDescription = iconName,
-            modifier = Modifier.size(if (smallerSize) 60.dp else 120.dp)
-        )
-    }
-}
-
-
-@Composable
-fun loadMapStyleFromAssets(): String {
-    val context = LocalContext.current
-    return try {
-        context.assets.open("map_style_light.json").bufferedReader().use { it.readText() }
-    } catch (e: IOException) {
-        e.printStackTrace()
-        ""
-    }
-}
-
-@Composable
-fun getFromDirectionPainterResource(windDirection: String): Painter {
-    val resourceId = when (windDirection) {
-        "north" -> R.drawable.north
-        "north_northeast" -> R.drawable.north_northeast
-        "northeast" -> R.drawable.northeast
-        "east_northeast" -> R.drawable.east_northeast
-        "east" -> R.drawable.east
-        "east_southeast" -> R.drawable.east_southeast
-        "southeast" -> R.drawable.southeast
-        "south_southeast" -> R.drawable.south_southeast
-        "south" -> R.drawable.south
-        "south_southwest" -> R.drawable.south_southwest
-        "southwest" -> R.drawable.southwest
-        "west_southwest" -> R.drawable.west_southwest
-        "west" -> R.drawable.west
-        "west_northwest" -> R.drawable.west_northwest
-        "northwest" -> R.drawable.northwest
-        "north_northwest" -> R.drawable.north_northwest
-        else -> R.drawable.north
-    }
-    return painterResource(id = resourceId)
-}
