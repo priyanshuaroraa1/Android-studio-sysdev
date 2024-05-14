@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION") //Denne funksjonaliteten løser våre behov for nåværende tidspunkt
+
 package no.uio.ifi.in2000.martirhe.appsolution.ui.screens.location
 
 import android.Manifest
@@ -23,7 +25,6 @@ class LocationViewModel @Inject constructor(application: Application) : AndroidV
     init {
         fetchLocation()
     }
-
     fun fetchLocation() {
         val locationRequest = LocationRequest.create().apply {
             interval = 10000

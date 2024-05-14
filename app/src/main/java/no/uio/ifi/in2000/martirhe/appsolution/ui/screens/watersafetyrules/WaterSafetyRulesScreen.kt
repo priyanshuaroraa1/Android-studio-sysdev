@@ -48,7 +48,7 @@ fun WaterSafetyRulesScreen(navController: NavController) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Tilbake knapp")
                         }
                     },
-                    colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.background)
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
                 )
             },
             containerColor = MaterialTheme.colorScheme.background
