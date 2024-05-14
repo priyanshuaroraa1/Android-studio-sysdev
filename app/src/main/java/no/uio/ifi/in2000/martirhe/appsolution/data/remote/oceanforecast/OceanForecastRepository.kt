@@ -37,11 +37,11 @@ class OceanForecastRepository @Inject constructor(
             val distanceToCoast = swimspotCoordinates.sphericalDistance(nearestCoastlineCoordinates)
             val isSaltWater = distanceToCoast < distanceToCoastThreshold
 
-            val seaSurfaceWaveFromDirection = oceanForecast.properties.timeseries[0].data.instant.details.sea_surface_wave_from_direction
-            val seaSurfaceWaveHeight = oceanForecast.properties.timeseries[0].data.instant.details.sea_surface_wave_height
-            val seaWaterSpeed = oceanForecast.properties.timeseries[0].data.instant.details.sea_water_speed
-            val seaWaterTemperature = oceanForecast.properties.timeseries[0].data.instant.details.sea_water_temperature
-            val seaWaterToDirection = oceanForecast.properties.timeseries[0].data.instant.details.sea_water_to_direction
+            val seaSurfaceWaveFromDirection = oceanForecast.properties.timeseries[0].data.instant.details.seaSurfaceWaveFromDirection
+            val seaSurfaceWaveHeight = oceanForecast.properties.timeseries[0].data.instant.details.seaSurfaceWaveHeight
+            val seaWaterSpeed = oceanForecast.properties.timeseries[0].data.instant.details.seaWaterSpeed
+            val seaWaterTemperature = oceanForecast.properties.timeseries[0].data.instant.details.seaWaterTemperature
+            val seaWaterToDirection = oceanForecast.properties.timeseries[0].data.instant.details.seaWaterToDirection
 
 
             OceanForecastRightNow(

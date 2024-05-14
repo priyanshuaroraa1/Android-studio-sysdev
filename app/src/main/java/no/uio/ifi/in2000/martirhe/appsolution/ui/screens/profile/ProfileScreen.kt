@@ -14,9 +14,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -140,7 +139,7 @@ fun MenuItem(
             Text(text = buttonText, style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.weight(1f))
             Icon(
-                imageVector = Icons.Default.ArrowForward,
+                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = "Velg $buttonText"
             )
         }

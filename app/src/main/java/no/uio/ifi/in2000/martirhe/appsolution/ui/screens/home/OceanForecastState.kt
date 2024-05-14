@@ -7,6 +7,6 @@ sealed interface OceanForecastState {
         val oceanForecastRightNow: OceanForecastRightNow,
     ): OceanForecastState
 
-    object Loading: OceanForecastState
-    object Error: OceanForecastState
+    data object Loading: OceanForecastState
+    data object Error: OceanForecastState
 }

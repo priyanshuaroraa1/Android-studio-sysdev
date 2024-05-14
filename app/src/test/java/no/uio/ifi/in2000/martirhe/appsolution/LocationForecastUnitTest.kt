@@ -43,7 +43,7 @@ class LocationForecastUnitTest {
 
             val dataSource = LocationForecastDataSource()
             val data = dataSource.fetchLocationForecast(lat = 59.920244, lon = 10.756355)
-            assertTrue("The returned temperature should be double", data.properties.timeseries[0].data.instant.details.air_temperature is Double)
+            assertTrue("The returned temperature should be double", data.properties.timeseries[0].data.instant.details.airTemperature is Double)
         }
     }
 
@@ -53,7 +53,7 @@ class LocationForecastUnitTest {
 
             val dataSource = LocationForecastDataSource()
             val data = dataSource.fetchLocationForecast(lat = 59.920244, lon = 10.756355)
-            assertTrue("The returned temperature should be double", data.properties.timeseries[0].data.instant.details.wind_from_direction is Double)
+            assertTrue("The returned temperature should be double", data.properties.timeseries[0].data.instant.details.windFromDirection is Double)
         }
     }
 }

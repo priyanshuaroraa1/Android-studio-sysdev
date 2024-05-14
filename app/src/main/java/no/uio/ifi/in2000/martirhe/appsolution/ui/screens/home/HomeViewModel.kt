@@ -68,7 +68,6 @@ class HomeViewModel @Inject constructor(
 
     var locationForecastUiState: LocationForecastUiState by mutableStateOf(LocationForecastUiState.Loading)
     var oceanForecastUiState: OceanForecastState by mutableStateOf(OceanForecastState.Loading)
-//    var metAlertUiState: MetAlertUiState by mutableStateOf(MetAlertUiState.Loading)
 
     private val _metAlertUiState = MutableStateFlow<MetAlertUiState>(MetAlertUiState.Loading)
     val metAlertUiState = _metAlertUiState.asStateFlow()
@@ -181,7 +180,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun expandBottomSheet(coroutineScope: CoroutineScope) {
+    private fun expandBottomSheet(coroutineScope: CoroutineScope) {
         coroutineScope.launch {
             if (homeState.value.bottomSheetPosition == BottomSheetPosition.Hidden) {
                 updateBottomSheetPosition(true)
@@ -218,7 +217,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun makeSwimspotFavourite(
+    private fun makeSwimspotFavourite(
         swimspot: Swimspot,
     ) {
         viewModelScope.launch(Dispatchers.Default) {
@@ -238,7 +237,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun makeSwimspotNotFavourite(
+    private fun makeSwimspotNotFavourite(
         swimspot: Swimspot,
     ) {
         viewModelScope.launch(Dispatchers.Default) {
@@ -258,7 +257,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun makeCustomSwimspotFavourite(
+    private fun makeCustomSwimspotFavourite(
         swimspot: Swimspot,
     ) {
         viewModelScope.launch(Dispatchers.Default) {
@@ -289,7 +288,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun makeCustomSwimspotNotFavourite(
+    private fun makeCustomSwimspotNotFavourite(
         swimspot: Swimspot,
     ) {
         viewModelScope.launch(Dispatchers.Default) {
@@ -336,35 +335,13 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-//    fun createAllMarkers(map: GoogleMap) {
-//        Log.i("Function call", "createAllMarkers")
-//
-//        _homeState.update { homeState ->
-//            homeState.copy(map = map)
-//        }
-//
-//        homeState.value.allSwimspots.forEach { swimspot ->
-//            viewModelScope.launch(Dispatchers.Default) {
-//                val icon =
-//                    swimspot.getMarkerIcon(metAlertUiState.value) // Assuming this doesn't need to be on the main thread
-//                val latLng = swimspot.getLatLng()
-//                val markerData = MarkerData(latLng, icon, swimspot)
-//
-//                // Switch to the Main thread to update the UI
-//                withContext(Dispatchers.Main) {
-//                    addMarker(markerData, map)
-//                }
-//            }
-//        }
-//    }
-
     data class MarkerData(
         val latLng: LatLng,
         val icon: BitmapDescriptor,
         val swimspot: Swimspot
     )
 
-    fun addMarker(markerData: MarkerData, map: GoogleMap? = homeState.value.map) {
+    private fun addMarker(markerData: MarkerData, map: GoogleMap? = homeState.value.map) {
         map?.let { googleMap ->
             viewModelScope.launch(Dispatchers.Main) {
                 val newMarker = googleMap.addMarker(
@@ -390,57 +367,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-//    fun createAllMarkers(
-//        map: GoogleMap,
-//    ) {
-//        Log.i("Function call", "createAllMarkers")
-//
-//
-//
-//        _homeState.update { homeState ->
-//            homeState.copy(map = map)
-//        }
-//
-//
-//        homeState.value.allSwimspots.forEach {
-//            viewModelScope.launch(Dispatchers.Default) {
-//
-//                addMarker(it)
-//            }
-//        }
-//    }
-//
-//    fun addMarker(
-//        swimspot: Swimspot,
-//        map: GoogleMap? = homeState.value.map,
-//    ) {
-//        viewModelScope.launch(Dispatchers.Main) {
-//
-//
-//            if (map != null) {
-//                val icon = swimspot.getMarkerIcon(metAlertUiState.value)
-//                val newMarker = map.addMarker(
-//                    MarkerOptions()
-//                        .position(swimspot.getLatLng())
-//                        .icon(icon)
-//                )
-//
-//                newMarker?.tag = swimspot
-//
-//                _homeState.update { homeState ->
-//                    val updatedMarkers = homeState.allMarkers.toMutableMap()
-//                    updatedMarkers[swimspot.id]?.remove()
-//                    updatedMarkers[swimspot.id!!] = newMarker
-//                    homeState.copy(
-//                        allMarkers = updatedMarkers,
-//                        map = map
-//                    )
-//                }
-//            }
-//        }
-//    }
-
-    fun removeMarker(swimspot: Swimspot) {
+    private fun removeMarker(swimspot: Swimspot) {
         viewModelScope.launch(Dispatchers.Main) {
 
             homeState.value.allMarkers[swimspot.id]?.remove()
@@ -463,17 +390,16 @@ class HomeViewModel @Inject constructor(
             val searchString = swimspot.getQuerySearchString(searchInLocationString)
             searchString.indexOf(queryString, ignoreCase = true).takeIf { it >= 0 } ?: Int.MAX_VALUE
         }
-        // TODO: Sortere på avstand til bruker?
         return resultList.take(10)
     }
 
-    fun updateSelectedSwimspot(swimspot: Swimspot) {
+    private fun updateSelectedSwimspot(swimspot: Swimspot) {
         _homeState.update { homeState ->
             homeState.copy(selectedSwimspot = swimspot)
         }
     }
 
-    fun updateCustomSwimspot(swimspot: Swimspot?) {
+    private fun updateCustomSwimspot(swimspot: Swimspot?) {
         _homeState.update { homeState ->
             homeState.copy(customSwimspot = swimspot)
         }
@@ -503,9 +429,8 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun updateBottomSheetPosition(makeVisible: Boolean) {
-        val bottomSheetPosition: BottomSheetPosition
-        bottomSheetPosition = if (makeVisible) {
+    private fun updateBottomSheetPosition(makeVisible: Boolean) { // Warning: Variable always true is kept for expandability
+        val bottomSheetPosition: BottomSheetPosition = if (makeVisible) {
             BottomSheetPosition.Showing
         } else {
             BottomSheetPosition.Hidden
@@ -529,17 +454,14 @@ class HomeViewModel @Inject constructor(
                 )
                 saveToSearchHistory(searchQuery)
             }
-        } else {
-            // TODO: Hva hvis ingen søk passer?
         }
-        updateSearchbarText("")
     }
 
     fun getSearchHistory(): List<String> {
         return preferencesManager.getSearchHistory()
     }
 
-    fun saveToSearchHistory(searchQuery: String) {
+    private fun saveToSearchHistory(searchQuery: String) {
         preferencesManager.addToSearchHistory(searchQuery.replace(";", ""))
     }
 
@@ -575,7 +497,7 @@ class HomeViewModel @Inject constructor(
     }
 
 
-    fun loadLocationForecast(lat: Double, lon: Double) {
+    private fun loadLocationForecast(lat: Double, lon: Double) {
         viewModelScope.launch(Dispatchers.IO) {
             locationForecastUiState = LocationForecastUiState.Loading
             locationForecastUiState = try {
@@ -596,7 +518,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun loadOceanForecast(lat: Double, lon: Double) {
+    private fun loadOceanForecast(lat: Double, lon: Double) {
         viewModelScope.launch(Dispatchers.IO) {
             oceanForecastUiState = OceanForecastState.Loading
             oceanForecastUiState = try {
@@ -618,7 +540,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun loadFarevarsler() {
+    private fun loadFarevarsler() {
         viewModelScope.launch(Dispatchers.IO) {
             _metAlertUiState.update {
                 MetAlertUiState.Loading

@@ -9,14 +9,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 
 
 @Composable
@@ -48,13 +46,17 @@ fun shimmerBrush(showShimmer: Boolean = true,targetValue:Float = 10000f): Brush 
             Color.LightGray.copy(alpha = 0.4f),
         )
 
-        val transition = rememberInfiniteTransition()
+        val transition = rememberInfiniteTransition(
+            label = "shimmerAnimation"
+        )
         val translateAnimation = transition.animateFloat(
             initialValue = 0f,
             targetValue = targetValue,
             animationSpec = infiniteRepeatable(
-                animation = tween(3000), repeatMode = RepeatMode.Restart
-            )
+                animation = tween(3000),
+                repeatMode = RepeatMode.Restart
+            ),
+            label = "shimmerAnimation"
         )
         Brush.linearGradient(
             colors = shimmerColors,

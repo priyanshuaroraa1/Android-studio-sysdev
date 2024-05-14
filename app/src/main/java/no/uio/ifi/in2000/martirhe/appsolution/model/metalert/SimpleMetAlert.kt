@@ -34,8 +34,7 @@ data class SimpleMetAlert(
     }
 
     fun getAwarenessLevelColor(): WarningIconColor {
-        val colorString =  awarenessLevel.split(";").getOrNull(1)?.trim() ?: "green"
-        return when (colorString) {
+        return when (awarenessLevel.split(";").getOrNull(1)?.trim() ?: "green") {
             "yellow" -> WarningIconColor.YELLOW
             "orange" -> WarningIconColor.ORANGE
             "red" -> WarningIconColor.RED
@@ -58,11 +57,7 @@ data class SimpleMetAlert(
                 simpleMetAlert.getAwarenesLevelInt()
             }
 
-            return if (mostSevereAlert == null) {
-                WarningIconColor.GREEN
-            } else {
-                mostSevereAlert.getAwarenessLevelColor()
-            }
+            return mostSevereAlert?.getAwarenessLevelColor() ?: WarningIconColor.GREEN
         }
     }
 }

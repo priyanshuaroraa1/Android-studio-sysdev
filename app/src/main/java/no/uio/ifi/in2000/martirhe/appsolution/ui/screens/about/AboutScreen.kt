@@ -81,7 +81,6 @@ fun AboutScreen(navController: NavController) {
                         }
                     },
                     colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.background)
-
                 )
             },
             containerColor = MaterialTheme.colorScheme.background

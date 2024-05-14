@@ -63,7 +63,7 @@ fun AccessibilityOptionsCard(
                     modifier = Modifier
                         .padding(all = dimensionResource(id = R.dimen.padding_medium))
                 ) {
-                    accessibilityStringList.forEachIndexed() { index, string ->
+                    accessibilityStringList.forEachIndexed { index, string ->
                         if (index != 0) {
                             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_small)))
                         }

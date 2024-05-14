@@ -10,11 +10,7 @@ data class ForecastNextHour(
     val windSpeed: Double,
 ) {
     fun getTemperatureString(): String {
-        return if (airTemperature == null) {
-            "N/A"
-        } else {
-            airTemperature.roundToInt().toString()
-        }
+        return airTemperature?.roundToInt()?.toString() ?: "N/A"
     }
 
     fun getWindSpeedString(): String {
@@ -39,7 +35,7 @@ data class ForecastNextHour(
             windFromDirection >= 258.75 && windFromDirection < 281.25 -> "west"
             windFromDirection >= 281.25 && windFromDirection < 303.75 -> "west_northwest"
             windFromDirection >= 303.75 && windFromDirection < 326.25 -> "northwest"
-            windFromDirection >= 326.25 && windFromDirection < 348.75 -> "north_northwest"
+            windFromDirection >= 326.25 && windFromDirection < 348.75 -> "north_northwest" // Warning: Left like this for readability
             else -> "Invalid direction"
         }
     }

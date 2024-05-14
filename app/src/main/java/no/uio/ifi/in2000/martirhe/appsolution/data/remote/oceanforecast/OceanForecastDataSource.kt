@@ -34,8 +34,7 @@ class OceanForecastDataSource @Inject constructor() {
             handleResponseExceptionWithRequest { exception, _ ->
                 when (exception) {
                     is ClientRequestException -> {
-                        val status = exception.response.status
-                        when (status) {
+                        when (exception.response.status) {
                             HttpStatusCode.UnprocessableEntity -> {
                                 throw IllegalArgumentException("Received 422 Unprocessable Entity: Coordinates are outside the valid domain")
                             }

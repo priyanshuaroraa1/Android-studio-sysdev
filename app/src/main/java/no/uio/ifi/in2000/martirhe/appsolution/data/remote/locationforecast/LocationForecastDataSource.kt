@@ -33,10 +33,8 @@ class LocationForecastDataSource @Inject constructor() {
     ): LocationForecast {
         val apiString = "weatherapi/locationforecast/2.0/compact.json"
         val parameterString = "?lat=$lat&lon=$lon"
-        val locationForecast: LocationForecast =
-            client.get(urlString = apiString + parameterString).body()
 
-        return locationForecast
+        return client.get(urlString = apiString + parameterString).body<LocationForecast>()
     }
 
 }

@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Plask</string>
-    <string name="search_bar_placeholder">Søk etter badeplass</string>
 
     //About Us
     <string name="about_screen_label">Om Plask</string>
@@ -62,6 +61,5 @@
 
     // ProfileScreen
     <string name="profile_header">Min profil</string>
-    <string name="settings_header">Instillinger</string>
 
 </resources>

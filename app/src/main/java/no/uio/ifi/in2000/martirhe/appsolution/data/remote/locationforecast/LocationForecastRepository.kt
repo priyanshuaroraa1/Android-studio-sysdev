@@ -27,13 +27,13 @@ class LocationForecastRepository @Inject constructor(
     override suspend fun getForecastNextHour(lat: Double, lon: Double): ForecastNextHour {
         val locationForecast = getLocationForecast(lat, lon)
 
-        val symbolCode = locationForecast.properties.timeseries[0].data.next_1_hours?.summary?.symbol_code
+        val symbolCode = locationForecast.properties.timeseries[0].data.next1Hours?.summary?.symbolCode
         Log.i("Next hour forecast", symbolCode.toString())
-        val airTemperature = locationForecast.properties.timeseries[0].data.instant.details.air_temperature
-        val precipitationAmount = locationForecast.properties.timeseries[0].data.next_1_hours?.details?.precipitation_amount
+        val airTemperature = locationForecast.properties.timeseries[0].data.instant.details.airTemperature
+        val precipitationAmount = locationForecast.properties.timeseries[0].data.next1Hours?.details?.precipitationAmount
         Log.i("Next hour forecast", precipitationAmount.toString() + " mm")
-        val windFromDirection = locationForecast.properties.timeseries[0].data.instant.details.wind_from_direction
-        val windSpeed = locationForecast.properties.timeseries[0].data.instant.details.wind_speed
+        val windFromDirection = locationForecast.properties.timeseries[0].data.instant.details.windFromDirection
+        val windSpeed = locationForecast.properties.timeseries[0].data.instant.details.windSpeed
 
         return ForecastNextHour(
             symbolCode = symbolCode,
@@ -68,8 +68,8 @@ class LocationForecastRepository @Inject constructor(
             if (morningForecast != null && eveningForecast != null) {
                 ForecastWeekday(
                     date = morning.toLocalDate(),
-                    symbolCode = morningForecast.data.next_12_hours?.summary?.symbol_code ?: "unknown",
-                    airTemperature = eveningForecast.data.instant.details.air_temperature
+                    symbolCode = morningForecast.data.next12Hours?.summary?.symbolCode ?: "unknown",
+                    airTemperature = eveningForecast.data.instant.details.airTemperature
                 )
             } else null
         }

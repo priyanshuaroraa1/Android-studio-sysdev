@@ -69,9 +69,7 @@ fun HomeSearchBar(
                 query = homeState.searchBarText,
                 onQueryChange = onQueryChange,
                 onSearch = {
-                    if (keyboardController != null) {
-                        keyboardController.hide()
-                    }
+                    keyboardController?.hide()
                     onSearch(it)
                 },
                 active = homeState.searchBarActive,

@@ -27,21 +27,14 @@ sealed class BottomNavItem(
     var icon: ImageVector,
     val route: String,
 ) {
-    object Home :
+    data object Home :
         BottomNavItem(
             "Hjem",
             Icons.Default.Home,
             Routes.HOME_SCREEN
         )
 
-//    object AboutUs :
-//        BottomNavItem(
-//            "About us",
-//            Icons.Default.Info,
-//            Routes.ABOUT_US_SCREEN
-//        )
-
-    object Profile :
+    data object Profile :
         BottomNavItem(
             "Profil",
             Icons.Default.Person,
@@ -49,7 +42,7 @@ sealed class BottomNavItem(
         )
 
 
-    object Favorites :
+    data object Favorites :
         BottomNavItem(
             "Favoritter",
             Icons.Default.Star,

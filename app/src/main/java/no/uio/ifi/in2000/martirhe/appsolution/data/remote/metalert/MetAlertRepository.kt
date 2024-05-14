@@ -30,9 +30,9 @@ class MetAlertRepository @Inject constructor(
 
             try {
                 multiPolygon = if (it.geometry.type == "Polygon") {
-                    listOf(it.geometry.coordinates as List<List<List<Float>>>)
+                    listOf(it.geometry.coordinates as List<List<List<Float>>>) // Warning: This cast is correct with expected json data
                 } else {
-                    it.geometry.coordinates as List<List<List<List<Float>>>>
+                    it.geometry.coordinates as List<List<List<List<Float>>>> // Warning: This cast is correct with expected json data
                 }
                 val area: String = it.properties.area
                 val awarenessLevel: String = it.properties.awarenessLevel
@@ -48,7 +48,9 @@ class MetAlertRepository @Inject constructor(
                     consequences = consequences,
                     description = description,
                     eventAwarenessName = eventAwarenessName))
-            } catch (_: Exception) {  } // TODO: Føler dette er en billig løsning
+            } catch (_: Exception) {
+
+            }
         }
 
         return simpleMetAlertList

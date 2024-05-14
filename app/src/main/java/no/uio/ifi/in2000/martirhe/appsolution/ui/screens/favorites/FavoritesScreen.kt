@@ -1,3 +1,5 @@
+package no.uio.ifi.in2000.martirhe.appsolution.ui.screens.favorites
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.favorites.FavoritesViewModel
 import no.uio.ifi.in2000.martirhe.appsolution.R
 import no.uio.ifi.in2000.martirhe.appsolution.model.swimpot.Swimspot
 import no.uio.ifi.in2000.martirhe.appsolution.model.metalert.SimpleMetAlert
