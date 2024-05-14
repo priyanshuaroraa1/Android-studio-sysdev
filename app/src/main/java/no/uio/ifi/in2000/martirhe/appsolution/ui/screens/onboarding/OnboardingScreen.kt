@@ -229,18 +229,25 @@ fun OnboardingBottomBar(
             }
         }
 
-        Button(
-            onClick = onNextClicked,
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onPrimary),
-            shape = MaterialTheme.shapes.medium
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = if (currentPage < totalPages - 1) stringResource(id = R.string.onboarding_next) else stringResource(
-                    id = R.string.onboarding_done
-                ),
-                color = MaterialTheme.colorScheme.background
-            )
+            Button(
+                onClick = onNextClicked,
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onPrimary),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Text(
+                    text = if (currentPage < totalPages - 1) stringResource(id = R.string.onboarding_next) else stringResource(id = R.string.onboarding_done),
+                    color = MaterialTheme.colorScheme.background
+                )
+            }
         }
+
     }
 }
 
