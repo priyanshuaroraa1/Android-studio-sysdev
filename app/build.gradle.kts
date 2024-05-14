@@ -84,6 +84,7 @@ secrets {
     ignoreList.add("sdk.*")       // Ignore all keys matching the regexp "sdk.*"
 }
 
+// Warnings related to newer version are not to be implemented in this release.
 dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("androidx.core:core-ktx:1.12.0")
@@ -131,9 +132,6 @@ dependencies {
     implementation("io.ktor:ktor-serialization:2.3.8")
     implementation("io.ktor:ktor-serialization-gson:2.3.8")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.8")
-
-    // gson dependencies?
-    implementation("com.google.code.gson:gson:2.10.1") // TODO: Trengs denne?
 
     // Dependencies for location services
     implementation("com.google.android.gms:play-services-location:21.2.0")

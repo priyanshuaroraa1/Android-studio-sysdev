@@ -28,8 +28,6 @@ class MetAlertDataSource @Inject constructor() {
     }
 
     suspend fun fetchMetAlerts(): MetAlertCollection {
-        val metAlertCollection: MetAlertCollection =
-            client.get("weatherapi/metalerts/2.0/current.json").body()
-        return metAlertCollection
+        return client.get("weatherapi/metalerts/2.0/current.json").body<MetAlertCollection>()
     }
 }

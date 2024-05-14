@@ -20,16 +20,16 @@ data class Properties (
 )
 
 data class Meta (
-    @SerializedName("updated_at") val updated_at : String,
+    @SerializedName("updated_at") val updatedAt : String,
     @SerializedName("units") val units : Units
 )
 
 data class Units (
-    @SerializedName("sea_surface_wave_from_direction") val sea_surface_wave_from_direction : String,
-    @SerializedName("sea_surface_wave_height") val sea_surface_wave_height : String,
-    @SerializedName("sea_water_speed") val sea_water_speed : String,
-    @SerializedName("sea_water_temperature") val sea_water_temperature : String,
-    @SerializedName("sea_water_to_direction") val sea_water_to_direction : String
+    @SerializedName("sea_surface_wave_from_direction") val seaSurfaceWaveFromDirection : String,
+    @SerializedName("sea_surface_wave_height") val seaSurfaceWaveHeight : String,
+    @SerializedName("sea_water_speed") val seaWaterSpeed : String,
+    @SerializedName("sea_water_temperature") val seaWaterTemperature : String,
+    @SerializedName("sea_water_to_direction") val seaWaterToDirection : String
 )
 
 data class Timeseries (
@@ -46,10 +46,10 @@ data class Instant (
 )
 
 data class Details (
-    @SerializedName("sea_surface_wave_from_direction") val sea_surface_wave_from_direction : Double,
-    @SerializedName("sea_surface_wave_height") val sea_surface_wave_height : Double,
-    @SerializedName("sea_water_speed") val sea_water_speed : Double,
-    @SerializedName("sea_water_temperature") val sea_water_temperature : Double,
-    @SerializedName("sea_water_to_direction") val sea_water_to_direction : Double
+    @SerializedName("sea_surface_wave_from_direction") val seaSurfaceWaveFromDirection : Double,
+    @SerializedName("sea_surface_wave_height") val seaSurfaceWaveHeight : Double,
+    @SerializedName("sea_water_speed") val seaWaterSpeed : Double,
+    @SerializedName("sea_water_temperature") val seaWaterTemperature : Double,
+    @SerializedName("sea_water_to_direction") val seaWaterToDirection : Double
 )
 

@@ -36,7 +36,7 @@ data class OceanForecastRightNow (
             seaSurfaceWaveFromDirection >= 258.75 && seaSurfaceWaveFromDirection < 281.25 -> "west"
             seaSurfaceWaveFromDirection >= 281.25 && seaSurfaceWaveFromDirection < 303.75 -> "west_northwest"
             seaSurfaceWaveFromDirection >= 303.75 && seaSurfaceWaveFromDirection < 326.25 -> "northwest"
-            seaSurfaceWaveFromDirection >= 326.25 && seaSurfaceWaveFromDirection < 348.75 -> "north_northwest"
+            seaSurfaceWaveFromDirection >= 326.25 && seaSurfaceWaveFromDirection < 348.75 -> "north_northwest" // Warning: Not changed because of readibility
             else -> "Invalid direction"
         }
     }

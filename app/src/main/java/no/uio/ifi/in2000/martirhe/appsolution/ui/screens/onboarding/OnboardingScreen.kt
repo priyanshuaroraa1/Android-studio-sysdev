@@ -29,7 +29,7 @@ import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
 @Composable
 fun OnboardingScreen(navController: NavController) {
 
-        var currentPage by remember { mutableStateOf(0) }
+        var currentPage by remember { mutableIntStateOf(0) }
         val totalPages = 5
 
         val (imageId, mainTitle, subTitle, bodyText) = when (currentPage) {

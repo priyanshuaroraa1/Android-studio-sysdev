@@ -463,7 +463,6 @@ class HomeViewModel @Inject constructor(
             val searchString = swimspot.getQuerySearchString(searchInLocationString)
             searchString.indexOf(queryString, ignoreCase = true).takeIf { it >= 0 } ?: Int.MAX_VALUE
         }
-        // TODO: Sortere på avstand til bruker?
         return resultList.take(10)
     }
 
@@ -529,10 +528,7 @@ class HomeViewModel @Inject constructor(
                 )
                 saveToSearchHistory(searchQuery)
             }
-        } else {
-            // TODO: Hva hvis ingen søk passer?
         }
-        updateSearchbarText("")
     }
 
     fun getSearchHistory(): List<String> {

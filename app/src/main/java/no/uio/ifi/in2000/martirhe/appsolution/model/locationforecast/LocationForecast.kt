@@ -21,18 +21,18 @@ data class Properties (
 )
 
 data class Meta (
-    @SerializedName("updated_at") val updated_at : String,
+    @SerializedName("updated_at") val updatedAt : String,
     @SerializedName("units") val units : Units
 )
 
 data class Units (
-    @SerializedName("air_pressure_at_sea_level") val air_pressure_at_sea_level : String,
-    @SerializedName("air_temperature") val air_temperature : String,
-    @SerializedName("cloud_area_fraction") val cloud_area_fraction : String,
-    @SerializedName("precipitation_amount") val precipitation_amount : String,
-    @SerializedName("relative_humidity") val relative_humidity : String,
-    @SerializedName("wind_from_direction") val wind_from_direction : String,
-    @SerializedName("wind_speed") val wind_speed : String
+    @SerializedName("air_pressure_at_sea_level") val airPressureAtSeaLevel : String,
+    @SerializedName("air_temperature") val airTemperature : String,
+    @SerializedName("cloud_area_fraction") val cloudAreaFraction : String,
+    @SerializedName("precipitation_amount") val precipitationAmount : String,
+    @SerializedName("relative_humidity") val relativeHumidity : String,
+    @SerializedName("wind_from_direction") val windFromDirection : String,
+    @SerializedName("wind_speed") val windSpeed : String
 )
 
 data class Timeseries (
@@ -42,9 +42,9 @@ data class Timeseries (
 
 data class Data (
     val instant: Instant,
-    val next_12_hours: Next_12_Hours? = null,
-    val next_1_hours: Next_1_Hours? = null,
-    val next_6_hours: Next_6_Hours? = null
+    @SerializedName("next_12_hours") val next12Hours: Next12Hours? = null,
+    @SerializedName("next_1_hours") val next1Hours: Next1Hours? = null,
+    @SerializedName("next_6_hours") val next6Hours: Next6Hours? = null
 )
 
 data class Instant (
@@ -52,38 +52,38 @@ data class Instant (
 )
 
 data class InstantDetails (
-    @SerializedName("air_pressure_at_sea_level") val air_pressure_at_sea_level: Double,
-    @SerializedName("air_temperature") val air_temperature: Double,
-    @SerializedName("cloud_area_fraction") val cloud_area_fraction: Double,
-    @SerializedName("relative_humidity") val relative_humidity: Double,
-    @SerializedName("wind_from_direction") val wind_from_direction: Double,
-    @SerializedName("wind_speed") val wind_speed: Double
+    @SerializedName("air_pressure_at_sea_level") val airPressureAtSeaLevel: Double,
+    @SerializedName("air_temperature") val airTemperature: Double,
+    @SerializedName("cloud_area_fraction") val cloudAreaFraction: Double,
+    @SerializedName("relative_humidity") val relativeHumidity: Double,
+    @SerializedName("wind_from_direction") val windFromDirection: Double,
+    @SerializedName("wind_speed") val windSpeed: Double
 )
 
-data class Next_12_Hours (
+data class Next12Hours (
     @SerializedName("summary") val summary: Summary,
-    @SerializedName("details") val details: Next_12_Hours_Details
+    @SerializedName("details") val details: Next12HoursDetails
 )
-data class Next_6_Hours (
+data class Next6Hours (
     val summary: Summary,
-    val details: Next_6_Hours_Details
+    val details: Next6HoursDetails
 )
-data class Next_1_Hours (
+data class Next1Hours (
     val summary: Summary,
-    val details: Next_1_Hours_Details
+    val details: Next1HoursDetails
 )
 
-class Next_12_Hours_Details()
+class Next12HoursDetails()
 
-data class Next_1_Hours_Details(
-    @SerializedName("precipitation_amount") val precipitation_amount : Double
+data class Next1HoursDetails(
+    @SerializedName("precipitation_amount") val precipitationAmount : Double
 )
-data class Next_6_Hours_Details(
-    @SerializedName("precipitation_amount") val precipitation_amount : Double
+data class Next6HoursDetails(
+    @SerializedName("precipitation_amount") val precipitationAmount : Double
 )
 
 data class Summary (
-    @SerializedName("symbol_code") val symbol_code : String
+    @SerializedName("symbol_code") val symbolCode : String
 )
 
 

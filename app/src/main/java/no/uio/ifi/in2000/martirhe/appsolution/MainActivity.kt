@@ -1,6 +1,5 @@
 package no.uio.ifi.in2000.martirhe.appsolution
 
-import FavoritesScreen
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -28,6 +27,7 @@ import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.Routes
 import no.uio.ifi.in2000.martirhe.appsolution.ui.navigation.navbar.BottomNavBar
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.about.AboutScreen
+import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.favorites.FavoritesScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.home.HomeScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.location.LocationScreen
 import no.uio.ifi.in2000.martirhe.appsolution.ui.screens.onboarding.OnboardingScreen
@@ -121,7 +121,7 @@ class MainActivity : ComponentActivity() {
                                     duration = SnackbarDuration.Long
                                 )
                                 if (result == SnackbarResult.ActionPerformed) {
-                                    // Lukker snackbar
+                                    // If needs empty body to be able to close snackbar
                                 }
                             }
                         }

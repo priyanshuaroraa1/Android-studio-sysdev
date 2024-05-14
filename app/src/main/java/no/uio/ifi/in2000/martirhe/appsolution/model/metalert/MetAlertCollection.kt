@@ -35,7 +35,7 @@ data class Properties(
     val awarenessSeriousness: String?,
     @SerializedName("awareness_level") val awarenessLevel: String,
     @SerializedName("awareness_type") val awarenessType: String,
-    val ceiling_above_sea_level: Int,
+    val ceilingAboveSeaLevel: Int,
     val certainty: String,
     val consequences: String,
     val contact: String,
@@ -56,8 +56,8 @@ data class Properties(
     val type: String,
     val web: String,
     val triggerLevel: String? = null,
-    val municipalityID: String? = null, // TODO: Fjerne denne?
-    val administrativeID: String? = null, //
+    val municipalityID: String? = null,
+    val administrativeID: String? = null,
     val incidentName: String? = null
 )
 

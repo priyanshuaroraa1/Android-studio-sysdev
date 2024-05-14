@@ -19,7 +19,7 @@ data class ForecastWeekday(
         val today = LocalDate.now()
 
         // Check if the given date is tomorrow
-        return if (date.equals(today.plusDays(1))) {
+        return if (date == today.plusDays(1)) {
             "I morgen"
         } else {
             // Get the name of the weekday in Norwegian, ensure only the first letter is capitalized

@@ -43,5 +43,5 @@ data class HomeState @OptIn(ExperimentalMaterial3Api::class) constructor(
 
 enum class BottomSheetPosition(val heightDp: Dp) {
     Hidden(0.dp),
-    Showing(125.dp), // TODO: Endre til en andel av skjermstørrelsen
-} // TODO: Trenger vi i det heletatt denne?
+    Showing(125.dp),
+}

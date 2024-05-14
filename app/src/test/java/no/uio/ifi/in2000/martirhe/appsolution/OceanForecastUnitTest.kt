@@ -41,7 +41,7 @@ class OceanForecastUnitTest {
 
             val dataSource = OceanForecastDataSource()
             val data = dataSource.fetchOceanForecast(lat = 59.920244, lon = 10.756355)
-            assertTrue("The returned temperature should be double", data.properties.timeseries[0].data.instant.details.sea_water_temperature is Double)
+            assertTrue("The returned temperature should be double", data.properties.timeseries[0].data.instant.details.seaWaterTemperature is Double)
         }
     }
 
@@ -51,7 +51,7 @@ class OceanForecastUnitTest {
 
             val dataSource = OceanForecastDataSource()
             val data = dataSource.fetchOceanForecast(lat = 59.920244, lon = 10.756355)
-            assertTrue("The returned wind direction should be double", data.properties.timeseries[0].data.instant.details.sea_water_speed is Double)
+            assertTrue("The returned wind direction should be double", data.properties.timeseries[0].data.instant.details.seaWaterSpeed is Double)
         }
     }
 }
