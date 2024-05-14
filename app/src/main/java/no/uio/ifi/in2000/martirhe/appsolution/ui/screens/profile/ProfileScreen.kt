@@ -82,7 +82,7 @@ fun ProfileScreen(navController: NavController) {
         ) {
             ProfileHeader()
 
-            Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
             MenuItem(
                 buttonText = "Badevettreglene",

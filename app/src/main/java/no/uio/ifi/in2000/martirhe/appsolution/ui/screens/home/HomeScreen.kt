@@ -57,6 +57,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -259,8 +260,10 @@ fun HomeScreen(
                                 durationMs = 250
                             )
                         }
-                        coroutineScope.launch {
-                            scaffoldState.bottomSheetState.expand()
+                        if (swimspot != null) {
+                            coroutineScope.launch {
+                                scaffoldState.bottomSheetState.expand()
+                            }
                         }
 
                         true
@@ -278,17 +281,17 @@ fun HomeScreen(
                         }
                     }
                 }
+
                 MapEffect(key1 = locationData) {map ->
                     if (locationData != null) {
                         homeState.userPositionMarker?.remove()
                         val newMarker = map.addMarker(
                             MarkerOptions()
-                                .position(
-                                    LatLng(
-                                        locationData!!.latitude,
-                                        locationData!!.longitude
-                                    )
-                                )
+                                .position(LatLng(locationData!!.latitude, locationData!!.longitude))
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.userpos)
+                        )
+
+
                         )
                         homeViewModel.updateUserPositionMarker(newMarker)
                     }
