@@ -48,7 +48,7 @@ fun WaterSafetyRulesScreen(navController: NavController) {
                     },
                     navigationIcon = {
                         IconButton(onClick = { navController.navigateUp() }) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Tilbake knapp")
                         }
                     },
                     colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.background)
@@ -81,7 +81,7 @@ fun WaterSafetyRulesScreen(navController: NavController) {
 
                 Image(
                     painter = painterResource(id = R.drawable.badevett),
-                    contentDescription = "Main Illustration",
+                    contentDescription = "Vanvett illustrasjon",
                     modifier = Modifier
                         .size(250.dp)
                 )

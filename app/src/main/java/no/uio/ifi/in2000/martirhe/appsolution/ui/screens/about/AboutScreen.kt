@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -39,6 +40,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -75,7 +77,7 @@ fun AboutScreen(navController: NavController) {
                     },
                     navigationIcon = {
                         IconButton(onClick = { navController.navigateUp() }) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Tilbake ikon")
                         }
                     },
                     colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.background)
@@ -96,8 +98,8 @@ fun AboutScreen(navController: NavController) {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.plasklogo1),
-                        contentDescription = "App Logo",
+                        painter = painterResource(id = R.drawable.plask_logo),
+                        contentDescription = "Plask logo",
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
                             .size(250.dp),
@@ -142,7 +144,7 @@ fun AboutScreen(navController: NavController) {
                     ) {
 
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(Icons.Default.Filter5, contentDescription = "Info Icon", tint = Color.White)
+                            Icon(Icons.Default.Filter5, contentDescription = "Info ikon", tint = Color.White)
                             Spacer(Modifier.width(8.dp))
                             Text(
                                 text = "Vårt Team",
@@ -158,19 +160,19 @@ fun AboutScreen(navController: NavController) {
                             .align(Alignment.CenterHorizontally)
                         ) {
                             TeamMembers("Priyanshu", R.drawable.priyanshu)
-                            Spacer(modifier = Modifier.width(2.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
 
                             TeamMembers("Vetle", R.drawable.vetle)
-                            Spacer(modifier = Modifier.width(2.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
 
                             TeamMembers("Bernd", R.drawable.bernd)
-                            Spacer(modifier = Modifier.width(2.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
 
                             TeamMembers("Martine", R.drawable.martine)
-                            Spacer(modifier = Modifier.width(2.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
 
                             TeamMembers("Sindre", R.drawable.sindre)
-                            Spacer(modifier = Modifier.width(2.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
                         }
 
                         Spacer(Modifier.height(16.dp))
@@ -237,7 +239,7 @@ fun AboutScreen(navController: NavController) {
                                 ) {
                                     Icon(
                                         Icons.Filled.Email,
-                                        contentDescription = "Email",
+                                        contentDescription = "Mail ikon",
                                         tint = MaterialTheme.colorScheme.secondary
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
@@ -265,7 +267,7 @@ fun AboutScreen(navController: NavController) {
                                 ) {
                                     Icon(
                                         Icons.Filled.Phone,
-                                        contentDescription = "Phone",
+                                        contentDescription = "Telefon ikon",
                                         tint = MaterialTheme.colorScheme.secondary
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
@@ -319,9 +321,10 @@ fun TeamMembers(name: String, drawableId: Int) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Image(
             painter = painterResource(id = drawableId),
-            contentDescription = "Team ansatte bilder",
+            contentDescription = "Team medlem bilder",
             modifier = Modifier
                 .size(60.dp)
+                .clip(CircleShape)
         )
         Text(name, color = MaterialTheme.colorScheme.primaryContainer, fontSize = 11.sp)
     }
