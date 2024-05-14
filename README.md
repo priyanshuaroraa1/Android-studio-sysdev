@@ -9,9 +9,10 @@ Prosjektets arkitektur er beskrevet i [ARCHITECTURE.md](ARCHITECTURE.md), samt a
 Alle branch-navn kan slåes opp i [product_backlog.csv](product_backlog.csv) for en fullstendig oversikt.
 
 # Hvordan kjøre appen
-//Github link her (clone rep)
-1. Åpne prosjektet i Android Studio.
-2. Bygg og kjør appen på en emulator eller fysisk enhet.
+1. Last ned prosjektet fra https://github.uio.no/IN2000-V24/team-5/tree/release/v1.0
+2. Åpne prosjektet i Android Studio.
+3. Sørg for å ha en secrets.properties-fil med API-nøkkel til Meterologisk Institutt sine APIer og Google Maps SDK for Android.
+4. Bygg og kjør appen på en emulator eller fysisk enhet.
 
 # Funksjoner
 Interaktivt kart: Kartfunksjonalitet som viser lokasjoner av badeplasser med relevant vær- og vanninformasjon.
