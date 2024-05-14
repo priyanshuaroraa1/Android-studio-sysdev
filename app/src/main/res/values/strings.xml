@@ -3,36 +3,36 @@
 
     //About Us
     <string name="about_screen_label">Om Plask</string>
-    <string name="about_screen_description">Plask er din guide til badetemperaturer langs kysten. Utforsk ulike strender og badeplasser med oppdatert informasjon rett i hånden.</string>
-    <string name="about_screen_info">Plask tilbyr detaljert informasjon om vann- og lufttemperatur, samt vannkvalitet ved dine favorittbadeplasser. Appen inneholder funksjoner som langtidsvarsel for badetemperaturer og muligheten til å lagre og følge med på favorittsteder.</string>
+    <string name="about_screen_description">Plask er din personlige guide til å utforske ulike strender og badeplasser med oppdatert informasjon rett i hånden.</string>
+    <string name="about_screen_info">Plask tilbyr detaljert informasjon om vann- og lufttemperatur. Appen inneholder funksjoner som langtidsvarsel for badetemperaturer og muligheten til å lagre og følge med på dine favorittsteder.</string>
     <string name="about_screen_team">Møt teamet bak Plask</string>
-    <string name="about_screen_teaminfo">Teamet vårt består av dedikerte utviklere og designere som er lidenskapelig opptatt av å skape den beste brukeropplevelsen. Hver medarbeider bringer unik kompetanse for å sikre at Plask ikke bare er funksjonell, men også brukervennlig og nyskapende.</string>
+    <string name="about_screen_teaminfo">Teamet vårt består av dedikerte utviklere og designere som er lidenskapelig opptatt av å skape den beste brukeropplevelsen. Hver medarbeider bringer unik kompetanse for å sikre at Plask ikke bare er funksjonell, men også brukervennlig.</string>
 
-    <string name="about_screen_mail">info@plask.no</string>
-    <string name="about_screen_phone">477 10 410</string>
-    <string name="about_screen_license">Lisens og API-bruk: Plask benytter åpne API-er for å hente realtidsdata og andre tjenester. Vi følger gjeldende lover om datasikkerhet og brukerrettigheter. All bruk av programvare og tredjepartstjenester er i henhold til lisenser som tillater modifikasjon og videre distribusjon under spesifikke vilkår. \n\n API og lisenser vi har brukt er: \n METAlerts \n LocationForecast \n OceanForecast \n Google Maps SDK for Android (Google Maps Platform)</string>
+    <string name="about_screen_mail">martirhe@uio.no</string>
+    <string name="about_screen_phone">936 91 12</string>
+    <string name="about_screen_license">Plask benytter åpne API-er for å hente sanntidsdata og andre tjenester. Vi følger gjeldende lover om datasikkerhet og brukerrettigheter. All bruk av programvare og tredjepartstjenester er i henhold til lisenser som tillater modifikasjon og videre distribusjon under spesifikke vilkår. \n\n API og lisenser vi har brukt er: \n METAlerts \n LocationForecast \n OceanForecast \n Google Maps SDK for Android (Google Maps Platform)</string>
     <string name="about_screen_apibutton">Havvarsel Case</string>
 
     // Onboarding
     <string name="pageone_maintitle">Velkommen til Plask</string>
     <string name="pageone_subtitle">Den ultimate badeguiden for dine badeeventyr i Norge</string>
-    <string name="pageone_bodytext">Utforsk hundrevis av badeplasser og oppdag alt fra vann og land temperaturer til aktuelle farevarsler</string>
+    <string name="pageone_bodytext">Utforsk hundrevis av badeplasser og oppdag alt fra vann- og landtemperaturer til aktuelle farevarsler</string>
 
-    <string name="pagetwo_maintitle">Oppdag Badeplasser</string>
+    <string name="pagetwo_maintitle">Oppdag badeplasser</string>
     <string name="pagetwo_subtitle">Plask er din ultimate følgesvenn når du skal finne den perfekte badeplassen for dine behov</string>
-    <string name="pagetwo_bodytext">Utforsk steder i nærheten, sjekk generell informasjon og vær alltid oppdatert på eventuelle advarsler før du tar et forfriskende dykk</string>
+    <string name="pagetwo_bodytext">Utforsk steder i nærheten, få informasjon om badeplasser og vær alltid oppdatert på eventuelle farevarsler før du tar et forfriskende dykk</string>
 
     <string name="pagethree_maintitle">Legg til Favoritter</string>
-    <string name="pagethree_subtitle">Gjør Plask til din personlige badeassistent ved å legge til favorittbadeplassene dine</string>
-    <string name="pagethree_bodytext">Med ett enkelt trykk kan du få tilgang til dine mest elskede steder og enkelt sjekke relevant informasjon om stedet før du tar et plask fra brygga</string>
+    <string name="pagethree_subtitle">Gjør Plask til din personlige badeassistent.</string>
+    <string name="pagethree_bodytext">Med ett tastetrykk kan du samle dine favorittbadeplasser på ett sted, og enkelt sjekke relevant informasjon om badeplassen før du tar et plask fra brygga</string>
 
-    <string name="pagefour_maintitle">Finn Ditt Perfekte Badested</string>
+    <string name="pagefour_maintitle">Finn ditt perfekte badested</string>
     <string name="pagefour_subtitle">Søk og Oppdag</string>
-    <string name="pagefour_bodytext">Bruk vårt søkeverktøy for å finne badesteder basert på dine preferanser, fra vannkvalitet til værforhold</string>
+    <string name="pagefour_bodytext">Bruk vårt søkeverktøy for å lete blant over 500 badeplasser i hele Norge</string>
 
     <string name="pagefive_maintitle">Se farevarsel i kartet</string>
     <string name="pagefive_subtitle">Røde, Oransje og Gule farevarsler</string>
-    <string name="pagefive_bodytext">På kartet ser du badeplasser markert med ulike pin-farger basert på havvarselet for hvert sted. Finn og sammenlign badesteder basert på havvarsel for å velge det tryggeste og mest behagelige stedet for din bading. I tillegg ser du også badesteder som du har lagret som favoritt.</string>
+    <string name="pagefive_bodytext">På kartet ser du badeplasser markert med ulike markørfarger basert på farevarsel for hvert sted. Finn og sammenlign badesteder basert på farevarsel for å velge det tryggeste og mest behagelige stedet for din bading. I tillegg ser du også badesteder som du har lagret som favoritt.</string>
 
     <string name="onboarding_skip">Hopp over</string>
     <string name="onboarding_next">Neste</string>
@@ -40,7 +40,7 @@
 
     //Location Screen
     <string name="location_screen_label">Plask ønsker å bruke posisjonen din</string>
-    <string name="location_screen_subtext">Plask trenger tilgang til din lokasjon for å kunne vise deg nærliggende badeplasser og gi deg nøyaktige vær- og badevilkår. \n\n Vi forstår viktigheten av personvern og forsikrer deg om at din lokasjonsdata kun vil bli brukt internt i appen og ikke vil deles med tredjeparter.</string>
+    <string name="location_screen_subtext">Plask trenger tilgang til din lokasjon for å kunne vise deg nærliggende badeplasser.\n\n Vi forstår viktigheten av personvern og forsikrer deg om at din lokasjonsdata kun vil bli brukt internt i appen og ikke vil deles med tredjeparter.</string>
 
     <string name="location_screen_accept">Godta</string>
     <string name="location_screen_decline">Avvis</string>
@@ -57,7 +57,7 @@
 
     // HomeScreen BottomSheetScaffold
     <string name="accessability_options_header">Tilgjengelighet</string>
-    <string name="accessability_options_dialog_body">Tilgjengelighetsdata er hentet fra Google Maps, og det kan derfor forekomme avvik. Informasjonen forteller om fremkommelighet med rullestol, HC-toalett og HC-parkering. Hvis ingen informasjon er oppgitt, kan det både bety at badeplassen ikke er tilrettelagt, eller at vi mangler informasjon.</string>
+    <string name="accessability_options_dialog_body">Tilgjengelighetsdata er hentet fra Google Maps, og det kan derfor forekomme avvik. Informasjonen forteller om fremkommelighet med rullestol, HC-toalett og HC-parkering. Hvis ingen informasjon er oppgitt, kan det både bety at badeplassen ikke er tilrettelagt, eller at informasjonen mangler.</string>
 
     // ProfileScreen
     <string name="profile_header">Min profil</string>
