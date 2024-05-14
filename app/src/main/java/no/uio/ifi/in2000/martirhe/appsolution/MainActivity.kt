@@ -53,7 +53,6 @@ class MainActivity : ComponentActivity() {
         //Splash screen
         installSplashScreen().setKeepOnScreenCondition { false }
 
-
         setContent {
             val snackbarHostState = remember { SnackbarHostState() }
             val scope = rememberCoroutineScope()
