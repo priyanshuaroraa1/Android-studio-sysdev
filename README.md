@@ -1,5 +1,5 @@
 # Team 5 - PLASK
-Velkommen til GitHub-repositoriet for Plask, en Android-applikasjon designet av IN2000 studenter for å hjelpe brukere med å oppdage og utforske ulike badeplasser. 
+Velkommen til GitHub-repositoriet for Plask, en Android-applikasjon designet av meg og 4 andre studenter for å hjelpe brukere med å oppdage og utforske ulike badeplasser. 
 
 # Dokumentasjon
 All dokumentasjon kan finnes i dette GitHub-repositoriet og i rapporten som er levert som en del av dette prosjektet.
@@ -9,7 +9,7 @@ Prosjektets arkitektur er beskrevet i [ARCHITECTURE.md](ARCHITECTURE.md), samt a
 Alle branch-navn kan slåes opp i [product_backlog.csv](product_backlog.csv) for en fullstendig oversikt.
 
 # Hvordan kjøre appen
-//Github link her (clone rep)
+git clone: https://github.com/priyanshuaroraa1/IN2000_V24.git
 1. Åpne prosjektet i Android Studio.
 2. Bygg og kjør appen på en emulator eller fysisk enhet.
 
@@ -79,11 +79,4 @@ Flow og Coroutines for asynkron datahåndtering og UI-oppdateringer.
 - `org.mockito:mockito-core`
 
 # Kontakt
-For spørsmål eller innspill, vennligst ikke nøl med å kontakte vårt utviklingsteam på priyansa@uio.no. Din tilbakemelding er verdifull for oss, og vi står klare til å bistå deg.
-
-
-
-
-
-
-
+For spørsmål eller innspill, vennligst ikke nøl med å kontakte vårt utviklingsteam på priyanshu768@gmail.com - Din tilbakemelding er verdifull for oss, og vi står klare til å bistå deg.
