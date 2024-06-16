@@ -1,4 +1,4 @@
-# Team 5 - PLASK
+# PLASK
 Velkommen til GitHub-repositoriet for Plask, en Android-applikasjon designet av meg og 4 andre studenter for å hjelpe brukere med å oppdage og utforske ulike badeplasser. 
 
 # Dokumentasjon
