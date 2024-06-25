@@ -1,6 +1,9 @@
 # PLASK
 Velkommen til GitHub-repositoriet for Plask, en Android-applikasjon designet av meg og 4 andre studenter for å hjelpe brukere med å oppdage og utforske ulike badeplasser. 
 
+![image](https://github.com/priyanshuaroraa1/Android-studio-sysdev/assets/172809196/b002c023-da05-4117-b7d6-8606a0d397be) ![image](https://github.com/priyanshuaroraa1/Android-studio-sysdev/assets/172809196/8b7f5eb5-3804-44b4-a1cc-919474bf9346)
+![image](https://github.com/priyanshuaroraa1/Android-studio-sysdev/assets/172809196/c41da0c6-d7e1-453b-8ef6-b88bc2d8c2a7) ![image](https://github.com/priyanshuaroraa1/Android-studio-sysdev/assets/172809196/ebb4e943-167b-4c63-87cc-77499b2bf277)
+
 # Dokumentasjon
 All dokumentasjon kan finnes i dette GitHub-repositoriet og i rapporten som er levert som en del av dette prosjektet.
 
